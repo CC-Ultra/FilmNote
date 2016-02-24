@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:id="@+id/listElementLayout"
+		android:orientation="horizontal">
+	<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Title"
+				android:id="@+id/title" android:textColor="#ff0303" android:textSize="18sp"
+				android:layout_alignParentLeft="true" android:layout_marginLeft="0dp"
+				android:layout_alignParentTop="true" android:layout_marginTop="0dp" />
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:text="Watched"
+				android:id="@+id/watched" android:textColor="#90fb15" android:textSize="14sp"
+				android:visibility="gone" android:layout_alignParentLeft="true" android:layout_marginLeft="0dp"
+				android:layout_alignParentTop="true" android:layout_marginTop="0dp" />
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Last Date"
+				android:id="@+id/lastDate" android:textSize="12sp" android:textColor="#d9460c"
+				android:layout_alignParentLeft="true" android:layout_marginLeft="0dp"
+				android:layout_alignParentTop="true" android:layout_marginTop="43dp" />
+		<ImageView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/watchedStatusImage"
+				android:src="@drawable/image_not_found"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentEnd="true" />
+	</RelativeLayout>
+</LinearLayout>
