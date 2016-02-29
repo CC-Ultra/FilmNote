@@ -5,8 +5,8 @@ package fnote.snayper.com.filmsnote.p1;
  */
 public class Record_Film
 	{
-	 String title, date="";
-	 char watched='t';
+	 String title,date="";
+	 char watched='f';
 	 Record_Film(String _title)
 		{
 		 title=_title;

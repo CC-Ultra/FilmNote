@@ -43,23 +43,13 @@
 				android:id="@+id/img"
 				android:src="@drawable/image_not_found"
 				android:layout_gravity="right"/>
-		<LinearLayout
+		<Button
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:orientation="horizontal">
-			<Button
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="add"
-					android:id="@+id/watchButton"
-					android:layout_weight="1"/>
-			<Button
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="del"
-					android:id="@+id/cancelButton"
-					android:layout_weight="1"/>
-		</LinearLayout >
+				android:layout_gravity="right"
+				android:text="add"
+				android:id="@+id/watchButton"
+				android:layout_weight="1"/>
 	</LinearLayout >
 </LinearLayout >
 <ListView

@@ -7,75 +7,77 @@ import android.view.View;
 import android.widget.*;
 import fnote.snayper.com.filmsnote.R;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
 /**
  * Created by snayper on 22.02.2016.
  */
-public class EditActivity extends AppCompatActivity
+public class EditActivity extends AppCompatActivity implements AdapterInterface
 	{
-	 Button watchButton,cancelButton;
+	 Button watchButton;
 	 ListView episodeList;
+	 CustomSimpleAdapter adapter;
 	 ImageView img;
 	 TextView titleTxtView, dateTxtView;
-	 String titleSrc;
-	 String dateSrc;
 	 int watched,all;
-	 int contentType;
+	 int contentType,dbPosition;
 
-	 class WatchButtonListener implements View.OnClickListener
+	 class AddButtonListener implements View.OnClickListener
 		{
 		 @Override
 		 public void onClick(View v)
 			{
-			 ;
+			 all++;
+			 HashMap<String,Object> data= new HashMap<>();
+			 data.put(O.db.FIELD_NAME_ALL,all);
+			 DbHelper.updateRecord(contentType,dbPosition,data);
+			 updateDate();
+			 initAdapter();
+			 episodeList.setSelection(episodeList.getCount());
 			 }
 		 }
-	 class CancelButtonListener implements View.OnClickListener
+	 class ListItemClickListener_Watch implements AdapterView.OnItemClickListener
 		{
 		 @Override
-		 public void onClick(View v)
+		 public void onItemClick(AdapterView<?> parent,View view,int position,long id)
 			{
-			 ;
+			 if(watched<all)
+				{
+				 watched++;
+				 HashMap<String,Object> data= new HashMap<>();
+				 data.put(O.db.FIELD_NAME_WATCHED,watched);
+				 DbHelper.updateRecord(contentType,dbPosition,data);
+				 initAdapter();
+				 episodeList.setSelection(watched);
+				 }
 			 }
 		 }
-
-	 String getCurentDate()
+	 class ListItemLongClickListener implements AdapterView.OnItemLongClickListener
 		{
-		 String result;
-		 Calendar date= Calendar.getInstance();
-		 int day= date.get(Calendar.DAY_OF_MONTH);
-		 String dayStr= (day<10 ? "0" : "") + day;
-		 int month= date.get(Calendar.MONTH) +1;
-		 String monthStr= (month<10 ? "0" : "") + month;
-		 int year= date.get(Calendar.YEAR);
-		 result= ""+ dayStr +"."+ monthStr +"."+ year;
-		 return result;
+		 @Override
+		 public boolean onItemLongClick(AdapterView<?> parent,View view,int position,long id)
+			 {
+			  String txtLeft="Cancel";
+			  String txtRight="Delete";
+			  int listenerLeft=O.dialog.LISTENER_SERIAL_CANCEL;
+			  int listenerRight=O.dialog.LISTENER_SERIAL_DEL;
+			  ActionDialog dialog= new ActionDialog();
+			  Bundle paramsBundle= new Bundle();
+			  ActionDialogParams params= new ActionDialogParams(EditActivity.this,contentType,dbPosition,txtLeft,txtRight,listenerLeft,listenerRight);
+			  paramsBundle.putParcelable("Params",params);
+			  dialog.setArguments(paramsBundle);
+			  dialog.show(getSupportFragmentManager(),"");
+			  return true;
+			  }
 		 }
 
-	 @Override
-	 protected void onCreate(Bundle savedInstanceState)
+	 public void initAdapter()
 		{
-		 super.onCreate(savedInstanceState);
-		 setContentView(R.layout.edit_layout);
-
-		 Intent intent=getIntent();
-		 contentType=intent.getIntExtra("Content type",-1);
-		 titleSrc=intent.getStringExtra("Title");
-		 watched= intent.getIntExtra("Watched episodes",-1);
-		 all= intent.getIntExtra("All episodes",-1);
-		 dateSrc= getCurentDate();
-
-		 watchButton= (Button)findViewById(R.id.watchButton);
-		 cancelButton= (Button)findViewById(R.id.cancelButton);
-		 episodeList= (ListView)findViewById(R.id.episodeList);
-		 titleTxtView= (TextView)findViewById(R.id.title);
-		 dateTxtView= (TextView)findViewById(R.id.date);
-		 img= (ImageView)findViewById(R.id.img);
-
-		 String from[]= new String[all];
-		 int to[]= new int[all];
+		 Record_Serial record= DbHelper.extractRecord_Serial(contentType,dbPosition);
+		 all= record.all;
+		 watched= record.watched;
+		 String from[]= {"Episode", "Pic"};
+		 int to[]= {R.id.episode, R.id.img};
 		 ArrayList< HashMap<String,Object> > listData= new ArrayList<>();
 		 HashMap<String,Object> listElementMap;
 		 for(int i=0; i<all; i++)
@@ -88,14 +90,42 @@ public class EditActivity extends AppCompatActivity
 				 listElementMap.put("Pic", true);
 			 listData.add(listElementMap);
 			 }
-//		 String listSrc[]= new String[all];
-		 CustomSimpleAdapter adapter= new CustomSimpleAdapter(EditActivity.this, listData, android.R.layout.simple_list_item_1, from, to);
-//		 ArrayAdapter<String> adapter= new ArrayAdapter<>(EditActivity.this,android.R.layout.simple_list_item_1,listSrc);
-
+		 adapter= new CustomSimpleAdapter(EditActivity.this, listData, R.layout.edit_list_element, from, to);
 		 episodeList.setAdapter(adapter);
+		 }
+	 void updateDate()
+		{
+		 String dateSrc= Util.getCurentDate();
+		 HashMap<String,Object> data= new HashMap<>();
+		 data.put(O.db.FIELD_NAME_DATE,dateSrc);
+		 DbHelper.updateRecord(contentType,dbPosition,data);
+		 dateTxtView.setText(dateSrc);
+		 }
+
+	 @Override
+	 protected void onCreate(Bundle savedInstanceState)
+		{
+		 super.onCreate(savedInstanceState);
+		 setContentView(R.layout.edit_layout);
+
+		 Intent intent=getIntent();
+		 contentType=intent.getIntExtra("Content type",-1);
+		 dbPosition=intent.getIntExtra("Db position",-1);
+		 Record_Serial record= DbHelper.extractRecord_Serial(contentType,dbPosition);
+		 String titleSrc= record.title;
+		 String dateSrc= record.date;
+
+		 watchButton= (Button)findViewById(R.id.watchButton);
+		 episodeList= (ListView)findViewById(R.id.episodeList);
+		 titleTxtView= (TextView)findViewById(R.id.title);
+		 dateTxtView= (TextView)findViewById(R.id.date);
+		 img= (ImageView)findViewById(R.id.img);
+
+		 initAdapter();
+		 episodeList.setOnItemClickListener(new ListItemClickListener_Watch() );
+		 episodeList.setOnItemLongClickListener(new ListItemLongClickListener());
 		 titleTxtView.setText(titleSrc);
 		 dateTxtView.setText(dateSrc);
-		 watchButton.setOnClickListener(new WatchButtonListener() );
-		 cancelButton.setOnClickListener(new CancelButtonListener() );
+		 watchButton.setOnClickListener(new AddButtonListener() );
 		 }
 	}

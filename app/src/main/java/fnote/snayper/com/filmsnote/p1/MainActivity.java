@@ -1,36 +1,41 @@
 package fnote.snayper.com.filmsnote.p1;
 
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 import fnote.snayper.com.filmsnote.R;
 
 public class MainActivity extends AppCompatActivity
 	{
 	 DbHelper dbHelper;
-	 static SQLiteDatabase db;
 	 Toolbar toolbar;
 	 ViewPager viewPager;
-	 static Cursor cursor[]= new Cursor[3];
 
-	 class JmpButtonListener implements View.OnClickListener
+	 class testButtonListener implements View.OnClickListener
 		{
 		 @Override
 		 public void onClick(View v)
 			{
-			 Intent jumper= new Intent(MainActivity.this, EditActivity.class);
-			 jumper.putExtra("Content type",2);
-			 jumper.putExtra("Title","Game of thrones");
-			 jumper.putExtra("Watched episodes",7);
-			 jumper.putExtra("All episodes",10);
-			 startActivity(jumper);
+			 String txtLeft="Cancel";
+			 String txtRight="Delete";
+			 int contentType=1;
+			 int dbPosition=1;
+			 int listenerLeft=O.dialog.LISTENER_SERIAL_CANCEL;
+			 int listenerRight=O.dialog.LISTENER_SERIAL_DEL;
+			 ActionDialog dialog= new ActionDialog();
+			 Bundle paramsBundle= new Bundle();
+			 ActionDialogParams params= new ActionDialogParams(new EditActivity(),contentType,dbPosition,txtLeft,txtRight,listenerLeft,listenerRight);
+			 paramsBundle.putParcelable("Params",params);
+			 dialog.setArguments(paramsBundle);
+			 Log.d("c123","Bundle задан");
+			 dialog.show(getSupportFragmentManager(),"");
 			 }
 		 }
 
@@ -41,24 +46,12 @@ public class MainActivity extends AppCompatActivity
 		 }
 	 private void initTabs()
 		{
-		 viewPager = (ViewPager) findViewById(R.id.viewPager);
-		 TabsFragmentAdapter adapter = new TabsFragmentAdapter(this, getSupportFragmentManager() );
+		 viewPager= (ViewPager)findViewById(R.id.viewPager);
+		 TabsFragmentAdapter adapter= new TabsFragmentAdapter(getSupportFragmentManager() );
 		 viewPager.setAdapter(adapter);
 
-		 TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+		 TabLayout tabLayout= (TabLayout)findViewById(R.id.tabLayout);
 		 tabLayout.setupWithViewPager(viewPager);
-		 }
-	 static void initCursors()
-		{
-		 String fields[][]=
-				{
-					{DbHelper._ID, O.FIELD_NAME_TITLE, O.FIELD_NAME_DATE, O.FIELD_NAME_FLAG},
-					{DbHelper._ID, O.FIELD_NAME_TITLE, O.FIELD_NAME_ALL, O.FIELD_NAME_WATCHED, O.FIELD_NAME_DATE}
-				 };
-		 cursor[0] = db.query(O.TABLE_NAME[0], fields[0], null, null, null, null, null);
-		 cursor[1] = db.query(O.TABLE_NAME[1], fields[1], null, null, null, null, null);
-		 cursor[2] = db.query(O.TABLE_NAME[2], fields[1], null, null, null, null, null);
-//		 cursor[1].get
 		 }
 
 	 @Override
@@ -67,12 +60,13 @@ public class MainActivity extends AppCompatActivity
 		 super.onCreate(savedInstanceState);
 		 setContentView(R.layout.main_layout);
 
-		 dbHelper= new DbHelper(this,null,null,O.DB_VERSION);
-		 db = dbHelper.getWritableDatabase();
-		 initCursors();
+		 dbHelper= new DbHelper(this, O.db.DB_FILENAME, null, O.db.DB_VERSION);
+		 dbHelper.initDb();
+		 DbHelper.initCursors();
 		 initToolbar();
 		 initTabs();
-		 Button jmpButton= (Button)findViewById(R.id.jmpButton);
-		 jmpButton.setOnClickListener(new JmpButtonListener() );
+
+//		 Button testButton= (Button)findViewById(R.id.testButton);
+//		 testButton.setOnClickListener(new testButtonListener() );
 		 }
 	 }

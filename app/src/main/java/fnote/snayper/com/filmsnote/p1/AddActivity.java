@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import fnote.snayper.com.filmsnote.R;
 
+import java.util.Calendar;
+
 /**
  * Created by snayper on 18.02.2016.
  */
@@ -23,32 +25,11 @@ public class AddActivity extends AppCompatActivity
 		 public void onClick(View v)
 			{
 			 if(contentType==0)
-				 putRecord_Films(new Record_Film(titleInput.getText().toString() ), contentType);
+				 DbHelper.putRecord_Films(new Record_Film(titleInput.getText().toString() ), contentType);
 			 else
-				 putRecord_Serial(new Record_Serial(titleInput.getText().toString() ), contentType);
+				 DbHelper.putRecord_Serial(new Record_Serial(titleInput.getText().toString() ), contentType);
 			 onBackPressed();
 			 }
-		 }
-
-	 void putRecord_Serial(Record_Serial rec,int tableNum)
-		{
-		 ContentValues newRecord = new ContentValues();
-		 newRecord.put(O.FIELD_NAME_TITLE, rec.title);
-		 newRecord.put(O.FIELD_NAME_DATE, rec.date);
-		 newRecord.put(O.FIELD_NAME_ALL, ""+ rec.all);
-		 newRecord.put(O.FIELD_NAME_WATCHED, ""+ rec.watched);
-		 newRecord.put(O.FIELD_NAME_FLAG, "");
-		 MainActivity.db.insert(O.TABLE_NAME[tableNum], null, newRecord);
-		 }
-	 void putRecord_Films(Record_Film rec,int tableNum)
-		{
-		 ContentValues newRecord = new ContentValues();
-		 newRecord.put(O.FIELD_NAME_TITLE, rec.title);
-		 newRecord.put(O.FIELD_NAME_DATE, rec.date);
-		 newRecord.put(O.FIELD_NAME_ALL, "");
-		 newRecord.put(O.FIELD_NAME_WATCHED, "");
-		 newRecord.put(O.FIELD_NAME_FLAG, ""+ rec.watched);
-		 MainActivity.db.insert(O.TABLE_NAME[tableNum], null, newRecord);
 		 }
 
 	 @Override

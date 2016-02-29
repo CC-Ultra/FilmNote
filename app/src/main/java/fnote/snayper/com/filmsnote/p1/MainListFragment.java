@@ -1,6 +1,6 @@
 package fnote.snayper.com.filmsnote.p1;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -15,31 +15,31 @@ import fnote.snayper.com.filmsnote.R;
 /**
  * Created by snayper on 16.02.2016.
  */
-public abstract class MainListFragment extends Fragment
+public abstract class MainListFragment extends Fragment implements AdapterInterface
 	{
 	 private String title;
-	 protected Context context;
-	 protected View view;
 	 ListView list;
 	 FloatingActionButton activeButton;
 	 SimpleCursorAdapter adapter;
 	 int contentType;
 	 int listElementLayout;
 
-	 String dbListFrom[]= {O.FIELD_NAME_TITLE, O.FIELD_NAME_ALL, O.FIELD_NAME_WATCHED, O.FIELD_NAME_DATE};
+	 String dbListFrom[]= {O.db.FIELD_NAME_TITLE, O.db.FIELD_NAME_ALL, O.db.FIELD_NAME_WATCHED, O.db.FIELD_NAME_DATE};
 	 int dbListTo[]= {R.id.title, R.id.newEpisodes, R.id.watchedEpisodes, R.id.lastDate};
 
-//		{
-//		Bundle args = new Bundle();
-//		DbListFragment fragment= new DbListFragment();
-//		fragment.setArguments(args);
-//		fragment.setContext(context);
-//		fragment.setTitle("DB file");
-//		return fragment;
-//		}
-	 abstract void setListener_activeButton();
+	 class ActiveButtonListener implements View.OnClickListener
+		{
+		 @Override
+		 public void onClick(View v)
+			{
+			 Intent jumper= new Intent(getActivity(), AddActivity.class);
+			 jumper.putExtra("Content type",contentType);
+			 startActivity(jumper);
+			 }
+		 }
+
 	 abstract void setListener_listOnClick();
-	 abstract void initAdapter();
+	 abstract void setListener_listOnLongClick();
 	 public String getTitle()
 		{
 		 return title;
@@ -48,9 +48,11 @@ public abstract class MainListFragment extends Fragment
 		{
 		 title= _title;
 		 }
-	 public void setContext(Context _context)
+	 @Override
+	 public void onResume()
 		{
-		 context=_context;
+		 initAdapter();
+		 super.onResume();
 		 }
 
 	 @Nullable
@@ -58,14 +60,19 @@ public abstract class MainListFragment extends Fragment
 	 public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
 		{
 		 super.onCreateView(inflater,container,savedInstanceState);
-		 view = inflater.inflate(R.layout.main_list_fragment,container, false);
+		 View view= inflater.inflate(R.layout.main_list_fragment,container, false);
 
-		 initAdapter();
+		 Bundle bundleParams= getArguments();
+		 MainListFragmentParams params= bundleParams.getParcelable("Params");
+		 listElementLayout= params.listElementLayout;
+		 contentType= params.contentType;
+
 		 list= (ListView)view.findViewById(R.id.list);
-		 list.setAdapter(adapter);
+		 initAdapter();
 		 activeButton= (FloatingActionButton)view.findViewById(R.id.activeButton);
-		 setListener_activeButton();
+		 activeButton.setOnClickListener(new ActiveButtonListener() );
 		 setListener_listOnClick();
+		 setListener_listOnLongClick();
 		 return view;
 		 }
 	 }

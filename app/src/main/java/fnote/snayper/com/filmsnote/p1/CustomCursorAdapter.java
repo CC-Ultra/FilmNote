@@ -16,14 +16,10 @@ import java.util.ArrayList;
  */
 public class CustomCursorAdapter extends SimpleCursorAdapter
 	{
-	 ArrayList<Integer> idList;
-
-	@SuppressWarnings("deprecation")
-	 public CustomCursorAdapter(Context context,int layout,Cursor c,String[] from,int[] to, ArrayList<Integer> _idList)
+	 @SuppressWarnings("deprecation")
+	 public CustomCursorAdapter(Context context,int layout,Cursor c,String[] from,int[] to)
 		{
 		 super(context,layout,c,from,to);
-		 idList=_idList;
-		 idList.clear();
 		 }
 
 	 @Override
@@ -42,9 +38,6 @@ public class CustomCursorAdapter extends SimpleCursorAdapter
 	@Override
 	public View getView(int position,View convertView,ViewGroup parent)
 		{
-//		 Cursor item= (Cursor)getItem(position);
-		 Log.d("c123",""+ getItemId(position) );
-//		 int p= item.getPosition();
 		 return super.getView(position,convertView,parent);
 		 }
 	}
