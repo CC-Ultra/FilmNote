@@ -1,4 +1,4 @@
-package fnote.snayper.com.filmsnote.p1;
+package fnote.snayper.com.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import fnote.snayper.com.Activities.AddActivity;
 import fnote.snayper.com.filmsnote.R;
+import fnote.snayper.com.Utils.O;
 
 /**
  * Created by snayper on 16.02.2016.
@@ -18,28 +20,46 @@ import fnote.snayper.com.filmsnote.R;
 public abstract class MainListFragment extends Fragment implements AdapterInterface
 	{
 	 private String title;
-	 ListView list;
-	 FloatingActionButton activeButton;
-	 SimpleCursorAdapter adapter;
-	 int contentType;
-	 int listElementLayout;
+	 protected ListView list;
+	 protected FloatingActionButton activeButton;
+	 protected SimpleCursorAdapter adapter;
+	 protected int contentType;
+	 protected int listElementLayout;
 
-	 String dbListFrom[]= {O.db.FIELD_NAME_TITLE, O.db.FIELD_NAME_ALL, O.db.FIELD_NAME_WATCHED, O.db.FIELD_NAME_DATE};
-	 int dbListTo[]= {R.id.title, R.id.newEpisodes, R.id.watchedEpisodes, R.id.lastDate};
+	 protected String dbListFrom[]= {O.db.FIELD_NAME_TITLE, O.db.FIELD_NAME_ALL, O.db.FIELD_NAME_WATCHED, O.db.FIELD_NAME_DATE};
+	 protected int dbListTo[]= {R.id.title, R.id.newEpisodes, R.id.watchedEpisodes, R.id.lastDate};
 
-	 class ActiveButtonListener implements View.OnClickListener
+	 protected class ActiveButtonListener implements View.OnClickListener
 		{
 		 @Override
 		 public void onClick(View v)
 			{
-			 Intent jumper= new Intent(getActivity(), AddActivity.class);
-			 jumper.putExtra("Content type",contentType);
-			 startActivity(jumper);
+			 if(contentType == O.interaction.CONTENT_FILMS)
+				{
+				 Intent jumper= new Intent(getActivity(),AddActivity.class);
+				 jumper.putExtra("Content type",contentType);
+				 startActivity(jumper);
+				 }
+			 else
+				{
+				 String txtLeft="Online";
+				 String txtRight="Offline";
+				 String message="Выбери способ добавления";
+				 int position=0;
+				 int listenerLeft=O.dialog.LISTENER_ADD_ONLINE;
+				 int listenerRight=O.dialog.LISTENER_ADD_OFFLINE;
+				 ActionDialog dialog=new ActionDialog();
+				 Bundle paramsBundle=new Bundle();
+				 ActionDialogParams params=new ActionDialogParams(MainListFragment.this,contentType,position,message,txtLeft,txtRight,listenerLeft,listenerRight);
+				 paramsBundle.putParcelable("Params",params);
+				 dialog.setArguments(paramsBundle);
+				 dialog.show(getActivity().getSupportFragmentManager(),"");
+				 }
 			 }
 		 }
 
-	 abstract void setListener_listOnClick();
-	 abstract void setListener_listOnLongClick();
+	 protected abstract void setListener_listOnClick();
+	 protected abstract void setListener_listOnLongClick();
 	 public String getTitle()
 		{
 		 return title;

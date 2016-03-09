@@ -1,4 +1,4 @@
-package fnote.snayper.com.filmsnote.p1;
+package fnote.snayper.com.Utils;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -17,8 +17,8 @@ import java.util.HashMap;
 public class DbHelper extends SQLiteOpenHelper implements BaseColumns
 	{
 	 private static final String DB_CREATE_SCRIPT[]= new String[3];
-	 static SQLiteDatabase db;
-	 static Cursor cursors[]= new Cursor[3];
+	 private static SQLiteDatabase db;
+	 public static Cursor cursors[]= new Cursor[3];
 
 	 public DbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version)
 		{
@@ -31,11 +31,11 @@ public class DbHelper extends SQLiteOpenHelper implements BaseColumns
 					+ O.db.FIELD_NAME_DATE +" text not null, "
 					+ O.db.FIELD_NAME_FLAG +" text not null);";
 		 }
-	 void initDb()
+	 public void initDb()
 		{
 		 db= getWritableDatabase();
 		 }
-	 static void initCursors()
+	 public static void initCursors()
 		{
 		 String fields[][]=
 				{
@@ -46,54 +46,56 @@ public class DbHelper extends SQLiteOpenHelper implements BaseColumns
 		 cursors[1] = db.query(O.db.TABLE_NAME[1], fields[1], null, null, null, null, null);
 		 cursors[2] = db.query(O.db.TABLE_NAME[2],fields[1],null,null,null,null,null);
 		 }
-	 static void putRecord_Serial(Record_Serial rec,int tableNum)
+	 public static void putRecord_Serial(Record_Serial rec,int tableNum)
 		{
 		 ContentValues newRecord = new ContentValues();
-		 newRecord.put(O.db.FIELD_NAME_TITLE, rec.title);
+		 newRecord.put(O.db.FIELD_NAME_TITLE, rec.getTitle() );
 		 newRecord.put(O.db.FIELD_NAME_DATE, "");
-		 newRecord.put(O.db.FIELD_NAME_ALL, ""+ rec.all);
-		 newRecord.put(O.db.FIELD_NAME_WATCHED, ""+ rec.watched);
+		 newRecord.put(O.db.FIELD_NAME_ALL, ""+ rec.getAll() );
+		 newRecord.put(O.db.FIELD_NAME_WATCHED, ""+ rec.getWatched() );
 		 newRecord.put(O.db.FIELD_NAME_FLAG, "");
 		 db.insert(O.db.TABLE_NAME[tableNum],null,newRecord);
 		 DbHelper.initCursors();
 		 }
-	 static void putRecord_Films(Record_Film rec,int tableNum)
+	 public static void putRecord_Films(Record_Film rec,int tableNum)
 		{
 		 ContentValues newRecord = new ContentValues();
-		 newRecord.put(O.db.FIELD_NAME_TITLE, rec.title);
+		 newRecord.put(O.db.FIELD_NAME_TITLE, rec.getTitle() );
 		 newRecord.put(O.db.FIELD_NAME_DATE, Util.getCurentDate() );
 		 newRecord.put(O.db.FIELD_NAME_ALL, "");
 		 newRecord.put(O.db.FIELD_NAME_WATCHED, "");
-		 newRecord.put(O.db.FIELD_NAME_FLAG, ""+ rec.watched);
+		 newRecord.put(O.db.FIELD_NAME_FLAG, ""+ rec.getWatched() );
 		 db.insert(O.db.TABLE_NAME[tableNum],null,newRecord);
 		 DbHelper.initCursors();
 		 }
-	 static Record_Film extractRecord_Film(int tableNum,int position)
+	 public static Record_Film extractRecord_Film(int tableNum,int position)
 		{
 		 Record_Film result;
 		 Cursor cursor= DbHelper.cursors[tableNum];
 		 cursor.moveToPosition(position);
 		 String title= cursor.getString( cursor.getColumnIndex(O.db.FIELD_NAME_TITLE) );
-		 result= new Record_Film(title);
+		 result= new Record_Film();
+		 result.setTitle(title);
 		 String date= cursor.getString( cursor.getColumnIndex(O.db.FIELD_NAME_DATE) );
-		 result.date=date;
-		 result.watched= cursor.getString(cursor.getColumnIndex(O.db.FIELD_NAME_FLAG) ).charAt(0);
+		 result.setDate(date);
+		 result.setWatched(cursor.getString(cursor.getColumnIndex(O.db.FIELD_NAME_FLAG)).charAt(0));
 		 return result;
 		 }
-	 static Record_Serial extractRecord_Serial(int tableNum,int position)
+	 public static Record_Serial extractRecord_Serial(int tableNum,int position)
 		{
 		 Record_Serial result;
 		 Cursor cursor= DbHelper.cursors[tableNum];
 		 cursor.moveToPosition(position);
 		 String title= cursor.getString( cursor.getColumnIndex(O.db.FIELD_NAME_TITLE) );
-		 result= new Record_Serial(title);
+		 result= new Record_Serial();
+		 result.setTitle(title);
 		 String date= cursor.getString( cursor.getColumnIndex(O.db.FIELD_NAME_DATE) );
-		 result.date=date;
-		 result.all= Integer.parseInt(cursor.getString(cursor.getColumnIndex(O.db.FIELD_NAME_ALL) ) );
-		 result.watched= Integer.parseInt(cursor.getString(cursor.getColumnIndex(O.db.FIELD_NAME_WATCHED) ) );
+		 result.setDate(date);
+		 result.setAll(Integer.parseInt(cursor.getString(cursor.getColumnIndex(O.db.FIELD_NAME_ALL))));
+		 result.setWatched(Integer.parseInt(cursor.getString(cursor.getColumnIndex(O.db.FIELD_NAME_WATCHED))));
 		 return result;
 		 }
-	 static void updateRecord(int tableNum,int position,HashMap<String,Object> updatedData)
+	 public static void updateRecord(int tableNum,int position,HashMap<String,Object> updatedData)
 		{
 		 Cursor cursor= DbHelper.cursors[tableNum];
 		 cursor.moveToPosition(position);
@@ -105,7 +107,7 @@ public class DbHelper extends SQLiteOpenHelper implements BaseColumns
 		 int updCount = DbHelper.db.update(O.db.TABLE_NAME[tableNum],record,"_id = ?",new String[]{strID} );
 		 DbHelper.initCursors();
 		 }
-	 static void deleteRecord(int tableNum,int position)
+	 public static void deleteRecord(int tableNum,int position)
 		{
 		 Cursor cursor= DbHelper.cursors[tableNum];
 		 cursor.moveToPosition(position);
@@ -114,7 +116,7 @@ public class DbHelper extends SQLiteOpenHelper implements BaseColumns
 		 initCursors();
 		 }
 
-	@Override
+	 @Override
 	 public void onCreate(SQLiteDatabase db)
 		{
 		 db.execSQL(DB_CREATE_SCRIPT[0] );

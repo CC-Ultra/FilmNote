@@ -1,41 +1,31 @@
-package fnote.snayper.com.filmsnote.p1;
+package fnote.snayper.com.Activities;
 
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import fnote.snayper.com.Adapters.TabsFragmentAdapter;
+import fnote.snayper.com.Utils.DbHelper;
 import fnote.snayper.com.filmsnote.R;
+import fnote.snayper.com.Utils.O;
 
 public class MainActivity extends AppCompatActivity
 	{
-	 DbHelper dbHelper;
-	 Toolbar toolbar;
-	 ViewPager viewPager;
+	 private DbHelper dbHelper;
+	 private Toolbar toolbar;
+	 private ViewPager viewPager;
 
-	 class testButtonListener implements View.OnClickListener
+	 private class testButtonListener implements View.OnClickListener
 		{
 		 @Override
 		 public void onClick(View v)
 			{
-			 String txtLeft="Cancel";
-			 String txtRight="Delete";
-			 int contentType=1;
-			 int dbPosition=1;
-			 int listenerLeft=O.dialog.LISTENER_SERIAL_CANCEL;
-			 int listenerRight=O.dialog.LISTENER_SERIAL_DEL;
-			 ActionDialog dialog= new ActionDialog();
-			 Bundle paramsBundle= new Bundle();
-			 ActionDialogParams params= new ActionDialogParams(new EditActivity(),contentType,dbPosition,txtLeft,txtRight,listenerLeft,listenerRight);
-			 paramsBundle.putParcelable("Params",params);
-			 dialog.setArguments(paramsBundle);
-			 Log.d("c123","Bundle задан");
-			 dialog.show(getSupportFragmentManager(),"");
+//			 Intent jumper= new Intent(MainActivity.this, WebActivity.class);
+//			 startActivity(jumper);
 			 }
 		 }
 
@@ -66,7 +56,7 @@ public class MainActivity extends AppCompatActivity
 		 initToolbar();
 		 initTabs();
 
-//		 Button testButton= (Button)findViewById(R.id.testButton);
-//		 testButton.setOnClickListener(new testButtonListener() );
+		 Button testButton= (Button)findViewById(R.id.testButton);
+		 testButton.setOnClickListener(new testButtonListener() );
 		 }
 	 }

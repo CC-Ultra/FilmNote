@@ -1,15 +1,12 @@
-package fnote.snayper.com.filmsnote.p1;
+package fnote.snayper.com.Adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import fnote.snayper.com.filmsnote.R;
-
-import java.util.ArrayList;
 
 /**
  * Created by snayper on 19.02.2016.
@@ -29,9 +26,11 @@ public class CustomCursorAdapter extends SimpleCursorAdapter
 		 if(v.getId()==R.id.watchedStatusImage)
 			{
 			 if(value.equals("f") )
-				 v.setImageResource(R.mipmap.not_watched);
+				 v.setImageResource(R.drawable.list_not_watched);
+//				 v.setImageResource(R.mipmap.not_watched);
 			 else
-				 v.setImageResource(R.mipmap.watched);
+				 v.setImageResource(R.drawable.list_watched);
+//				 v.setImageResource(R.mipmap.watched);
 			 }
 		 }
 

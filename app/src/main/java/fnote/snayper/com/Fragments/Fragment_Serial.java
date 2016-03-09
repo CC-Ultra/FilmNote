@@ -1,4 +1,4 @@
-package fnote.snayper.com.filmsnote.p1;
+package fnote.snayper.com.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,13 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.SimpleCursorAdapter;
+import fnote.snayper.com.Activities.EditActivity;
+import fnote.snayper.com.Utils.DbHelper;
+import fnote.snayper.com.Utils.O;
 
 /**
  * Created by snayper on 16.02.2016.
  */
 public class Fragment_Serial extends MainListFragment implements AdapterInterface
 	{
-	 class SerialListItemClickListener implements AdapterView.OnItemClickListener
+	 private class SerialListItemClickListener implements AdapterView.OnItemClickListener
 		{
 		 @Override
 		 public void onItemClick(AdapterView<?> parent,View view,int position,long id)
@@ -25,18 +28,19 @@ public class Fragment_Serial extends MainListFragment implements AdapterInterfac
 			 startActivity(jumper);
 			 }
 		 }
-	 class SerialListItemLongClickListener implements AdapterView.OnItemLongClickListener
+	 private class SerialListItemLongClickListener implements AdapterView.OnItemLongClickListener
 		{
 		 @Override
 		 public boolean onItemLongClick(AdapterView<?> parent,View view,int position,long id)
 			{
 			 String txtLeft="Delete";
 			 String txtRight="Update";
+			 String message="";
 			 int listenerLeft= O.dialog.LISTENER_MAIN_LIST_DEL;
 			 int listenerRight= O.dialog.LISTENER_MAIN_LIST_UPDATE;
 			 ActionDialog dialog= new ActionDialog();
 			 Bundle paramsBundle= new Bundle();
-			 ActionDialogParams params= new ActionDialogParams(Fragment_Serial.this,contentType,position,txtLeft,txtRight,listenerLeft,listenerRight);
+			 ActionDialogParams params= new ActionDialogParams(Fragment_Serial.this,contentType,position,message,txtLeft,txtRight,listenerLeft,listenerRight);
 			 paramsBundle.putParcelable("Params",params);
 			 dialog.setArguments(paramsBundle);
 			 dialog.show(getActivity().getSupportFragmentManager(), "");
@@ -49,12 +53,12 @@ public class Fragment_Serial extends MainListFragment implements AdapterInterfac
 		 super();
 		 }
 	 @Override
-	 void setListener_listOnClick()
+	 protected void setListener_listOnClick()
 		{
 		 list.setOnItemClickListener(new SerialListItemClickListener() );
 		 }
 	 @Override
-	 void setListener_listOnLongClick()
+	 protected void setListener_listOnLongClick()
 		{
 		 list.setOnItemLongClickListener(new SerialListItemLongClickListener() );
 		 }
@@ -64,13 +68,5 @@ public class Fragment_Serial extends MainListFragment implements AdapterInterfac
 		{
 		 adapter= new SimpleCursorAdapter(getActivity(), listElementLayout, DbHelper.cursors[contentType], dbListFrom, dbListTo);
 		 list.setAdapter(adapter);
-		 }
-
-	@Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
-		{
-		 View v= super.onCreateView(inflater,container,savedInstanceState);
-		 return v;
 		 }
 	 }

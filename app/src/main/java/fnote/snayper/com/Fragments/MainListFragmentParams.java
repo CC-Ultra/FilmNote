@@ -1,4 +1,4 @@
-package fnote.snayper.com.filmsnote.p1;
+package fnote.snayper.com.Fragments;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,12 +8,12 @@ import android.os.Parcelable;
  */
 public class MainListFragmentParams implements Parcelable
 	{
-	 int listElementLayout;
-	 int contentType;
+	 public int listElementLayout;
+	 public int contentType;
 
 	 public static final Parcelable.Creator CREATOR = new Creator();
 
-	 static class Creator implements Parcelable.Creator
+	 private static class Creator implements Parcelable.Creator
 		{
 		 public MainListFragmentParams createFromParcel(Parcel in)
 			{
@@ -26,12 +26,12 @@ public class MainListFragmentParams implements Parcelable
 			 }
 		 }
 
-	 MainListFragmentParams(Parcel in)
+	 public MainListFragmentParams(Parcel in)
 		{
 		 listElementLayout= in.readInt();
 		 contentType= in.readInt();
 		 }
-	 MainListFragmentParams(int _listElementLayout,int _contentType)
+	 public MainListFragmentParams(int _listElementLayout,int _contentType)
 		{
 		 listElementLayout=_listElementLayout;
 		 contentType=_contentType;

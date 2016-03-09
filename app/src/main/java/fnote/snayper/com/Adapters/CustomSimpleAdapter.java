@@ -1,7 +1,6 @@
-package fnote.snayper.com.filmsnote.p1;
+package fnote.snayper.com.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +35,13 @@ public class CustomSimpleAdapter extends SimpleAdapter
 		 HashMap<String,Object> item= (HashMap<String,Object>)getItem(position);
 		 TextView txt= (TextView)convertView.findViewById(R.id.episode);
 		 ImageView img= (ImageView)convertView.findViewById(R.id.img);
-		 txt.setText(item.get("Episode").toString() );
+		 txt.setText(item.get("Episode").toString());
 		 if( (boolean)item.get("Pic") )
-			 img.setImageResource(R.mipmap.watched);
+			 img.setImageResource(R.drawable.list_watched);
+//			 img.setImageResource(R.mipmap.watched);
 		 else
-			 img.setImageResource(R.mipmap.not_watched);
+			 img.setImageResource(R.drawable.list_not_watched);
+//			 img.setImageResource(R.mipmap.not_watched);
 		 return convertView;
 		 }
 	}

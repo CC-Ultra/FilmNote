@@ -1,33 +1,43 @@
-package fnote.snayper.com.filmsnote.p1;
+package fnote.snayper.com.Activities;
 
-import android.content.ContentValues;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import fnote.snayper.com.Utils.DbHelper;
+import fnote.snayper.com.Utils.O;
+import fnote.snayper.com.Utils.Record_Film;
+import fnote.snayper.com.Utils.Record_Serial;
 import fnote.snayper.com.filmsnote.R;
-
-import java.util.Calendar;
 
 /**
  * Created by snayper on 18.02.2016.
  */
 public class AddActivity extends AppCompatActivity
 	{
-	 EditText titleInput;
-	 Button okButton;
-	 int contentType;
+	 private EditText titleInput;
+	 private Button okButton;
+	 private int contentType;
 
-	 class OkButtonListener implements View.OnClickListener
+	 private class OkButtonListener implements View.OnClickListener
 		{
 		 @Override
 		 public void onClick(View v)
 			{
-			 if(contentType==0)
-				 DbHelper.putRecord_Films(new Record_Film(titleInput.getText().toString() ), contentType);
+			 String title= titleInput.getText().toString();
+			 if(contentType == O.interaction.CONTENT_FILMS)
+				{
+				 Record_Film record= new Record_Film();
+				 record.setTitle(title);
+				 DbHelper.putRecord_Films(record,contentType);
+				 }
 			 else
-				 DbHelper.putRecord_Serial(new Record_Serial(titleInput.getText().toString() ), contentType);
+				{
+				 Record_Serial record= new Record_Serial();
+				 record.setTitle(title);
+				 DbHelper.putRecord_Serial(record,contentType);
+				 }
 			 onBackPressed();
 			 }
 		 }

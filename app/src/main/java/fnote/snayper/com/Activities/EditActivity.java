@@ -1,11 +1,20 @@
-package fnote.snayper.com.filmsnote.p1;
+package fnote.snayper.com.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.*;
+import fnote.snayper.com.Adapters.CustomSimpleAdapter;
+import fnote.snayper.com.Fragments.ActionDialog;
+import fnote.snayper.com.Fragments.ActionDialogParams;
+import fnote.snayper.com.Fragments.AdapterInterface;
+import fnote.snayper.com.Utils.DbHelper;
+import fnote.snayper.com.Utils.Record_Serial;
 import fnote.snayper.com.filmsnote.R;
+import fnote.snayper.com.Utils.O;
+import fnote.snayper.com.Utils.Util;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,15 +23,15 @@ import java.util.HashMap;
  */
 public class EditActivity extends AppCompatActivity implements AdapterInterface
 	{
-	 Button watchButton;
-	 ListView episodeList;
-	 CustomSimpleAdapter adapter;
-	 ImageView img;
-	 TextView titleTxtView, dateTxtView;
-	 int watched,all;
-	 int contentType,dbPosition;
+	 private Button watchButton;
+	 private ListView episodeList;
+	 private CustomSimpleAdapter adapter;
+	 private ImageView img;
+	 private TextView titleTxtView, dateTxtView;
+	 private int watched,all;
+	 private int contentType,dbPosition;
 
-	 class AddButtonListener implements View.OnClickListener
+	 private class AddButtonListener implements View.OnClickListener
 		{
 		 @Override
 		 public void onClick(View v)
@@ -36,7 +45,7 @@ public class EditActivity extends AppCompatActivity implements AdapterInterface
 			 episodeList.setSelection(episodeList.getCount());
 			 }
 		 }
-	 class ListItemClickListener_Watch implements AdapterView.OnItemClickListener
+	 private class ListItemClickListener_Watch implements AdapterView.OnItemClickListener
 		{
 		 @Override
 		 public void onItemClick(AdapterView<?> parent,View view,int position,long id)
@@ -52,7 +61,7 @@ public class EditActivity extends AppCompatActivity implements AdapterInterface
 				 }
 			 }
 		 }
-	 class ListItemLongClickListener implements AdapterView.OnItemLongClickListener
+	 private class ListItemLongClickListener implements AdapterView.OnItemLongClickListener
 		{
 		 @Override
 		 public boolean onItemLongClick(AdapterView<?> parent,View view,int position,long id)
@@ -74,8 +83,8 @@ public class EditActivity extends AppCompatActivity implements AdapterInterface
 	 public void initAdapter()
 		{
 		 Record_Serial record= DbHelper.extractRecord_Serial(contentType,dbPosition);
-		 all= record.all;
-		 watched= record.watched;
+		 all= record.getAll();
+		 watched= record.getWatched();
 		 String from[]= {"Episode", "Pic"};
 		 int to[]= {R.id.episode, R.id.img};
 		 ArrayList< HashMap<String,Object> > listData= new ArrayList<>();
@@ -93,7 +102,7 @@ public class EditActivity extends AppCompatActivity implements AdapterInterface
 		 adapter= new CustomSimpleAdapter(EditActivity.this, listData, R.layout.edit_list_element, from, to);
 		 episodeList.setAdapter(adapter);
 		 }
-	 void updateDate()
+	 private void updateDate()
 		{
 		 String dateSrc= Util.getCurentDate();
 		 HashMap<String,Object> data= new HashMap<>();
@@ -112,8 +121,8 @@ public class EditActivity extends AppCompatActivity implements AdapterInterface
 		 contentType=intent.getIntExtra("Content type",-1);
 		 dbPosition=intent.getIntExtra("Db position",-1);
 		 Record_Serial record= DbHelper.extractRecord_Serial(contentType,dbPosition);
-		 String titleSrc= record.title;
-		 String dateSrc= record.date;
+		 String titleSrc= record.getTitle();
+		 String dateSrc= record.getDate();
 
 		 watchButton= (Button)findViewById(R.id.watchButton);
 		 episodeList= (ListView)findViewById(R.id.episodeList);

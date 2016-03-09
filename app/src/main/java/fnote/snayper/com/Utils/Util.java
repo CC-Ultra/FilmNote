@@ -1,4 +1,4 @@
-package fnote.snayper.com.filmsnote.p1;
+package fnote.snayper.com.Utils;
 
 import java.util.Calendar;
 
@@ -7,7 +7,7 @@ import java.util.Calendar;
  */
 public class Util
 	{
-	 static String getCurentDate()
+	 public static String getCurentDate()
 		{
 		 String result;
 		 Calendar date= Calendar.getInstance();
