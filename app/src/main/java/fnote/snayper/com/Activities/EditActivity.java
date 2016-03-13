@@ -72,6 +72,7 @@ public class EditActivity extends AppCompatActivity implements AdapterInterface
 			  int listenerRight=O.dialog.LISTENER_SERIAL_DEL;
 			  ActionDialog dialog= new ActionDialog();
 			  Bundle paramsBundle= new Bundle();
+//			  paramsBundle.putSerializable("Parent",EditActivity.this);
 			  ActionDialogParams params= new ActionDialogParams(EditActivity.this,contentType,dbPosition,txtLeft,txtRight,listenerLeft,listenerRight);
 			  paramsBundle.putParcelable("Params",params);
 			  dialog.setArguments(paramsBundle);

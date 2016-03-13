@@ -3,6 +3,8 @@
 		  package="fnote.snayper.com.filmsnote">
 	<uses-permission
 			android:name="android.permission.INTERNET" />
+	<uses-permission
+			android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 	<application
 			android:allowBackup="true"
 			android:icon="@drawable/image_not_found"
@@ -18,5 +20,6 @@
 		<activity android:name="fnote.snayper.com.Activities.AddActivity"/>
 		<activity android:name="fnote.snayper.com.Activities.EditActivity"/>
 		<activity android:name="fnote.snayper.com.Activities.WebActivity"/>
+		<activity android:name="fnote.snayper.com.Activities.ImageActivity"/>
 	</application>
 </manifest>

@@ -29,6 +29,7 @@ public class Fragment_Films extends MainListFragment implements AdapterInterface
 			 int listenerRight= O.dialog.LISTENER_MAIN_LIST_DEL;
 			 ActionDialog dialog= new ActionDialog();
 			 Bundle paramsBundle= new Bundle();
+//			 paramsBundle.putSerializable("Parent",Fragment_Films.this);
 			 ActionDialogParams params= new ActionDialogParams(Fragment_Films.this, contentType, position, txtLeft,txtRight,listenerLeft,listenerRight);
 			 paramsBundle.putParcelable("Params",params);
 			 dialog.setArguments(paramsBundle);
@@ -57,11 +58,4 @@ public class Fragment_Films extends MainListFragment implements AdapterInterface
 		 list.setAdapter(adapter);
 		 }
 
-	 @Nullable
-	 @Override
-	 public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
-		{
-		 View v= super.onCreateView(inflater,container,savedInstanceState);
-		 return v;
-		 }
 	 }

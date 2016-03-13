@@ -1,11 +1,13 @@
 package fnote.snayper.com.Activities;
 
 import android.content.Intent;
+import android.os.Environment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import fnote.snayper.com.Adapters.TabsFragmentAdapter;
@@ -24,8 +26,8 @@ public class MainActivity extends AppCompatActivity
 		 @Override
 		 public void onClick(View v)
 			{
-//			 Intent jumper= new Intent(MainActivity.this, WebActivity.class);
-//			 startActivity(jumper);
+			 Intent jumper= new Intent(MainActivity.this, ImageActivity.class);
+			 startActivity(jumper);
 			 }
 		 }
 

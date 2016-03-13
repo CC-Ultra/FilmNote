@@ -173,6 +173,7 @@ public class ActionDialog extends DialogFragment
 	 public Dialog onCreateDialog(Bundle savedInstanceState)
 		{
 		 Bundle bundleParams= getArguments();
+//		 parent= (AdapterInterface)bundleParams.getSerializable("Parent");
 		 ActionDialogParams params= bundleParams.getParcelable("Params");
 		 parent= params.parent;
 		 contentType= params.contentType;
