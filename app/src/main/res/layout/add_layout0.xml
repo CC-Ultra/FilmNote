@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+	<android.support.v7.widget.Toolbar
+			android:id="@+id/toolbar"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:theme="@style/ThemeOverlay.AppCompat.Dark"
+			android:background="?attr/colorPrimary" />
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Введи название"
+			android:id="@+id/txt"
+			android:layout_below="@+id/toolbar"
+			android:layout_centerHorizontal="true"
+			android:layout_marginTop="50dp"
+			android:textSize="18dp" />
+	<EditText
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="20dp"
+			android:layout_marginLeft="20dp"
+			android:id="@+id/titleInput"
+			android:background="@drawable/edit_text_selector"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+			android:layout_below="@+id/toolbar"
+			android:layout_marginTop="200dp"
+			android:paddingTop="5dp"
+			android:paddingBottom="5dp"
+			android:gravity="center_horizontal" />
+	<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="OK"
+			android:id="@+id/okButton"
+			android:layout_alignParentBottom="true"
+			android:layout_centerHorizontal="true"
+			android:layout_marginBottom="60dp"
+			android:background="@drawable/buton_selector"
+			android:textColor="#ffffff"
+			android:paddingLeft="50dp"
+			android:paddingRight="50dp" />
+	<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/easterImg"
+			android:visibility="invisible"
+			android:src="@drawable/korovan"
+			android:layout_above="@+id/okButton"
+			android:layout_marginTop="10dp"
+			android:layout_centerHorizontal="true" />
+</RelativeLayout>

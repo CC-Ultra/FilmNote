@@ -1,32 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="horizontal">
-	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:orientation="vertical">
-		<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="Title"
-				android:id="@+id/title" android:textColor="#ff0303" android:textSize="18sp" />
-		<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="Watched"
-				android:id="@+id/watchedEpisodes" android:textSize="14sp" android:textColor="#90fb15" />
-		<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="New"
-				android:id="@+id/newEpisodes" android:textColor="#e10c3e" android:textSize="14sp" />
-		<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="Last Date"
-				android:id="@+id/lastDate" android:textSize="12sp" android:textColor="#d9460c" />
-	</LinearLayout>
-</LinearLayout>
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:background="#f2f2f2"
+		android:paddingBottom="10dp"
+		>
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Title"
+			android:id="@+id/title"
+			android:textSize="18sp" />
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Просмотрено серий:"
+			android:id="@+id/watchedInfo"
+			android:textSize="14sp"
+			android:layout_marginTop="5dp"
+			android:layout_below="@+id/title"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true" />
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Всего серий:"
+			android:id="@+id/newInfo"
+			android:layout_below="@+id/watchedInfo"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true" />
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Watched"
+			android:id="@+id/watchedEpisodes"
+			android:layout_above="@+id/newInfo"
+			android:layout_marginLeft="5dp"
+			android:layout_toRightOf="@+id/watchedInfo"
+			android:layout_toEndOf="@+id/watchedInfo" />
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="New"
+			android:id="@+id/newEpisodes"
+			android:layout_alignTop="@+id/newInfo"
+			android:layout_alignLeft="@+id/watchedEpisodes"
+			android:layout_alignStart="@+id/watchedEpisodes" />
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Last Date"
+			android:id="@+id/lastDate"
+			android:layout_marginTop="5dp"
+			android:layout_below="@+id/newInfo"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true" />
+</RelativeLayout>
