@@ -5,7 +5,7 @@ package com.snayper.filmsnote.Utils;
  */
 public class Record_Serial
 	{
-	 private String title="",date="",imgSrc="";
+	 private String title="",date="",imgSrc="",webSrc="";
 	 private int all=0;
 	 private int watched=0;
 
@@ -16,6 +16,10 @@ public class Record_Serial
 	 public void setImgSrc(String _imgSrc)
 		{
 		 imgSrc=_imgSrc;
+		 }
+	 public void setWebSrc(String _webSrc)
+		{
+		 webSrc=_webSrc;
 		 }
 	 public void setDate(String _date)
 		{
@@ -36,6 +40,10 @@ public class Record_Serial
 	 public String getImgSrc()
 		{
 		 return imgSrc;
+		 }
+	 public String getWebSrc()
+		{
+		 return webSrc;
 		 }
 	 public String getDate()
 		{

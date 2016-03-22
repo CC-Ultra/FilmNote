@@ -2,14 +2,13 @@ package com.snayper.filmsnote.Fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import com.snayper.filmsnote.Activities.AddActivity;
-import com.snayper.filmsnote.Activities.WebActivity;
+import com.snayper.filmsnote.Activities.WebActivity_Add;
 import com.snayper.filmsnote.Utils.DbHelper;
 import com.snayper.filmsnote.Utils.O;
 import com.snayper.filmsnote.Utils.Record_Serial;
@@ -26,9 +25,9 @@ public class ActionDialog extends DialogFragment
 	 private int contentType;
 	 private int position;
 	 public String message="";
-	 private int buttonsNum=2;
-	 private String leftText,rightText, centralText="";
-	 private int leftListener,rightListener, centralListener=0;
+	 private int buttonsNum;
+	 private String leftText,rightText="", centralText="";
+	 private int leftListener,rightListener=0, centralListener=0;
 
 	 private class FilmCancelListener implements DialogInterface.OnClickListener
 		{
@@ -102,7 +101,7 @@ public class ActionDialog extends DialogFragment
 		 @Override
 		 public void onClick(DialogInterface dialog,int which)
 			{
-			 Intent jumper= new Intent(getActivity(), WebActivity.class);
+			 Intent jumper= new Intent(getActivity(), WebActivity_Add.class);
 			 jumper.putExtra("Content type",contentType);
 			 jumper.putExtra("Position",position);
 			 jumper.putExtra("Action",O.interaction.WEB_ACTION_UPDATE);
@@ -114,7 +113,7 @@ public class ActionDialog extends DialogFragment
 		 @Override
 		 public void onClick(DialogInterface dialog,int which)
 			{
-			 Intent jumper= new Intent(getActivity(), WebActivity.class);
+			 Intent jumper= new Intent(getActivity(), WebActivity_Add.class);
 			 jumper.putExtra("Content type",contentType);
 			 jumper.putExtra("Action",O.interaction.WEB_ACTION_ADD);
 			 startActivity(jumper);
@@ -169,8 +168,18 @@ public class ActionDialog extends DialogFragment
 			 }
 		 return result;
 		 }
+	 public void viceConstructor(AdapterInterface _parent,int _contentType,int _position,String _leftText,int _leftListener)
+		{
+		 buttonsNum=1;
+		 parent=_parent;
+		 contentType=_contentType;
+		 position=_position;
+		 leftListener=_leftListener;
+		 leftText=_leftText;
+		 }
 	 public void viceConstructor(AdapterInterface _parent,int _contentType,int _position,String _leftText,String _rightText,int _leftListener,int _rightListener)
 		{
+		 buttonsNum=2;
 		 parent=_parent;
 		 contentType=_contentType;
 		 position=_position;
@@ -181,6 +190,7 @@ public class ActionDialog extends DialogFragment
 		 }
 	 public void viceConstructor(AdapterInterface _parent,int _contentType,int _position,String _message,String _leftText,String _rightText,int _leftListener,int _rightListener)
 		{
+		 buttonsNum=2;
 		 parent=_parent;
 		 contentType=_contentType;
 		 position=_position;
@@ -196,16 +206,19 @@ public class ActionDialog extends DialogFragment
 	 public Dialog onCreateDialog(Bundle savedInstanceState)
 		{
 		 AlertDialog.Builder adb = new AlertDialog.Builder(getActivity() );
-		 if(buttonsNum==2)
+		 switch(buttonsNum)
 			{
-			 adb.setNegativeButton(leftText,getListener(leftListener) );
-			 adb.setPositiveButton(rightText,getListener(rightListener) );
-			 }
-		 else
-			{
-			 adb.setNegativeButton(leftText,getListener(leftListener) );
-			 adb.setPositiveButton(rightText,getListener(rightListener) );
-			 adb.setNeutralButton(centralText,getListener(centralListener) );
+			 case 1:
+				 adb.setNegativeButton(leftText,getListener(leftListener) );
+				 break;
+			 case 2:
+				 adb.setNegativeButton(leftText,getListener(leftListener) );
+				 adb.setPositiveButton(rightText,getListener(rightListener) );
+				 break;
+			 case 3:
+				 adb.setNegativeButton(leftText,getListener(leftListener) );
+				 adb.setPositiveButton(rightText,getListener(rightListener) );
+				 adb.setNeutralButton(centralText,getListener(centralListener) );
 			 }
 		 if(message.length()!=0)
 			 adb.setMessage(message);

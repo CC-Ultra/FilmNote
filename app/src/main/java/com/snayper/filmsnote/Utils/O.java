@@ -18,6 +18,7 @@ public class O
 		 public static final String FIELD_NAME_ALL= "All2";
 		 public static final String FIELD_NAME_FLAG= "Flag";
 		 public static final String FIELD_NAME_IMG= "Image";
+		 public static final String FIELD_NAME_WEB= "WebSRC";
 		 }
 
 	 public static class interaction

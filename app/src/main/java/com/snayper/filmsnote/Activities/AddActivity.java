@@ -41,6 +41,15 @@ public class AddActivity extends AppCompatActivity
 			 return false;
 			 }
 		 }
+
+	 private void toOnline()
+		{
+		 finish();
+		 Intent jumper= new Intent(this,WebActivity_Add.class);
+		 jumper.putExtra("Content type",contentType);
+		 jumper.putExtra("Action",O.interaction.WEB_ACTION_ADD);
+		 startActivity(jumper);
+		 }
 	 private boolean easterCheck(String secretKey)
 		{
 		 return secretKey.toLowerCase().trim().equals("955653 ограбить корован!");

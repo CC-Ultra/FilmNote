@@ -1,28 +1,22 @@
 package com.snayper.filmsnote.Activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.*;
 import com.snayper.filmsnote.Parsers.AsyncParser;
 import com.snayper.filmsnote.Parsers.*;
-import com.snayper.filmsnote.Utils.DbHelper;
-import com.snayper.filmsnote.Utils.FileManager;
-import com.snayper.filmsnote.Utils.Record_Serial;
+import com.snayper.filmsnote.Utils.*;
 import com.snayper.filmsnote.R;
-import com.snayper.filmsnote.Utils.O;
-import java.util.HashMap;
 
 /**
  * Created by User on 16.02.2016.
  */
-public class WebActivity extends AppCompatActivity implements WebTaskComleteListener
+public class WebActivity_Add extends AppCompatActivity implements WebTaskComleteListener
 	{
-	 private boolean loading;
+	 private Boolean loading= new Boolean(true);
 	 private ImageButton reloadButton;
 	 private WebView webView;
 	 private Spinner siteList;
@@ -45,16 +39,16 @@ public class WebActivity extends AppCompatActivity implements WebTaskComleteList
 			 switch(spinnerPosition)
 				{
 				 case O.web.filmix.ID:
-					 parser= new Parser_Filmix(WebActivity.this, WebActivity.this, resultWebSrc);
+					 parser= new Parser_Filmix(WebActivity_Add.this, WebActivity_Add.this, resultWebSrc);
 					 break;
 				 case O.web.seasonvar.ID:
-					 parser= new Parser_Seasonvar(WebActivity.this, WebActivity.this, resultWebSrc);
+					 parser= new Parser_Seasonvar(WebActivity_Add.this, WebActivity_Add.this, resultWebSrc);
 					 break;
 				 case O.web.kinogo.ID:
-					 parser= new Parser_Kinogo(WebActivity.this, WebActivity.this, resultWebSrc);
+					 parser= new Parser_Kinogo(WebActivity_Add.this, WebActivity_Add.this, resultWebSrc);
 					 break;
 				 case O.web.onlineLife.ID:
-					 parser= new Parser_OnlineLife(WebActivity.this, WebActivity.this, resultWebSrc);
+					 parser= new Parser_OnlineLife(WebActivity_Add.this, WebActivity_Add.this, resultWebSrc);
 				 }
 			 parser.execute();
 			 }
@@ -105,33 +99,14 @@ public class WebActivity extends AppCompatActivity implements WebTaskComleteList
 		 @Override
 		 public void onNothingSelected(AdapterView<?> arg0) {}
 		 }
-	 private class WebClient extends WebViewClient
+
+	 private void toOffline()
 		{
-		 @Override
-		 public boolean shouldOverrideUrlLoading(WebView view, String url)
-			{
-			 view.loadUrl(url);
-			 return true;
-			 }
-		 @Override
-		 public void onPageFinished(WebView view, String url)
-			{
-			 loading=false;
-			 reloadButton.setImageResource(R.drawable.web_reload);
-			 progressBar.setProgress(100);
-			 super.onPageFinished(view, url);
-			 }
-
-		 @Override
-		 public void onPageStarted(WebView view, String url, Bitmap favicon)
-			{
-			 loading=true;
-			 reloadButton.setImageResource(R.drawable.web_cancel);
-			 progressBar.setProgress(50);
-			 super.onPageStarted(view,url,favicon);
-			 }
+		 finish();
+		 Intent jumper= new Intent(this,AddActivity.class);
+		 jumper.putExtra("Content type",contentType);
+		 startActivity(jumper);
 		 }
-
 	 private int nowSelected(String url)
 		{
 		 for(int i=0; i<siteListSrc.length; i++)
@@ -147,47 +122,18 @@ public class WebActivity extends AppCompatActivity implements WebTaskComleteList
 		 siteList.setAdapter(adapter);
 		 siteList.setSelection(selected);
 		 }
-
 	 @Override
 	 public void useParserResult(Record_Serial extractedData)
 		{
-		 if( (extractedData!=null) && (extractedData.getTitle().length()!=0) )
-			{
-			 extractedData.setImgSrc(FileManager.getFilenameFromURL(extractedData.getImgSrc()));
-			 if( FileManager.getStoredPicURI(this, extractedData.getImgSrc() ).length() == 0)
-				 extractedData.setImgSrc("");
-			 if(action == O.interaction.WEB_ACTION_ADD)
-				 DbHelper.putRecord_Serial(extractedData,contentType);
-			 if(action == O.interaction.WEB_ACTION_UPDATE)
-				{
-				 Record_Serial dbRecord= DbHelper.extractRecord_Serial(contentType,dbPosition);
-				 HashMap<String,Object> data= new HashMap<>();
-				 dbRecord.setTitle( extractedData.getTitle() );
-				 data.put(O.db.FIELD_NAME_TITLE,dbRecord.getTitle());
-				 if(extractedData.getAll()!=0)
-					 dbRecord.setAll( extractedData.getAll() );
-				 data.put(O.db.FIELD_NAME_ALL,dbRecord.getAll());
-				 if(extractedData.getAll() < dbRecord.getWatched() )
-					{
-					 dbRecord.setWatched( extractedData.getAll() );
-					 data.put(O.db.FIELD_NAME_WATCHED,dbRecord.getWatched() );
-					 }
-				 if(extractedData.getImgSrc().length()!=0)
-					{
-					 dbRecord.setImgSrc( extractedData.getImgSrc() );
-					 data.put(O.db.FIELD_NAME_IMG, dbRecord.getImgSrc() );
-					 }
-				 DbHelper.updateRecord(contentType,dbPosition,data);
-				 }
-			 finish();
-			 }
+		 ParserResultConsumer.useParserResult(this,extractedData,action,contentType,dbPosition);
+		 finish();
 		 }
 
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState)
 		{
 		 super.onCreate(savedInstanceState);
-		 setContentView(R.layout.web_layout);
+		 setContentView(R.layout.web_add_layout);
 		 Intent intent= getIntent();
 		 contentType= intent.getIntExtra("Content type",-1);
 		 action= intent.getIntExtra("Action",-1);
@@ -204,9 +150,9 @@ public class WebActivity extends AppCompatActivity implements WebTaskComleteList
 		 progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		 webView= (WebView) findViewById(R.id.webView);
 
-		 webView.setWebViewClient(new WebClient());
+		 reloadButton.setOnClickListener(new NavigationButtonListener());
+		 webView.setWebViewClient(new WebClient(reloadButton,progressBar,loading) );
 		 acceptButton.setOnClickListener(new AcceptButtonListener());
-		 reloadButton.setOnClickListener(new NavigationButtonListener() );
 		 backButton.setOnClickListener(new NavigationButtonListener());
 		 forwardButton.setOnClickListener(new NavigationButtonListener() );
 		 initAdapter(0);

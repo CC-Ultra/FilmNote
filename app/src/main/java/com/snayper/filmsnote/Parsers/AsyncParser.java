@@ -89,6 +89,7 @@ public abstract class AsyncParser extends AsyncTask<Void,Void,Record_Serial>
 	 protected Record_Serial doInBackground(Void... params)
 		{
 		 Record_Serial extractedData= new Record_Serial();
+		 extractedData.setWebSrc(pageSrc);
 		 initDOM();
 		 if(isCancelled() )
 			 return null;
@@ -118,15 +119,10 @@ public abstract class AsyncParser extends AsyncTask<Void,Void,Record_Serial>
 			 return null;
 		 try
 			{
-			 extractedData.setTitle(extractTitle());
+			 extractedData.setTitle(extractTitle() );
 			 }
 		 catch(Exception e) {}
 		 hasSomethingFound= isImg || isEpisodesNum;
-		 try
-			{
-			 TimeUnit.SECONDS.sleep(5);
-			 }
-		 catch(InterruptedException e) {}
 
 		 return extractedData;
 		 }
@@ -137,7 +133,7 @@ public abstract class AsyncParser extends AsyncTask<Void,Void,Record_Serial>
 		 dialog= new ProgressDialog(context);
 		 dialog.setOnDismissListener(new TaskInterruptor() );
 		 dialog.setIndeterminate(true);
-		 dialog.setMessage("Извлекаю...");
+		 dialog.setMessage("Извлекаю данные...");
 		 dialog.setCancelable(true);
 		 dialog.show();
 		 super.onPreExecute();

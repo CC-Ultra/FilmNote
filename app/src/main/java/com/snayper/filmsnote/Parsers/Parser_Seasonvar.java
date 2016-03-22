@@ -2,7 +2,10 @@ package com.snayper.filmsnote.Parsers;
 
 import android.content.Context;
 import com.snayper.filmsnote.Activities.WebTaskComleteListener;
+import com.snayper.filmsnote.Utils.O;
 import org.jsoup.nodes.Element;
+
+import java.net.HttpURLConnection;
 
 /**
  * Created by snayper on 29.02.2016.
@@ -15,6 +18,13 @@ public class Parser_Seasonvar extends AsyncParser
 		 context=_context;
 		 pageSrc=_src;
 		 charset="UTF-8";
+		 }
+
+	 @Override
+	 protected void fillBasicURLparams(HttpURLConnection urlConnn)
+		{
+		 super.fillBasicURLparams(urlConnn);
+		 urlConnn.setRequestProperty("Host",O.web.seasonvar.HOST);
 		 }
 	 private int extractEpisodeNumData(String str)
 		{

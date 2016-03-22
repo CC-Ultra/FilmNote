@@ -32,12 +32,9 @@ public class Fragment_Serial extends MainListFragment implements AdapterInterfac
 		 public boolean onItemLongClick(AdapterView<?> parent,View view,int position,long id)
 			{
 			 String txtLeft="Удалить";
-			 String txtRight="Обновить информацию";
-			 String message="";
 			 int listenerLeft= O.dialog.LISTENER_MAIN_LIST_DEL;
-			 int listenerRight= O.dialog.LISTENER_MAIN_LIST_UPDATE;
 			 ActionDialog dialog= new ActionDialog();
-			 dialog.viceConstructor(Fragment_Serial.this,contentType,position,message,txtLeft,txtRight,listenerLeft,listenerRight);
+			 dialog.viceConstructor(Fragment_Serial.this,contentType,position,txtLeft,listenerLeft);
 			 dialog.show(getActivity().getSupportFragmentManager(), "");
 			 return true;
 			 }
@@ -63,7 +60,7 @@ public class Fragment_Serial extends MainListFragment implements AdapterInterfac
 		{
 		 adapter= new SimpleCursorAdapter(getActivity(), listElementLayout, DbHelper.cursors[contentType], dbListFrom, dbListTo);
 		 list.setAdapter(adapter);
-		 ColorDrawable divcolor = new ColorDrawable(Color.parseColor("#FF12212f"));
+		 ColorDrawable divcolor = new ColorDrawable(Color.parseColor("#FF12212f") );
 		 list.setDivider(divcolor);
 		 list.setDividerHeight(2);
 		 }

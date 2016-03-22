@@ -32,7 +32,7 @@ public class CustomSimpleAdapter extends SimpleAdapter
 			 inflater= (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			 convertView= inflater.inflate(R.layout.edit_list_element, parent, false);
 			 }
-		 HashMap<String,Object> item= (HashMap<String,Object>)getItem(position);
+		 HashMap<String,Object> item= (HashMap<String,Object>)getItem(getCount()-1-position);
 		 TextView txt= (TextView)convertView.findViewById(R.id.episode);
 		 ImageView img= (ImageView)convertView.findViewById(R.id.img);
 		 txt.setText(item.get("Episode").toString());

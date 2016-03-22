@@ -4,6 +4,8 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:id="@+id/listElementLayout"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
 		android:background="#f2f2f2"
 		android:orientation="horizontal">
 	<RelativeLayout

@@ -58,6 +58,10 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 	 protected abstract void setListener_listOnClick();
 	 protected abstract void setListener_listOnLongClick();
 
+	 public int getListCount()
+		{
+		 return list.getCount();
+		 }
 	 public void initFragment(String _title,int _contentType,int _listElementLayout)
 		{
 		 title=_title;

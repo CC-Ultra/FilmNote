@@ -29,6 +29,7 @@ public class DbHelper extends SQLiteOpenHelper implements BaseColumns
 					+ O.db.FIELD_NAME_ALL +" edit_text_selector not null, "
 					+ O.db.FIELD_NAME_WATCHED +" edit_text_selector not null, "
 					+ O.db.FIELD_NAME_DATE +" edit_text_selector not null, "
+					+ O.db.FIELD_NAME_WEB +" edit_text_selector not null, "
 					+ O.db.FIELD_NAME_IMG +" edit_text_selector not null, "
 					+ O.db.FIELD_NAME_FLAG +" edit_text_selector not null);";
 		 }
@@ -41,20 +42,21 @@ public class DbHelper extends SQLiteOpenHelper implements BaseColumns
 		 String fields[][]=
 				{
 					 {DbHelper._ID, O.db.FIELD_NAME_TITLE, O.db.FIELD_NAME_DATE, O.db.FIELD_NAME_FLAG},
-					 {DbHelper._ID, O.db.FIELD_NAME_TITLE, O.db.FIELD_NAME_ALL, O.db.FIELD_NAME_WATCHED, O.db.FIELD_NAME_DATE, O.db.FIELD_NAME_IMG}
+					 {DbHelper._ID, O.db.FIELD_NAME_TITLE, O.db.FIELD_NAME_ALL, O.db.FIELD_NAME_WATCHED, O.db.FIELD_NAME_DATE, O.db.FIELD_NAME_IMG, O.db.FIELD_NAME_WEB}
 				 };
-		 cursors[0] = db.query(O.db.TABLE_NAME[0], fields[0], null, null, null, null, null);
-		 cursors[1] = db.query(O.db.TABLE_NAME[1], fields[1], null, null, null, null, null);
-		 cursors[2] = db.query(O.db.TABLE_NAME[2], fields[1], null, null, null, null, null);
+		 cursors[0] = db.query(O.db.TABLE_NAME[0], fields[0], null, null, null, null, DbHelper._ID +" DESC");
+		 cursors[1] = db.query(O.db.TABLE_NAME[1], fields[1], null, null, null, null, DbHelper._ID +" DESC");
+		 cursors[2] = db.query(O.db.TABLE_NAME[2], fields[1], null, null, null, null, DbHelper._ID +" DESC");
 		 }
 	 public static void putRecord_Serial(Record_Serial rec,int tableNum)
 		{
 		 ContentValues newRecord = new ContentValues();
 		 newRecord.put(O.db.FIELD_NAME_TITLE, rec.getTitle() );
-		 newRecord.put(O.db.FIELD_NAME_DATE, "");
+		 newRecord.put(O.db.FIELD_NAME_DATE, ""+ rec.getDate() );
 		 newRecord.put(O.db.FIELD_NAME_ALL, ""+ rec.getAll() );
 		 newRecord.put(O.db.FIELD_NAME_WATCHED, ""+ rec.getWatched() );
 		 newRecord.put(O.db.FIELD_NAME_IMG, ""+ rec.getImgSrc() );
+		 newRecord.put(O.db.FIELD_NAME_WEB, ""+ rec.getWebSrc() );
 		 newRecord.put(O.db.FIELD_NAME_FLAG, "");
 		 db.insert(O.db.TABLE_NAME[tableNum],null,newRecord);
 		 DbHelper.initCursors();
@@ -67,6 +69,7 @@ public class DbHelper extends SQLiteOpenHelper implements BaseColumns
 		 newRecord.put(O.db.FIELD_NAME_ALL, "");
 		 newRecord.put(O.db.FIELD_NAME_WATCHED, "");
 		 newRecord.put(O.db.FIELD_NAME_IMG, "");
+		 newRecord.put(O.db.FIELD_NAME_WEB, "");
 		 newRecord.put(O.db.FIELD_NAME_FLAG, ""+ rec.getWatched() );
 		 db.insert(O.db.TABLE_NAME[tableNum],null,newRecord);
 		 DbHelper.initCursors();
@@ -96,6 +99,8 @@ public class DbHelper extends SQLiteOpenHelper implements BaseColumns
 		 result.setDate(date);
 		 String imgSrc= cursor.getString( cursor.getColumnIndex(O.db.FIELD_NAME_IMG) );
 		 result.setImgSrc(imgSrc);
+		 String webSrc= cursor.getString( cursor.getColumnIndex(O.db.FIELD_NAME_WEB) );
+		 result.setWebSrc(webSrc);
 		 result.setAll(Integer.parseInt(cursor.getString(cursor.getColumnIndex(O.db.FIELD_NAME_ALL) ) ) );
 		 result.setWatched(Integer.parseInt(cursor.getString(cursor.getColumnIndex(O.db.FIELD_NAME_WATCHED) ) ) );
 		 return result;
