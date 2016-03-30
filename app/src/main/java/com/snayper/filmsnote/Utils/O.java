@@ -21,6 +21,21 @@ public class O
 		 public static final String FIELD_NAME_WEB= "WebSRC";
 		 }
 
+	 public static class mapKeys
+		{
+		 public static class extra
+			{
+			 public static final String CONTENT_TYPE="Content type";
+			 public static final String ACTION="Action";
+			 public static final String POSITION="Position";
+			 }
+		 public static class prefs
+			{
+			 public static final String PREFS_FILENAME="Ultra Prefs";
+			 public static final String THEME="Theme";
+			 }
+		 }
+
 	 public static class interaction
 		{
 		 public final static int CONTENT_FILMS=0;
@@ -40,6 +55,8 @@ public class O
 		 public final static int LISTENER_MAIN_LIST_UPDATE=5;
 		 public final static int LISTENER_ADD_ONLINE=6;
 		 public final static int LISTENER_ADD_OFFLINE=7;
+		 public final static int LISTENER_CONFIRM_YES=8;
+		 public final static int LISTENER_CONFIRM_NO=9;
 		 }
 
 	 public static class web

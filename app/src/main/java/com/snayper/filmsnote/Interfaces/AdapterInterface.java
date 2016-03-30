@@ -1,4 +1,4 @@
-package com.snayper.filmsnote.Fragments;
+package com.snayper.filmsnote.Interfaces;
 
 import android.content.Context;
 

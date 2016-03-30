@@ -1,7 +1,6 @@
 package com.snayper.filmsnote.Utils;
 
 import android.content.Context;
-import com.snayper.filmsnote.Activities.WebTaskComleteListener;
 
 import java.util.HashMap;
 

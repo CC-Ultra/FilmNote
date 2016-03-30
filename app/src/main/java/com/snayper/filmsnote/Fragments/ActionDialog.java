@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.view.View;
 import com.snayper.filmsnote.Activities.AddActivity;
-import com.snayper.filmsnote.Activities.WebActivity_Add;
+import com.snayper.filmsnote.Activities.WebActivity;
+import com.snayper.filmsnote.Interfaces.AdapterInterface;
 import com.snayper.filmsnote.Utils.DbHelper;
 import com.snayper.filmsnote.Utils.O;
 import com.snayper.filmsnote.Utils.Record_Serial;
@@ -28,6 +30,7 @@ public class ActionDialog extends DialogFragment
 	 private int buttonsNum;
 	 private String leftText,rightText="", centralText="";
 	 private int leftListener,rightListener=0, centralListener=0;
+	 DialogInterface.OnClickListener leftConfirmListener, rightConfirmListener;
 
 	 private class FilmCancelListener implements DialogInterface.OnClickListener
 		{
@@ -101,10 +104,10 @@ public class ActionDialog extends DialogFragment
 		 @Override
 		 public void onClick(DialogInterface dialog,int which)
 			{
-			 Intent jumper= new Intent(getActivity(), WebActivity_Add.class);
-			 jumper.putExtra("Content type",contentType);
-			 jumper.putExtra("Position",position);
-			 jumper.putExtra("Action",O.interaction.WEB_ACTION_UPDATE);
+			 Intent jumper= new Intent(getActivity(), WebActivity.class);
+			 jumper.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
+			 jumper.putExtra(O.mapKeys.extra.POSITION, position);
+			 jumper.putExtra(O.mapKeys.extra.ACTION, O.interaction.WEB_ACTION_UPDATE);
 			 startActivity(jumper);
 			 }
 		 }
@@ -113,9 +116,9 @@ public class ActionDialog extends DialogFragment
 		 @Override
 		 public void onClick(DialogInterface dialog,int which)
 			{
-			 Intent jumper= new Intent(getActivity(), WebActivity_Add.class);
-			 jumper.putExtra("Content type",contentType);
-			 jumper.putExtra("Action",O.interaction.WEB_ACTION_ADD);
+			 Intent jumper= new Intent(getActivity(), WebActivity.class);
+			 jumper.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
+			 jumper.putExtra(O.mapKeys.extra.ACTION, O.interaction.WEB_ACTION_ADD);
 			 startActivity(jumper);
 			 }
 		 }
@@ -125,7 +128,7 @@ public class ActionDialog extends DialogFragment
 		 public void onClick(DialogInterface dialog,int which)
 			{
 			 Intent jumper= new Intent(getActivity(), AddActivity.class);
-			 jumper.putExtra("Content type",contentType);
+			 jumper.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
 			 startActivity(jumper);
 			 }
 		 }
@@ -163,6 +166,12 @@ public class ActionDialog extends DialogFragment
 			 case O.dialog.LISTENER_ADD_OFFLINE:
 				 result= new AddOfflineListener();
 				 break;
+			 case O.dialog.LISTENER_CONFIRM_YES:
+				 result=leftConfirmListener;
+				 break;
+			 case O.dialog.LISTENER_CONFIRM_NO:
+				 result=rightConfirmListener;
+				 break;
 			 default:
 				 result=null;
 			 }
@@ -199,6 +208,17 @@ public class ActionDialog extends DialogFragment
 		 rightListener=_rightListener;
 		 leftText=_leftText;
 		 rightText=_rightText;
+		 }
+	 public void viceConstructor(String _message,String _leftText,String _rightText,DialogInterface.OnClickListener _leftConfirmListener,DialogInterface.OnClickListener _rightConfirmListener)
+		{
+		 buttonsNum=2;
+		 message=_message;
+		 leftListener= O.dialog.LISTENER_CONFIRM_YES;
+		 rightListener= O.dialog.LISTENER_CONFIRM_NO;
+		 leftText=_leftText;
+		 rightText=_rightText;
+		 leftConfirmListener=_leftConfirmListener;
+		 rightConfirmListener=_rightConfirmListener;
 		 }
 
 	 @NonNull

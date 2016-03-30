@@ -1,5 +1,7 @@
 package com.snayper.filmsnote.Utils;
 
+import java.util.Date;
+
 /**
  * Created by snayper on 17.02.2016.
  */
@@ -8,6 +10,7 @@ public class Record_Serial
 	 private String title="",date="",imgSrc="",webSrc="";
 	 private int all=0;
 	 private int watched=0;
+	 private Date trueDate;
 
 	 public void setTitle(String _title)
 		{
@@ -33,6 +36,10 @@ public class Record_Serial
 		{
 		 watched=_watched;
 		 }
+	 public void setTrueDate(Date _trueDate)
+		{
+		 trueDate=_trueDate;
+		 }
 	 public String getTitle()
 		{
 		 return title;
@@ -56,5 +63,9 @@ public class Record_Serial
 	 public int getWatched()
 		{
 		 return watched;
+		 }
+	 public Date getTrueDate()
+		{
+		 return trueDate;
 		 }
 	 }

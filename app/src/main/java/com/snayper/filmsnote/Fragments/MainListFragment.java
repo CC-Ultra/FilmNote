@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import com.snayper.filmsnote.Activities.AddActivity;
+import com.snayper.filmsnote.Interfaces.AdapterInterface;
 import com.snayper.filmsnote.R;
 import com.snayper.filmsnote.Utils.O;
 
@@ -37,7 +38,7 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 			 if(contentType == O.interaction.CONTENT_FILMS)
 				{
 				 Intent jumper= new Intent(getActivity(),AddActivity.class);
-				 jumper.putExtra("Content type",contentType);
+				 jumper.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
 				 startActivity(jumper);
 				 }
 			 else

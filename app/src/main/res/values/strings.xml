@@ -1,3 +1,12 @@
 <resources>
 	<string name="app_name">Looker</string>
+
+	<string name="menu_toOffline">Все-таки, offline</string >
+	<string name="menu_toOnline">Все-таки, online</string >
+	<string name="menu_convert">Конвертировать в online</string >
+	<string name="menu_unwatchAll">Отменить все</string >
+	<string name="menu_watchAll">"Просмотреть" все</string >
+	<string name="menu_dellAll">Удалить все</string >
+	<string name="menu_settings">Настройки</string >
+	<string name="menu_exit">Выход</string >
 </resources>

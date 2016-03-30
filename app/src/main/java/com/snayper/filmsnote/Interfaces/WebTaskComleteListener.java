@@ -1,4 +1,4 @@
-package com.snayper.filmsnote.Activities;
+package com.snayper.filmsnote.Interfaces;
 
 import com.snayper.filmsnote.Utils.Record_Serial;
 

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.SimpleCursorAdapter;
 import com.snayper.filmsnote.Activities.EditActivity;
+import com.snayper.filmsnote.Interfaces.AdapterInterface;
 import com.snayper.filmsnote.Utils.DbHelper;
 import com.snayper.filmsnote.Utils.O;
 
@@ -21,8 +22,8 @@ public class Fragment_Serial extends MainListFragment implements AdapterInterfac
 		 public void onItemClick(AdapterView<?> parent,View view,int position,long id)
 			{
 			 Intent jumper= new Intent(getActivity(), EditActivity.class);
-			 jumper.putExtra("Content type",contentType);
-			 jumper.putExtra("Db position",position);
+			 jumper.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
+			 jumper.putExtra(O.mapKeys.extra.POSITION, position);
 			 startActivity(jumper);
 			 }
 		 }

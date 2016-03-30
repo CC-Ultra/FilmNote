@@ -1,11 +1,15 @@
 package com.snayper.filmsnote.Activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.*;
+import com.snayper.filmsnote.Interfaces.WebTaskComleteListener;
 import com.snayper.filmsnote.Parsers.AsyncParser;
 import com.snayper.filmsnote.Parsers.*;
 import com.snayper.filmsnote.Utils.*;
@@ -14,9 +18,9 @@ import com.snayper.filmsnote.R;
 /**
  * Created by User on 16.02.2016.
  */
-public class WebActivity_Add extends AppCompatActivity implements WebTaskComleteListener
+public class WebActivity extends GlobalMenuOptions implements WebTaskComleteListener
 	{
-	 private Boolean loading= new Boolean(true);
+	 private boolean loading;
 	 private ImageButton reloadButton;
 	 private WebView webView;
 	 private Spinner siteList;
@@ -39,16 +43,16 @@ public class WebActivity_Add extends AppCompatActivity implements WebTaskComlete
 			 switch(spinnerPosition)
 				{
 				 case O.web.filmix.ID:
-					 parser= new Parser_Filmix(WebActivity_Add.this, WebActivity_Add.this, resultWebSrc);
+					 parser= new Parser_Filmix(WebActivity.this, WebActivity.this, resultWebSrc);
 					 break;
 				 case O.web.seasonvar.ID:
-					 parser= new Parser_Seasonvar(WebActivity_Add.this, WebActivity_Add.this, resultWebSrc);
+					 parser= new Parser_Seasonvar(WebActivity.this, WebActivity.this, resultWebSrc);
 					 break;
 				 case O.web.kinogo.ID:
-					 parser= new Parser_Kinogo(WebActivity_Add.this, WebActivity_Add.this, resultWebSrc);
+					 parser= new Parser_Kinogo(WebActivity.this, WebActivity.this, resultWebSrc);
 					 break;
 				 case O.web.onlineLife.ID:
-					 parser= new Parser_OnlineLife(WebActivity_Add.this, WebActivity_Add.this, resultWebSrc);
+					 parser= new Parser_OnlineLife(WebActivity.this, WebActivity.this, resultWebSrc);
 				 }
 			 parser.execute();
 			 }
@@ -99,12 +103,38 @@ public class WebActivity_Add extends AppCompatActivity implements WebTaskComlete
 		 @Override
 		 public void onNothingSelected(AdapterView<?> arg0) {}
 		 }
+	 private class WebClient extends WebViewClient
+		{
+		 @Override
+		 public boolean shouldOverrideUrlLoading(WebView view, String url)
+			{
+			 view.loadUrl(url);
+			 return true;
+			 }
+		 @Override
+		 public void onPageFinished(WebView view, String url)
+			{
+			 loading=false;
+			 reloadButton.setImageResource(R.drawable.web_reload);
+			 progressBar.setProgress(100);
+			 super.onPageFinished(view, url);
+			 }
+
+		 @Override
+		 public void onPageStarted(WebView view, String url, Bitmap favicon)
+			{
+			 loading=true;
+			 reloadButton.setImageResource(R.drawable.web_cancel);
+			 progressBar.setProgress(50);
+			 super.onPageStarted(view,url,favicon);
+			 }
+		 }
 
 	 private void toOffline()
 		{
 		 finish();
 		 Intent jumper= new Intent(this,AddActivity.class);
-		 jumper.putExtra("Content type",contentType);
+		 jumper.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
 		 startActivity(jumper);
 		 }
 	 private int nowSelected(String url)
@@ -128,6 +158,18 @@ public class WebActivity_Add extends AppCompatActivity implements WebTaskComlete
 		 ParserResultConsumer.useParserResult(this,extractedData,action,contentType,dbPosition);
 		 finish();
 		 }
+	 @Override
+	 protected void setMenuLayout(Menu menu)
+		{
+		 getMenuInflater().inflate(R.menu.web_menu, menu);
+		 }
+	 @Override
+	 protected void putIntentExtra(Intent reset)
+		{
+		 reset.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
+		 reset.putExtra(O.mapKeys.extra.POSITION, dbPosition);
+		 reset.putExtra(O.mapKeys.extra.ACTION, action);
+		 }
 
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState)
@@ -135,9 +177,9 @@ public class WebActivity_Add extends AppCompatActivity implements WebTaskComlete
 		 super.onCreate(savedInstanceState);
 		 setContentView(R.layout.web_add_layout);
 		 Intent intent= getIntent();
-		 contentType= intent.getIntExtra("Content type",-1);
-		 action= intent.getIntExtra("Action",-1);
-		 dbPosition= intent.getIntExtra("Position",-1);
+		 contentType= intent.getIntExtra(O.mapKeys.extra.CONTENT_TYPE, -1);
+		 action= intent.getIntExtra(O.mapKeys.extra.ACTION, -1);
+		 dbPosition= intent.getIntExtra(O.mapKeys.extra.POSITION, -1);
 
 		 Button acceptButton;
 		 ImageButton backButton;
@@ -151,11 +193,23 @@ public class WebActivity_Add extends AppCompatActivity implements WebTaskComlete
 		 webView= (WebView) findViewById(R.id.webView);
 
 		 reloadButton.setOnClickListener(new NavigationButtonListener());
-		 webView.setWebViewClient(new WebClient(reloadButton,progressBar,loading) );
+		 webView.setWebViewClient(new WebClient() );
 		 acceptButton.setOnClickListener(new AcceptButtonListener());
 		 backButton.setOnClickListener(new NavigationButtonListener());
 		 forwardButton.setOnClickListener(new NavigationButtonListener() );
 		 initAdapter(0);
 		 siteList.setOnItemSelectedListener(new SiteListOnItemSelectedListener());
+		 }
+	 public boolean onOptionsItemSelected(MenuItem item)
+		{
+		 int id = item.getItemId();
+		 switch(id)
+			{
+			 case R.id.menu_convert:
+				 toOffline();
+				 return true;
+			 default:
+				 return super.onOptionsItemSelected(item);
+			 }
 		 }
 	 }

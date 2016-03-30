@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.AdapterView;
 import com.snayper.filmsnote.Adapters.CustomCursorAdapter;
+import com.snayper.filmsnote.Interfaces.AdapterInterface;
 import com.snayper.filmsnote.Utils.DbHelper;
 import com.snayper.filmsnote.Utils.Record_Film;
 import com.snayper.filmsnote.R;

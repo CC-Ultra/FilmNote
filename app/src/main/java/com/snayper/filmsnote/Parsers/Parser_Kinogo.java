@@ -1,7 +1,7 @@
 package com.snayper.filmsnote.Parsers;
 
 import android.content.Context;
-import com.snayper.filmsnote.Activities.WebTaskComleteListener;
+import com.snayper.filmsnote.Interfaces.WebTaskComleteListener;
 import com.snayper.filmsnote.Utils.O;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;

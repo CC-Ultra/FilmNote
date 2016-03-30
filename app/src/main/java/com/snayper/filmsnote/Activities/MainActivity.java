@@ -1,52 +1,34 @@
 package com.snayper.filmsnote.Activities;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 import com.snayper.filmsnote.Adapters.TabsFragmentAdapter;
 import com.snayper.filmsnote.Fragments.MainListFragment;
+import com.snayper.filmsnote.Interfaces.DialogDecision;
+import com.snayper.filmsnote.Utils.ConfirmDialog;
 import com.snayper.filmsnote.Utils.DbHelper;
 import com.snayper.filmsnote.R;
 import com.snayper.filmsnote.Utils.O;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends GlobalMenuOptions implements DialogDecision
 	{
+	 public static SharedPreferences prefs;
 	 private TabLayout tabLayout;
 	 private TabsFragmentAdapter tabsFragmentAdapter;
+	 private int themeSwitcher;
 
 	 private class testButtonListener implements View.OnClickListener
 		{
 		 @Override
 		 public void onClick(View v)
 			{
-			 class YN implements DialogInterface.OnClickListener
-				{
-				 @Override
-				 public void onClick(DialogInterface dialog,int which)
-					{
-					 switch(which)
-						{
-						 case DialogInterface.BUTTON_NEGATIVE:
-							 return;
-						 case DialogInterface.BUTTON_POSITIVE:
-							 clearMainList();
-						 }
-					 }
-				 }
-			 AlertDialog.Builder adb= new AlertDialog.Builder(MainActivity.this);
-			 adb.setMessage("Ты точно уверен?");
-			 adb.setNegativeButton("Ой, нет...",new YN() );
-			 adb.setPositiveButton("Конечно!",new YN() );
-			 adb.create().show();
+			 ;
 			 }
 		 }
 
@@ -60,9 +42,20 @@ public class MainActivity extends AppCompatActivity
 			 fragment.initAdapter();
 			 }
 		 }
+	 private void initThemeSwither()
+		{
+		 prefs= getSharedPreferences(O.mapKeys.prefs.PREFS_FILENAME, MODE_PRIVATE);
+		 themeSwitcher= prefs.getInt(O.mapKeys.prefs.THEME, 0);
+		 }
+	 private void updateThemeSwitcher()
+		{
+		 SharedPreferences.Editor editor= prefs.edit();
+		 editor.putInt(O.mapKeys.prefs.THEME, themeSwitcher).apply();
+		 }
 	 private void initToolbar()
 		{
 		 Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
+		 setSupportActionBar(toolbar);
 		 toolbar.setTitle("Looker");
 		 }
 	 private void initTabs()
@@ -74,6 +67,23 @@ public class MainActivity extends AppCompatActivity
 		 tabLayout= (TabLayout)findViewById(R.id.tabLayout);
 		 tabLayout.getSelectedTabPosition();
 		 tabLayout.setupWithViewPager(viewPager);
+		 }
+	 @Override
+	 public void sayNo(int noId) {}
+	 @Override
+	 public void sayYes(int yesId)
+		{
+		 switch(yesId)
+			{
+			 case 0:
+				 clearMainList();
+				 break;
+			 }
+		 }
+	 @Override
+	 protected void setMenuLayout(Menu menu)
+		{
+		 getMenuInflater().inflate(R.menu.main_menu,menu);
 		 }
 
 	 @Override
@@ -90,5 +100,25 @@ public class MainActivity extends AppCompatActivity
 
 //		 Button testButton= (Button)findViewById(R.id.testButton);
 //		 testButton.setOnClickListener(new testButtonListener() );
+		 }
+	 @Override
+	 public boolean onPrepareOptionsMenu(Menu menu)
+		{
+		 boolean x= DbHelper.cursors[tabLayout.getSelectedTabPosition() ].getCount()!=0;
+		 menu.findItem(R.id.menu_deleteAll).setVisible(x);
+		 return super.onPrepareOptionsMenu(menu);
+		 }
+	 @Override
+	 public boolean onOptionsItemSelected(MenuItem item)
+		{
+		 int id = item.getItemId();
+		 switch(id)
+			{
+			 case R.id.menu_deleteAll:
+				 new ConfirmDialog(this,this,0);
+				 return true;
+			 default:
+				 return super.onOptionsItemSelected(item);
+			 }
 		 }
 	 }

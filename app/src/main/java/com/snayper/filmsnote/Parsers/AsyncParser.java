@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
-import com.snayper.filmsnote.Activities.WebTaskComleteListener;
+import com.snayper.filmsnote.Interfaces.WebTaskComleteListener;
 import com.snayper.filmsnote.Utils.FileManager;
 import com.snayper.filmsnote.Utils.O;
 import com.snayper.filmsnote.Utils.Record_Serial;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
+
 import com.snayper.filmsnote.R;
 
 /**

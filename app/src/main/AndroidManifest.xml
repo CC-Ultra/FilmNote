@@ -15,26 +15,15 @@
 			android:theme="@style/AppTheme">
 		<activity
 				android:name="com.snayper.filmsnote.Activities.MainActivity"
-				android:screenOrientation="portrait">
+				android:configChanges="orientation|screenSize">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity
-				android:name="com.snayper.filmsnote.Activities.AddActivity"
-				android:screenOrientation="portrait"/>
-		<activity
-				android:name="com.snayper.filmsnote.Activities.EditActivity"
-				android:screenOrientation="portrait"/>
-		<activity
-				android:name=".Activities.WebActivity_Add"
-				android:screenOrientation="portrait"/>
-		<activity
-				android:name=".Activities.WebActivity_Watch"
-				android:screenOrientation="portrait"/>
-		<activity
-				android:name=".Activities.EasterActivity"
-				android:screenOrientation="portrait"/>
+		<activity android:name="com.snayper.filmsnote.Activities.AddActivity"/>
+		<activity android:name="com.snayper.filmsnote.Activities.EditActivity"/>
+		<activity android:name=".Activities.WebActivity"/>
+		<activity android:name=".Activities.EasterActivity"/>
 	</application>
 </manifest>

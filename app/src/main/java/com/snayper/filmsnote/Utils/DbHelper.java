@@ -8,8 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
-
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by snayper on 09.02.2016.
@@ -23,15 +24,18 @@ public class DbHelper extends SQLiteOpenHelper implements BaseColumns
 	 public DbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version)
 		{
 		 super(context, name, factory, version);
-		 for(int i=0; i<3; i++)
+		 DB_CREATE_SCRIPT[0]= "create table "+ O.db.TABLE_NAME[0] +" ("+ BaseColumns._ID +" integer primary key autoincrement, "
+				+ O.db.FIELD_NAME_TITLE +" edit_text_selector not null, "
+				+ O.db.FIELD_NAME_DATE +" edit_text_selector not null, "
+				+ O.db.FIELD_NAME_FLAG +" edit_text_selector not null);";
+		 for(int i=1; i<3; i++)
 			 DB_CREATE_SCRIPT[i]= "create table "+ O.db.TABLE_NAME[i] +" ("+ BaseColumns._ID +" integer primary key autoincrement, "
 					+ O.db.FIELD_NAME_TITLE +" edit_text_selector not null, "
 					+ O.db.FIELD_NAME_ALL +" edit_text_selector not null, "
 					+ O.db.FIELD_NAME_WATCHED +" edit_text_selector not null, "
 					+ O.db.FIELD_NAME_DATE +" edit_text_selector not null, "
 					+ O.db.FIELD_NAME_WEB +" edit_text_selector not null, "
-					+ O.db.FIELD_NAME_IMG +" edit_text_selector not null, "
-					+ O.db.FIELD_NAME_FLAG +" edit_text_selector not null);";
+					+ O.db.FIELD_NAME_IMG +" edit_text_selector not null);";
 		 }
 	 public void initDb()
 		{
@@ -57,7 +61,6 @@ public class DbHelper extends SQLiteOpenHelper implements BaseColumns
 		 newRecord.put(O.db.FIELD_NAME_WATCHED, ""+ rec.getWatched() );
 		 newRecord.put(O.db.FIELD_NAME_IMG, ""+ rec.getImgSrc() );
 		 newRecord.put(O.db.FIELD_NAME_WEB, ""+ rec.getWebSrc() );
-		 newRecord.put(O.db.FIELD_NAME_FLAG, "");
 		 db.insert(O.db.TABLE_NAME[tableNum],null,newRecord);
 		 DbHelper.initCursors();
 		 }
@@ -66,10 +69,6 @@ public class DbHelper extends SQLiteOpenHelper implements BaseColumns
 		 ContentValues newRecord = new ContentValues();
 		 newRecord.put(O.db.FIELD_NAME_TITLE, rec.getTitle() );
 		 newRecord.put(O.db.FIELD_NAME_DATE, Util.getCurentDate() );
-		 newRecord.put(O.db.FIELD_NAME_ALL, "");
-		 newRecord.put(O.db.FIELD_NAME_WATCHED, "");
-		 newRecord.put(O.db.FIELD_NAME_IMG, "");
-		 newRecord.put(O.db.FIELD_NAME_WEB, "");
 		 newRecord.put(O.db.FIELD_NAME_FLAG, ""+ rec.getWatched() );
 		 db.insert(O.db.TABLE_NAME[tableNum],null,newRecord);
 		 DbHelper.initCursors();

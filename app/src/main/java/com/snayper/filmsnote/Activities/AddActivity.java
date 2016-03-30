@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +20,7 @@ import com.snayper.filmsnote.R;
 /**
  * Created by snayper on 18.02.2016.
  */
-public class AddActivity extends AppCompatActivity
+public class AddActivity extends GlobalMenuOptions
 	{
 	 private EditText titleInput;
 	 private Button okButton;
@@ -45,9 +47,9 @@ public class AddActivity extends AppCompatActivity
 	 private void toOnline()
 		{
 		 finish();
-		 Intent jumper= new Intent(this,WebActivity_Add.class);
-		 jumper.putExtra("Content type",contentType);
-		 jumper.putExtra("Action",O.interaction.WEB_ACTION_ADD);
+		 Intent jumper= new Intent(this,WebActivity.class);
+		 jumper.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
+		 jumper.putExtra(O.mapKeys.extra.ACTION, O.interaction.WEB_ACTION_ADD);
 		 startActivity(jumper);
 		 }
 	 private boolean easterCheck(String secretKey)
@@ -57,6 +59,7 @@ public class AddActivity extends AppCompatActivity
 	 private void initToolbar()
 		{
 		 Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
+		 setSupportActionBar(toolbar);
 		 toolbar.setTitle("Note");
 		 }
 	 private void acceptPress()
@@ -84,18 +87,41 @@ public class AddActivity extends AppCompatActivity
 			 }
 		 onBackPressed();
 		 }
-
 	 @Override
+	 protected void setMenuLayout(Menu menu)
+		{
+		 getMenuInflater().inflate(R.menu.add_menu, menu);
+		 }
+	 @Override
+	 protected void putIntentExtra(Intent reset)
+		{
+		 reset.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
+		 }
+
+	@Override
 	 protected void onCreate(Bundle savedInstanceState)
 		{
 		 super.onCreate(savedInstanceState);
 		 setContentView(R.layout.add_layout);
 
-		 contentType= getIntent().getIntExtra("Content type",-1);
+		 contentType= getIntent().getIntExtra(O.mapKeys.extra.CONTENT_TYPE, -1);
 		 okButton= (Button)findViewById(R.id.okButton);
 		 titleInput= (EditText)findViewById(R.id.titleInput);
 		 okButton.setOnClickListener(new OkButtonListener() );
 		 titleInput.setOnEditorActionListener(new SubmitListener() );
 		 initToolbar();
+		 }
+	 @Override
+	 public boolean onOptionsItemSelected(MenuItem item)
+		{
+		 int id = item.getItemId();
+		 switch(id)
+			{
+			 case R.id.menu_convert:
+				 toOnline();
+				 return true;
+			 default:
+				 return super.onOptionsItemSelected(item);
+			 }
 		 }
 	 }

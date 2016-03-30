@@ -6,13 +6,16 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.snayper.filmsnote.Adapters.CustomSimpleAdapter;
 import com.snayper.filmsnote.Fragments.ActionDialog;
-import com.snayper.filmsnote.Fragments.AdapterInterface;
+import com.snayper.filmsnote.Interfaces.AdapterInterface;
+import com.snayper.filmsnote.Interfaces.DialogDecision;
+import com.snayper.filmsnote.Interfaces.WebTaskComleteListener;
 import com.snayper.filmsnote.Parsers.*;
 import com.snayper.filmsnote.Utils.*;
 import com.snayper.filmsnote.R;
@@ -23,7 +26,7 @@ import java.util.HashMap;
 /**
  * Created by snayper on 22.02.2016.
  */
-public class EditActivity extends AppCompatActivity implements AdapterInterface,WebTaskComleteListener
+public class EditActivity extends GlobalMenuOptions implements AdapterInterface,WebTaskComleteListener,DialogDecision
 	{
 	 private ListView episodeList;
 	 private ImageView img;
@@ -72,9 +75,6 @@ public class EditActivity extends AppCompatActivity implements AdapterInterface,
 		 @Override
 		 public void onClick(View v)
 			{
-//			 Intent jumper= new Intent(EditActivity.this,WebActivity_Watch.class);
-//			 jumper.putExtra("Serial URL",webSrc);
-//			 startActivity(jumper);
 			 Uri address = Uri.parse(webSrc);
 			 Intent openlinkIntent = new Intent(Intent.ACTION_VIEW, address);
 			 startActivity(openlinkIntent);
@@ -117,10 +117,10 @@ public class EditActivity extends AppCompatActivity implements AdapterInterface,
 		 finish();
 		 if(webSrc.length()==0)
 			{
-			 Intent jumper= new Intent(this,WebActivity_Add.class);
-			 jumper.putExtra("Content type",contentType);
-			 jumper.putExtra("Action",O.interaction.WEB_ACTION_UPDATE);
-			 jumper.putExtra("Position",dbPosition);
+			 Intent jumper= new Intent(this,WebActivity.class);
+			 jumper.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
+			 jumper.putExtra(O.mapKeys.extra.ACTION, O.interaction.WEB_ACTION_UPDATE);
+			 jumper.putExtra(O.mapKeys.extra.POSITION, dbPosition);
 			 startActivity(jumper);
 			 }
 		 else
@@ -130,8 +130,8 @@ public class EditActivity extends AppCompatActivity implements AdapterInterface,
 			 data.put(O.db.FIELD_NAME_WEB,webSrc);
 			 DbHelper.updateRecord(contentType,dbPosition,data);
 			 Intent reset= new Intent(this,this.getClass() );
-			 reset.putExtra("Content type",contentType);
-			 reset.putExtra("Db position",dbPosition);
+			 reset.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
+			 reset.putExtra(O.mapKeys.extra.POSITION, dbPosition);
 			 reset.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			 reset.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			 startActivity(reset);
@@ -238,16 +238,39 @@ public class EditActivity extends AppCompatActivity implements AdapterInterface,
 		 ParserResultConsumer.useParserResult(this,extractedData,O.interaction.WEB_ACTION_UPDATE,contentType,dbPosition);
 		 initPageByRecord();
 		 }
-
 	 @Override
+	 protected void setMenuLayout(Menu menu)
+		{
+		 getMenuInflater().inflate(R.menu.edit_menu,menu);
+		 }
+	 @Override
+	 protected void putIntentExtra(Intent reset)
+		{
+		 reset.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
+		 reset.putExtra(O.mapKeys.extra.POSITION, dbPosition);
+		 }
+	 @Override
+	 public void sayNo(int noId) {}
+	 @Override
+	 public void sayYes(int yesId)
+		{
+		 switch(yesId)
+			{
+			 case 0:
+				 clear();
+				 break;
+			 }
+		 }
+
+	@Override
 	 protected void onCreate(Bundle savedInstanceState)
 		{
 		 super.onCreate(savedInstanceState);
 		 setContentView(R.layout.edit_layout);
 
 		 Intent intent=getIntent();
-		 contentType=intent.getIntExtra("Content type",-1);
-		 dbPosition=intent.getIntExtra("Db position",-1);
+		 contentType=intent.getIntExtra(O.mapKeys.extra.CONTENT_TYPE, -1);
+		 dbPosition=intent.getIntExtra(O.mapKeys.extra.POSITION, -1);
 
 		 Button watchButton=(Button) findViewById(R.id.watchButton);
 		 Button allButton=(Button) findViewById(R.id.allButton);
@@ -274,4 +297,35 @@ public class EditActivity extends AppCompatActivity implements AdapterInterface,
 			 watchButton.setOnClickListener(new WatchButtonListener());
 			 }
 		 }
-	}
+	 @Override
+	 public boolean onPrepareOptionsMenu(Menu menu)
+		{
+		 menu.findItem(R.id.menu_convert).setVisible( (webSrc.length()==0) );
+		 menu.findItem(R.id.menu_watchAll).setVisible( (watched!=all) );
+		 menu.findItem(R.id.menu_unwatchAll).setVisible( (watched!=0) );
+		 menu.findItem(R.id.menu_deleteAll).setVisible( (all!=0) );
+		 return super.onPrepareOptionsMenu(menu);
+		 }
+	 @Override
+	 public boolean onOptionsItemSelected(MenuItem item)
+		{
+		 int id = item.getItemId();
+		 switch(id)
+			{
+			 case R.id.menu_convert:
+				 convert();
+				 return true;
+			 case R.id.menu_watchAll:
+				 watchAll();
+				 return true;
+			 case R.id.menu_unwatchAll:
+				 unwatchAll();
+				 return true;
+			 case R.id.menu_deleteAll:
+				 new ConfirmDialog(this,this,0);
+				 return true;
+			 default:
+				 return super.onOptionsItemSelected(item);
+			 }
+		 }
+	 }
