@@ -18,7 +18,7 @@ public class ParserResultConsumer
 				 extractedData.setImgSrc("");
 			 if(action == O.interaction.WEB_ACTION_ADD)
 				{
-				 extractedData.setDate(Util.getCurentDate());
+				 extractedData.setDate(DateUtil.getCurrentDate());
 				 DbHelper.putRecord_Serial(extractedData,contentType);
 				 }
 			 if(action == O.interaction.WEB_ACTION_UPDATE)
@@ -36,16 +36,31 @@ public class ParserResultConsumer
 					 data.put(O.db.FIELD_NAME_WATCHED,dbRecord.getWatched() );
 					 }
 				 dbRecord.setWebSrc( extractedData.getWebSrc() );
-				 data.put(O.db.FIELD_NAME_WEB,dbRecord.getWebSrc());
+				 data.put(O.db.FIELD_NAME_WEB,dbRecord.getWebSrc() );
 				 if(extractedData.getImgSrc().length()!=0)
 					{
 					 dbRecord.setImgSrc( extractedData.getImgSrc() );
 					 data.put(O.db.FIELD_NAME_IMG, dbRecord.getImgSrc() );
 					 }
-				 if(extractedData.getDate().length()!=0)
+				 if(extractedData.getDate() != null)
 					{
 					 dbRecord.setDate( extractedData.getDate() );
-					 data.put(O.db.FIELD_NAME_DATE, dbRecord.getDate() );
+					 data.put(O.db.FIELD_NAME_DATE, dbRecord.getDate().getTime() );
+					 }
+				 if(extractedData.isConfidentDate() )
+					{
+					 dbRecord.setConfidentDate(true);
+					 data.put(O.db.FIELD_NAME_CONFIDENT_DATE, dbRecord.isConfidentDate() );
+					 }
+				 if(extractedData.isUpdated() )
+					{
+					 dbRecord.setUpdated(true);
+					 data.put(O.db.FIELD_NAME_UPDATE_MARK, dbRecord.isUpdated() );
+					 }
+				 if(extractedData.hasUpdateOrder() )
+					{
+					 dbRecord.setUpdateOrder(true);
+					 data.put(O.db.FIELD_NAME_UPDATE_ORDER, dbRecord.hasUpdateOrder() );
 					 }
 				 DbHelper.updateRecord(contentType,dbPosition,data);
 				 }

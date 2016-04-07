@@ -3,6 +3,7 @@ package com.snayper.filmsnote.Activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,16 +44,21 @@ public class WebActivity extends GlobalMenuOptions implements WebTaskComleteList
 			 switch(spinnerPosition)
 				{
 				 case O.web.filmix.ID:
-					 parser= new Parser_Filmix(WebActivity.this, WebActivity.this, resultWebSrc);
+					 parser= new Parser_Filmix(WebActivity.this, WebActivity.this, resultWebSrc, true);
 					 break;
 				 case O.web.seasonvar.ID:
-					 parser= new Parser_Seasonvar(WebActivity.this, WebActivity.this, resultWebSrc);
+					 parser= new Parser_Seasonvar(WebActivity.this, WebActivity.this, resultWebSrc, true);
 					 break;
 				 case O.web.kinogo.ID:
-					 parser= new Parser_Kinogo(WebActivity.this, WebActivity.this, resultWebSrc);
+					 parser= new Parser_Kinogo(WebActivity.this, WebActivity.this, resultWebSrc, true);
 					 break;
 				 case O.web.onlineLife.ID:
-					 parser= new Parser_OnlineLife(WebActivity.this, WebActivity.this, resultWebSrc);
+					 parser= new Parser_OnlineLife(WebActivity.this, WebActivity.this, resultWebSrc, true);
+				 }
+			 if(parser==null)
+				{
+				 Log.d(O.TAG,"onClick: Парсер не был инициализирован, а значит и запущен");
+				 return;
 				 }
 			 parser.execute();
 			 }

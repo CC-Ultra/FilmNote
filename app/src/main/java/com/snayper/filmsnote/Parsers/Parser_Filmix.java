@@ -12,8 +12,9 @@ import java.net.HttpURLConnection;
  */
 public class Parser_Filmix extends AsyncParser
 	{
-	 public Parser_Filmix(Context _context,WebTaskComleteListener _completeListener,String _pageSrc)
+	 public Parser_Filmix(Context _context,WebTaskComleteListener _completeListener,String _pageSrc,boolean _enableDialog)
 		{
+		 dialogEnabled=_enableDialog;
 		 completeListener=_completeListener;
 		 context=_context;
 		 pageSrc=_pageSrc;

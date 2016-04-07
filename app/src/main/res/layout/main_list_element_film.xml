@@ -6,7 +6,7 @@
 		android:id="@+id/listElementLayout"
 		android:paddingLeft="10dp"
 		android:paddingRight="10dp"
-		android:background="#f2f2f2"
+		android:background="@color/list_background"
 		android:orientation="horizontal">
 	<RelativeLayout
 			android:layout_width="match_parent"
@@ -18,18 +18,6 @@
 				android:text="Title"
 				android:id="@+id/title"
 				android:textSize="18sp"
-				android:layout_alignParentLeft="true"
-				android:layout_marginLeft="0dp"
-				android:layout_alignParentTop="true"
-				android:layout_marginTop="0dp" />
-		<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textAppearance="?android:attr/textAppearanceLarge"
-				android:text="Просмотрено серий: "
-				android:id="@+id/watched"
-				android:textSize="14sp"
-				android:visibility="gone"
 				android:layout_alignParentLeft="true"
 				android:layout_marginLeft="0dp"
 				android:layout_alignParentTop="true"

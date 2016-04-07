@@ -1,20 +1,26 @@
 package com.snayper.filmsnote.Activities;
 
+import android.app.ActivityManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 import com.snayper.filmsnote.Adapters.TabsFragmentAdapter;
 import com.snayper.filmsnote.Fragments.MainListFragment;
 import com.snayper.filmsnote.Interfaces.DialogDecision;
-import com.snayper.filmsnote.Utils.ConfirmDialog;
-import com.snayper.filmsnote.Utils.DbHelper;
+import com.snayper.filmsnote.Services.Updater;
+import com.snayper.filmsnote.Utils.*;
 import com.snayper.filmsnote.R;
-import com.snayper.filmsnote.Utils.O;
 
 public class MainActivity extends GlobalMenuOptions implements DialogDecision
 	{
@@ -28,7 +34,25 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 		 @Override
 		 public void onClick(View v)
 			{
-			 ;
+			 PendingIntent pendingIntent= createPendingResult(112,new Intent(),0);
+			 Intent serv= new Intent(MainActivity.this,Updater.class);
+			 serv.putExtra(O.mapKeys.extra.PENDING_INTENT_AS_EXTRA,pendingIntent);
+			 if(!isServiceRunning(Updater.class) )
+				 startService(serv);
+			 else
+				 Toast.makeText(MainActivity.this,"Сервис и так запущен",Toast.LENGTH_SHORT).show();
+			 }
+		 }
+	 private class undoTestButtonListener implements View.OnClickListener
+		{
+		 @Override
+		 public void onClick(View v)
+			{
+			 Intent serv= new Intent(MainActivity.this,Updater.class);
+			 if(isServiceRunning(Updater.class) )
+				 stopService(serv);
+			 else
+				 Toast.makeText(MainActivity.this,"Сервис не запущен, чтобы его останавливать",Toast.LENGTH_SHORT).show();
 			 }
 		 }
 
@@ -42,7 +66,7 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 			 fragment.initAdapter();
 			 }
 		 }
-	 private void initThemeSwither()
+	 private void initPrefs()
 		{
 		 prefs= getSharedPreferences(O.mapKeys.prefs.PREFS_FILENAME, MODE_PRIVATE);
 		 themeSwitcher= prefs.getInt(O.mapKeys.prefs.THEME, 0);
@@ -65,7 +89,6 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 		 viewPager.setAdapter(tabsFragmentAdapter);
 
 		 tabLayout= (TabLayout)findViewById(R.id.tabLayout);
-		 tabLayout.getSelectedTabPosition();
 		 tabLayout.setupWithViewPager(viewPager);
 		 }
 	 @Override
@@ -90,9 +113,11 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 	 protected void onCreate(Bundle savedInstanceState)
 		{
 		 super.onCreate(savedInstanceState);
+		 initPrefs();
+//		 Log.d(O.TAG,"onCreate: main");
 		 setContentView(R.layout.main_layout);
 
-		 DbHelper dbHelper= new DbHelper(this, O.db.DB_FILENAME, null, O.db.DB_VERSION);
+		 DbHelper dbHelper= new DbHelper(this);
 		 dbHelper.initDb();
 		 DbHelper.initCursors();
 		 initToolbar();
@@ -100,6 +125,10 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 
 //		 Button testButton= (Button)findViewById(R.id.testButton);
 //		 testButton.setOnClickListener(new testButtonListener() );
+		 Button doButton= (Button)findViewById(R.id.doButton);
+		 doButton.setOnClickListener(new testButtonListener() );
+		 Button undoButton= (Button)findViewById(R.id.undoButton);
+		 undoButton.setOnClickListener(new undoTestButtonListener() );
 		 }
 	 @Override
 	 public boolean onPrepareOptionsMenu(Menu menu)
@@ -119,6 +148,16 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 				 return true;
 			 default:
 				 return super.onOptionsItemSelected(item);
+			 }
+		 }
+	 @Override
+	 protected void onActivityResult(int requestCode, int resultCode, Intent data)
+		{
+		 super.onActivityResult(requestCode, resultCode, data);
+		 switch(resultCode)
+			{
+//			 case O.interaction.SERVICE_RESULT_:
+//				 break;
 			 }
 		 }
 	 }

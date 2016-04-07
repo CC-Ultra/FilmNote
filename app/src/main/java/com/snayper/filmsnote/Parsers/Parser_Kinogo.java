@@ -13,8 +13,9 @@ import java.net.HttpURLConnection;
  */
 public class Parser_Kinogo extends AsyncParser
 	{
-	 public Parser_Kinogo(Context _context,WebTaskComleteListener _completeListener,String _src)
+	 public Parser_Kinogo(Context _context,WebTaskComleteListener _completeListener,String _src,boolean _enableDialog)
 		{
+		 dialogEnabled=_enableDialog;
 		 completeListener=_completeListener;
 		 context=_context;
 		 pageSrc=_src;

@@ -16,4 +16,9 @@
 		<item name="android:background" >@drawable/buton_selector</item>
 		<item name="android:textSize" >14dp</item>
 	</style>
+
+	<!--<style name="SampleTheme" parent="Theme.AppCompat">-->
+		<!--<item name="colorAccent">#00ff00</item>-->
+		<!--<item name="android:textColorSecondary">#ff0000</item>-->
+	<!--</style>-->
 </resources>

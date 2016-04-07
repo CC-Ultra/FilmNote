@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import java.util.HashMap;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 import com.snayper.filmsnote.Fragments.Fragment_Films;
 import com.snayper.filmsnote.Fragments.Fragment_Serial;
 import com.snayper.filmsnote.Fragments.MainListFragment;
@@ -30,6 +31,7 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter
 	 @Override
 	 public Fragment getItem(int position)
 		{
+//		 Log.d(O.TAG,"getItem: "+ tabs.get(position).contentType);
 		 return tabs.get(position);
 		 }
 	 @Override
@@ -39,6 +41,7 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter
 		 }
 	 private void initTabsMap()
 		{
+//		 Log.d(O.TAG,"initTabsMap: TabsFragmentAdapter");
 		 tabs = new HashMap<>();
 		 MainListFragment fragmentFilms= new Fragment_Films();
 		 MainListFragment fragmentSerial= new Fragment_Serial();

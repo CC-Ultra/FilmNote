@@ -23,8 +23,8 @@ import com.snayper.filmsnote.R;
 public class AddActivity extends GlobalMenuOptions
 	{
 	 private EditText titleInput;
-	 private Button okButton;
 	 private int contentType;
+	 private boolean updated;
 
 	 private class OkButtonListener implements View.OnClickListener
 		{
@@ -73,7 +73,7 @@ public class AddActivity extends GlobalMenuOptions
 			 }
 		 if(title.length()==0)
 			 return;
-		 if(contentType == O.interaction.CONTENT_FILMS)
+		 if(contentType==O.interaction.CONTENT_FILMS)
 			{
 			 Record_Film record= new Record_Film();
 			 record.setTitle(title);
@@ -83,6 +83,7 @@ public class AddActivity extends GlobalMenuOptions
 			{
 			 Record_Serial record= new Record_Serial();
 			 record.setTitle(title);
+			 record.setUpdated(updated);
 			 DbHelper.putRecord_Serial(record,contentType);
 			 }
 		 onBackPressed();
@@ -98,14 +99,15 @@ public class AddActivity extends GlobalMenuOptions
 		 reset.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
 		 }
 
-	@Override
+	 @Override
 	 protected void onCreate(Bundle savedInstanceState)
 		{
 		 super.onCreate(savedInstanceState);
 		 setContentView(R.layout.add_layout);
 
 		 contentType= getIntent().getIntExtra(O.mapKeys.extra.CONTENT_TYPE, -1);
-		 okButton= (Button)findViewById(R.id.okButton);
+		 updated= getIntent().getBooleanExtra("Updated",false);
+		 Button okButton= (Button)findViewById(R.id.okButton);
 		 titleInput= (EditText)findViewById(R.id.titleInput);
 		 okButton.setOnClickListener(new OkButtonListener() );
 		 titleInput.setOnEditorActionListener(new SubmitListener() );

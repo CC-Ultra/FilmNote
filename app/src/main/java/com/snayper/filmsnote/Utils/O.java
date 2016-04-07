@@ -7,18 +7,51 @@ public class O
 	{
 	 public static final String TAG="c123";
 
+	 public static class prefs
+		{
+		 public static final int UPDATE_INTERVAL_DEFAULT=7;
+		 public static final int NOTIFICATION_TYPE_ID_NONE=0;
+		 public static final int NOTIFICATION_TYPE_ID_DEFAULT=1;
+		 public static final int NOTIFICATION_TYPE_ID_TOAST=2;
+		 public static final String NOTIFICATION_TYPE_STR_NONE="Без уведомлений";
+		 public static final String NOTIFICATION_TYPE_STR_DEFAULT="Обычные";
+		 public static final String NOTIFICATION_TYPE_STR_TOAST="Toast-уведомления";
+		 public static final int THEME_ID_MENTOR=0;
+		 public static final int THEME_ID_ULTRA=1;
+		 public static final int THEME_ID_COW=2;
+		 public static final String THEME_STR_MENTOR="Стандартная";
+		 public static final String THEME_STR_ULTRA="Ultra";
+		 public static final String THEME_STR_COW="Секретная коровья";
+		 public static final int SETTINGS_LIST_THEME=0;
+		 public static final int SETTINGS_LIST_GSM_ORDER=1;
+		 public static final int SETTINGS_LIST_UPDATE_TIME=2;
+		 public static final int SETTINGS_LIST_UPDATE_INTERVAL=3;
+		 public static final int SETTINGS_LIST_NOTIFICATION_TYPE=4;
+		 public static final int SETTINGS_LIST_HELP=5;
+		 public static final int SETTINGS_LIST_ABOUT=6;
+		 }
+	 public static class date
+		{
+		 public static final long MINUTE_MILLIS= 1000*60;
+		 public static final long HOUR_MILLIS= MINUTE_MILLIS*60;
+		 public static final long DAY_MILLIS= HOUR_MILLIS*24;
+		 }
+
 	 public static class db
 		{
 		 public static final String DB_FILENAME= "filmNote.db";
-		 public static final int DB_VERSION= 6;
+		 public static final int DB_VERSION= 9;
 		 public static final String TABLE_NAME[]= {"Films","Serial","Mult_Serial"};
 		 public static final String FIELD_NAME_TITLE= "Title";
 		 public static final String FIELD_NAME_DATE= "Date";
 		 public static final String FIELD_NAME_WATCHED= "Watched";
 		 public static final String FIELD_NAME_ALL= "All2";
-		 public static final String FIELD_NAME_FLAG= "Flag";
 		 public static final String FIELD_NAME_IMG= "Image";
 		 public static final String FIELD_NAME_WEB= "WebSRC";
+		 public static final String FIELD_NAME_FILM_WATCHED= "Watched_flag";
+		 public static final String FIELD_NAME_CONFIDENT_DATE= "Confident_flag";
+		 public static final String FIELD_NAME_UPDATE_ORDER= "Update_order";
+		 public static final String FIELD_NAME_UPDATE_MARK= "Update_mark";
 		 }
 
 	 public static class mapKeys
@@ -28,11 +61,20 @@ public class O
 			 public static final String CONTENT_TYPE="Content type";
 			 public static final String ACTION="Action";
 			 public static final String POSITION="Position";
+			 public static final String PENDING_INTENT_AS_EXTRA="Activity agent intent";
+//			 public static final String ="";
 			 }
 		 public static class prefs
 			{
 			 public static final String PREFS_FILENAME="Ultra Prefs";
+			 public static final String FIRST_START="First start";
 			 public static final String THEME="Theme";
+			 public static final String GSM_ORDER="GSM order";
+			 public static final String UPDATE_TIME="Update time";
+			 public static final String UPDATE_INTERVAL="Update interval";
+			 public static final String NOTIFICATION_TYPE="Notification type";
+			 public static final String YPS_MODE="Yps mode";
+//			 public static final String ="";
 			 }
 		 }
 
@@ -43,6 +85,7 @@ public class O
 		 public final static int CONTENT_MULT=2;
 		 public final static int WEB_ACTION_ADD=3;
 		 public final static int WEB_ACTION_UPDATE=4;
+//		 public static final int SERVICE_RESULT_=;
 		 }
 
 	 public static class dialog

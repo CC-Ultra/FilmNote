@@ -10,8 +10,6 @@ import com.snayper.filmsnote.Interfaces.WebTaskComleteListener;
 import com.snayper.filmsnote.Utils.FileManager;
 import com.snayper.filmsnote.Utils.O;
 import com.snayper.filmsnote.Utils.Record_Serial;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,6 +17,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import com.snayper.filmsnote.R;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 /**
  * Created by snayper on 01.03.2016.
@@ -31,6 +31,7 @@ public abstract class AsyncParser extends AsyncTask<Void,Void,Record_Serial>
 	 protected Document docDOM;
 	 protected Context context;
 	 protected WebTaskComleteListener completeListener;
+	 protected boolean dialogEnabled;
 	 protected ProgressDialog dialog;
 
 	 private class TaskInterruptor implements ProgressDialog.OnDismissListener
@@ -79,7 +80,7 @@ public abstract class AsyncParser extends AsyncTask<Void,Void,Record_Serial>
 		 }
 	 protected void initDOM()
 		{
-		 docDOM= Jsoup.parse(getHtmlString() );
+		 docDOM= Jsoup.parse(getHtmlString());
 		 }
 	 protected abstract int extractEpisodesNum();
 	 protected abstract String extractTitle();
@@ -130,19 +131,23 @@ public abstract class AsyncParser extends AsyncTask<Void,Void,Record_Serial>
 	 @Override
 	 protected void onPreExecute()
 		{
-		 dialog= new ProgressDialog(context);
-		 dialog.setOnDismissListener(new TaskInterruptor() );
-		 dialog.setIndeterminate(true);
-		 dialog.setMessage("Извлекаю данные...");
-		 dialog.setCancelable(true);
-		 dialog.show();
+		 if(dialogEnabled)
+			{
+			 dialog= new ProgressDialog(context);
+			 dialog.setOnDismissListener(new TaskInterruptor() );
+			 dialog.setIndeterminate(true);
+			 dialog.setMessage("Извлекаю данные...");
+			 dialog.setCancelable(true);
+			 dialog.show();
+			 }
 		 super.onPreExecute();
 		 }
 
 	 @Override
 	 protected void onPostExecute(Record_Serial result)
 		{
-		 dialog.dismiss();
+		 if(dialogEnabled)
+			 dialog.dismiss();
 		 if(!hasSomethingFound)
 			{
 			 Toast.makeText(context,"На этой странице нечего извлекать",Toast.LENGTH_LONG).show();

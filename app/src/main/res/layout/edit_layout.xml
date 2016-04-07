@@ -26,8 +26,16 @@
 					android:textAppearance="?android:attr/textAppearanceLarge"
 					android:text="Title"
 					android:id="@+id/title"
-					android:layout_weight="4"
+					android:layout_weight="3"
 					android:layout_gravity="left" />
+			<CheckBox
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+					android:text="Автообновление"
+					android:layout_gravity="right"
+					android:id="@+id/updateOrder"/>
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"

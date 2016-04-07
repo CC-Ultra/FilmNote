@@ -7,14 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.view.View;
 import com.snayper.filmsnote.Activities.AddActivity;
 import com.snayper.filmsnote.Activities.WebActivity;
 import com.snayper.filmsnote.Interfaces.AdapterInterface;
 import com.snayper.filmsnote.Utils.DbHelper;
 import com.snayper.filmsnote.Utils.O;
 import com.snayper.filmsnote.Utils.Record_Serial;
-import com.snayper.filmsnote.Utils.Util;
+import com.snayper.filmsnote.Utils.DateUtil;
 
 import java.util.HashMap;
 
@@ -38,7 +37,7 @@ public class ActionDialog extends DialogFragment
 		 public void onClick(DialogInterface dialog,int which)
 			{
 			 HashMap<String,Object> data= new HashMap<>();
-			 data.put(O.db.FIELD_NAME_FLAG,'f');
+			 data.put(O.db.FIELD_NAME_FILM_WATCHED,false);
 			 DbHelper.updateRecord(contentType,position,data);
 			 parent.initAdapter();
 			 }
@@ -49,8 +48,8 @@ public class ActionDialog extends DialogFragment
 		 public void onClick(DialogInterface dialog,int which)
 			{
 			 HashMap<String,Object> data= new HashMap<>();
-			 data.put(O.db.FIELD_NAME_FLAG,'t');
-			 data.put(O.db.FIELD_NAME_DATE,Util.getCurentDate() );
+			 data.put(O.db.FIELD_NAME_FILM_WATCHED,true);
+			 data.put(O.db.FIELD_NAME_DATE, DateUtil.getCurrentDate().getTime() );
 			 DbHelper.updateRecord(contentType,position,data);
 			 parent.initAdapter();
 			 }

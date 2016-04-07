@@ -1,11 +1,14 @@
 package com.snayper.filmsnote.Activities;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.snayper.filmsnote.R;
+import com.snayper.filmsnote.Services.Updater;
 
 /**
  * Created by snayper on 29.03.2016.
@@ -14,6 +17,14 @@ public class GlobalMenuOptions extends AppCompatActivity
 	{
 //	 int a;
 
+	 protected boolean isServiceRunning(Class<?> serviceClass)
+		{
+		 ActivityManager manager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+		 for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE) )
+			if(serviceClass.getName().equals(service.service.getClassName() ) )
+				 return true;
+		 return false;
+		 }
 	 protected void resetActivity()
 		{
 		 finish();
@@ -25,13 +36,14 @@ public class GlobalMenuOptions extends AppCompatActivity
 		 }
 	 protected void exit()
 		{
+		 if(isServiceRunning(Updater.class) )
+			 stopService(new Intent(this,Updater.class) );
 		 android.os.Process.killProcess(android.os.Process.myPid() );
 		 }
 	 protected void goToSettings()
 		{
-		 Toast.makeText(this,"Settings",Toast.LENGTH_SHORT).show();
-//		 Intent jumper= new Intent(this,SettigsActivity.class);
-//		 startActivity(jumper);
+		 Intent jumper= new Intent(this,SettingsActivity.class);
+		 startActivity(jumper);
 		 }
 	 protected void setMenuLayout(Menu menu)
 		{
@@ -45,12 +57,6 @@ public class GlobalMenuOptions extends AppCompatActivity
 		 setMenuLayout(menu);
 		 return super.onCreateOptionsMenu(menu);
 		 }
-//	 @Override
-//	 public boolean onPrepareOptionsMenu(Menu menu)
-//		{
-//		 menu.findItem(R.id.action_settings).setCheckable(true);
-//		 return super.onPrepareOptionsMenu(menu);
-//		 }
 	 @Override
 	 public boolean onOptionsItemSelected(MenuItem item)
 		{

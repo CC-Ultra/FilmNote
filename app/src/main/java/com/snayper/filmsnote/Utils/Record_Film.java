@@ -1,26 +1,29 @@
 package com.snayper.filmsnote.Utils;
 
+import java.util.Date;
+
 /**
  * Created by snayper on 17.02.2016.
  */
 public class Record_Film
 	{
-	 private String title,date="";
-	 private char watched='f';
+	 private String title;
+	 private Date date;
+	 private boolean watched=false;
 
 	 public void setTitle(String _title)
 		{
 		 title=_title;
 		 }
-	 public void setDate(String _date)
+	 public void setDate(Date _date)
 		{
 		 date=_date;
 		 }
-	 public void setWatched(char _watched)
+	 public void setWatched(boolean _watched)
 		{
 		 watched=_watched;
 		 }
-	 public char getWatched()
+	 public boolean isWatched()
 		{
 		 return watched;
 		 }
@@ -28,7 +31,7 @@ public class Record_Film
 		{
 		 return title;
 		 }
-	 public String getDate()
+	 public Date getDate()
 		{
 		 return date;
 		 }

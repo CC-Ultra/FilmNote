@@ -12,8 +12,9 @@ import java.net.HttpURLConnection;
  */
 public class Parser_Seasonvar extends AsyncParser
 	{
-	 public Parser_Seasonvar(Context _context,WebTaskComleteListener _completeListener,String _src)
+	 public Parser_Seasonvar(Context _context,WebTaskComleteListener _completeListener,String _src,boolean _enableDialog)
 		{
+		 dialogEnabled=_enableDialog;
 		 completeListener=_completeListener;
 		 context=_context;
 		 pageSrc=_src;

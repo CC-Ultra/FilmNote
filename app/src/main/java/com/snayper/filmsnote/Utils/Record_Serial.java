@@ -7,10 +7,11 @@ import java.util.Date;
  */
 public class Record_Serial
 	{
-	 private String title="",date="",imgSrc="",webSrc="";
+	 private String title="",imgSrc="",webSrc="";
 	 private int all=0;
 	 private int watched=0;
-	 private Date trueDate;
+	 private Date date;
+	 private boolean updateOrder=false,confidentDate=false,updated=false;
 
 	 public void setTitle(String _title)
 		{
@@ -24,7 +25,7 @@ public class Record_Serial
 		{
 		 webSrc=_webSrc;
 		 }
-	 public void setDate(String _date)
+	 public void setDate(Date _date)
 		{
 		 date=_date;
 		 }
@@ -36,9 +37,17 @@ public class Record_Serial
 		{
 		 watched=_watched;
 		 }
-	 public void setTrueDate(Date _trueDate)
+	 public void setUpdateOrder(boolean _updateOrder)
 		{
-		 trueDate=_trueDate;
+		 updateOrder=_updateOrder;
+		 }
+	 public void setConfidentDate(boolean _confidentDate)
+		{
+		 confidentDate=_confidentDate;
+		 }
+	 public void setUpdated(boolean _updated)
+		{
+		 updated=_updated;
 		 }
 	 public String getTitle()
 		{
@@ -52,7 +61,7 @@ public class Record_Serial
 		{
 		 return webSrc;
 		 }
-	 public String getDate()
+	 public Date getDate()
 		{
 		 return date;
 		 }
@@ -64,8 +73,16 @@ public class Record_Serial
 		{
 		 return watched;
 		 }
-	 public Date getTrueDate()
+	 public boolean hasUpdateOrder()
 		{
-		 return trueDate;
+		 return updateOrder;
+		 }
+	 public boolean isConfidentDate()
+		{
+		 return confidentDate;
+		 }
+	 public boolean isUpdated()
+		{
+		 return updated;
 		 }
 	 }

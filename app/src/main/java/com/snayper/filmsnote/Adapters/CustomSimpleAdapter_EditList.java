@@ -14,13 +14,13 @@ import java.util.Map;
 /**
  * Created by snayper on 19.02.2016.
  */
-public class CustomSimpleAdapter extends SimpleAdapter
+public class CustomSimpleAdapter_EditList extends SimpleAdapter
 	{
-	 Context ctx;
-	 public CustomSimpleAdapter(Context context,List<? extends Map<String,?>> data,int resource,String[] from,int[] to)
+	 Context context;
+	 public CustomSimpleAdapter_EditList(Context _context,List<? extends Map<String,?>> data,int resource,String[] from,int[] to)
 		{
-		 super(context,data,resource,from,to);
-		 ctx=context;
+		 super(_context,data,resource,from,to);
+		 context=_context;
 		 }
 
 	 @Override
@@ -29,7 +29,7 @@ public class CustomSimpleAdapter extends SimpleAdapter
 		 if(convertView==null)
 			{
 			 LayoutInflater inflater;
-			 inflater= (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			 inflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			 convertView= inflater.inflate(R.layout.edit_list_element, parent, false);
 			 }
 		 HashMap<String,Object> item= (HashMap<String,Object>)getItem(getCount()-1-position);
@@ -38,10 +38,8 @@ public class CustomSimpleAdapter extends SimpleAdapter
 		 txt.setText(item.get("Episode").toString());
 		 if( (boolean)item.get("Pic") )
 			 img.setImageResource(R.drawable.list_watched);
-//			 img.setImageResource(R.mipmap.watched);
 		 else
 			 img.setImageResource(R.drawable.list_not_watched);
-//			 img.setImageResource(R.mipmap.not_watched);
 		 return convertView;
 		 }
 	}

@@ -11,7 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
-import com.snayper.filmsnote.Adapters.CustomSimpleAdapter;
+import com.snayper.filmsnote.Adapters.CustomSimpleAdapter_EditList;
 import com.snayper.filmsnote.Fragments.ActionDialog;
 import com.snayper.filmsnote.Interfaces.AdapterInterface;
 import com.snayper.filmsnote.Interfaces.DialogDecision;
@@ -21,6 +21,7 @@ import com.snayper.filmsnote.Utils.*;
 import com.snayper.filmsnote.R;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -31,10 +32,23 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 	 private ListView episodeList;
 	 private ImageView img;
 	 private TextView titleTxtView, dateTxtView;
+	 private CheckBox updateBox;
 	 private int watched,all;
+	 private boolean updateOrder;
 	 private int contentType,dbPosition;
 	 private String webSrc;
 
+	 private class CheckBoxListener implements View.OnClickListener
+		{
+		 @Override
+		 public void onClick(View v)
+			{
+			 updateOrder=!updateOrder;
+			 HashMap<String,Object> data= new HashMap<>();
+			 data.put(O.db.FIELD_NAME_UPDATE_ORDER,updateOrder);
+			 DbHelper.updateRecord(contentType,dbPosition,data);
+			 }
+		 }
 	 private class AddButtonListener implements View.OnClickListener
 		{
 		 @Override
@@ -53,21 +67,37 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 		 @Override
 		 public void onClick(View v)
 			{
-			 AsyncParser parser=null;
+			 HashMap<String,Object> data= new HashMap<>();
+			 data.put(O.db.FIELD_NAME_CONFIDENT_DATE,false);
+			 DbHelper.updateRecord(contentType,dbPosition,data);
+			 AsyncParser parser;
 			 if(webSrc.contains(O.web.filmix.HOST) )
-				 parser= new Parser_Filmix(EditActivity.this, EditActivity.this, webSrc);
-			 if(webSrc.contains(O.web.seasonvar.HOST) )
-				 parser= new Parser_Seasonvar(EditActivity.this, EditActivity.this, webSrc);
-			 if(webSrc.contains(O.web.kinogo.HOST) )
-				 parser= new Parser_Kinogo(EditActivity.this, EditActivity.this, webSrc);
-			 if(webSrc.contains(O.web.onlineLife.HOST) )
-				 parser= new Parser_OnlineLife(EditActivity.this, EditActivity.this, webSrc);
-			 if(parser==null)
+				 parser= new Parser_Filmix(EditActivity.this, EditActivity.this, webSrc, true);
+			 else if(webSrc.contains(O.web.seasonvar.HOST) )
+				 parser= new Parser_Seasonvar(EditActivity.this, EditActivity.this, webSrc, true);
+			 else if(webSrc.contains(O.web.kinogo.HOST) )
+				 parser= new Parser_Kinogo(EditActivity.this, EditActivity.this, webSrc, true);
+			 else if(webSrc.contains(O.web.onlineLife.HOST) )
+				 parser= new Parser_OnlineLife(EditActivity.this, EditActivity.this, webSrc, true);
+			 else //if(parser==null)
 				{
 				 Log.d(O.TAG,"onClick: парсер не был инициализирован, а значит и запущен");
 				 return;
 				 }
 			 parser.execute();
+			 }
+		 }
+	 private class WatchOnlineButtonLongListener implements View.OnLongClickListener
+		{
+		 @Override
+		 public boolean onLongClick(View v)
+			{
+			 HashMap<String,Object> data= new HashMap<>();
+			 data.put(O.db.FIELD_NAME_CONFIDENT_DATE,false);
+			 DbHelper.updateRecord(contentType,dbPosition,data);
+			 boolean confidentDate= DbHelper.extractRecord_Serial(contentType,dbPosition).isConfidentDate();
+			 Toast.makeText(EditActivity.this,"Confident date: "+ confidentDate,Toast.LENGTH_SHORT).show();
+			 return false;
 			 }
 		 }
 	 private class WatchOnlineButtonListener implements View.OnClickListener
@@ -159,9 +189,9 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 		 all=0;
 		 String dateSrc="";
 		 HashMap<String,Object> data= new HashMap<>();
-		 data.put(O.db.FIELD_NAME_WATCHED,watched);
-		 data.put(O.db.FIELD_NAME_ALL,all);
-		 data.put(O.db.FIELD_NAME_DATE,dateSrc);
+		 data.put(O.db.FIELD_NAME_WATCHED, watched);
+		 data.put(O.db.FIELD_NAME_ALL, all);
+		 data.put(O.db.FIELD_NAME_DATE, 0L);
 		 DbHelper.updateRecord(contentType,dbPosition,data);
 		 initAdapter();
 		 dateTxtView.setText(dateSrc);
@@ -181,22 +211,25 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 		 }
 	 private void updateDate()
 		{
-		 String dateSrc= Util.getCurentDate();
+		 Date currentDate= DateUtil.getCurrentDate();
+		 String dateStr= DateUtil.dateToString(currentDate);
 		 HashMap<String,Object> data= new HashMap<>();
-		 data.put(O.db.FIELD_NAME_DATE,dateSrc);
+		 data.put(O.db.FIELD_NAME_DATE,currentDate.getTime());
 		 DbHelper.updateRecord(contentType,dbPosition,data);
-		 dateTxtView.setText(dateSrc);
+		 dateTxtView.setText(dateStr);
 		 }
 	 private void initPageByRecord()
 		{
 		 Record_Serial record= DbHelper.extractRecord_Serial(contentType,dbPosition);
-		 String titleSrc=record.getTitle();
-		 String dateSrc=record.getDate();
-		 String imgSrc=FileManager.getStoredPicURI(this,record.getImgSrc());
+		 String titleSrc= record.getTitle();
+		 String dateStr= DateUtil.dateToString(record.getDate() );
+		 String imgSrc= FileManager.getStoredPicURI(this,record.getImgSrc() );
 		 webSrc= record.getWebSrc();
+		 updateOrder= record.hasUpdateOrder();
 		 initAdapter();
 		 titleTxtView.setText(titleSrc);
-		 dateTxtView.setText(dateSrc);
+		 dateTxtView.setText(dateStr);
+		 updateBox.setChecked(updateOrder);
 		 if(imgSrc.length() != 0)
 			 img.setImageURI(Uri.parse(imgSrc) );
 		 }
@@ -219,9 +252,9 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 				 listElementMap.put("Pic", true);
 			 listData.add(listElementMap);
 			 }
-		 CustomSimpleAdapter adapter=new CustomSimpleAdapter(EditActivity.this,listData,R.layout.edit_list_element,from,to);
+		 CustomSimpleAdapter_EditList adapter= new CustomSimpleAdapter_EditList(EditActivity.this,listData,R.layout.edit_list_element,from,to);
 		 episodeList.setAdapter(adapter);
-		 ColorDrawable divcolor = new ColorDrawable(Color.parseColor("#FF12212f"));
+		 ColorDrawable divcolor = new ColorDrawable(Color.parseColor("#FF12212f") );
 		 episodeList.setDivider(divcolor);
 		 episodeList.setDividerHeight(2);
 		 }
@@ -234,7 +267,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 	 public void useParserResult(Record_Serial extractedData)
 		{
 		 if(extractedData.getAll()!=all)
-			 extractedData.setDate(Util.getCurentDate() );
+			 extractedData.setDate(DateUtil.getCurrentDate() );
 		 ParserResultConsumer.useParserResult(this,extractedData,O.interaction.WEB_ACTION_UPDATE,contentType,dbPosition);
 		 initPageByRecord();
 		 }
@@ -272,8 +305,9 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 		 contentType=intent.getIntExtra(O.mapKeys.extra.CONTENT_TYPE, -1);
 		 dbPosition=intent.getIntExtra(O.mapKeys.extra.POSITION, -1);
 
-		 Button watchButton=(Button) findViewById(R.id.watchButton);
-		 Button allButton=(Button) findViewById(R.id.allButton);
+		 Button watchButton= (Button)findViewById(R.id.watchButton);
+		 Button allButton= (Button)findViewById(R.id.allButton);
+		 updateBox= (CheckBox)findViewById(R.id.updateOrder);
 		 episodeList= (ListView)findViewById(R.id.episodeList);
 		 titleTxtView= (TextView)findViewById(R.id.title);
 		 dateTxtView= (TextView)findViewById(R.id.date);
@@ -282,12 +316,15 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 		 initPageByRecord();
 		 episodeList.setOnItemClickListener(new ListItemClickListener_Watch());
 		 episodeList.setOnItemLongClickListener(new ListItemLongClickListener());
+		 updateBox.setOnClickListener(new CheckBoxListener() );
 		 if(webSrc.length()!=0)
 			{
 			 allButton.setText("Обновить информацию");
 			 allButton.setOnClickListener(new UpdateButtonListener());
 			 watchButton.setText("Просмотреть серию");
-			 watchButton.setOnClickListener(new WatchOnlineButtonListener() );
+			 watchButton.setOnClickListener(new WatchOnlineButtonListener());
+			 watchButton.setOnLongClickListener(new WatchOnlineButtonLongListener());
+			 updateBox.setVisibility(View.VISIBLE);
 			 }
 		 else
 			{
@@ -295,6 +332,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 			 allButton.setOnClickListener(new AddButtonListener());
 			 watchButton.setText("Отметить серию");
 			 watchButton.setOnClickListener(new WatchButtonListener());
+			 updateBox.setVisibility(View.GONE);
 			 }
 		 }
 	 @Override
