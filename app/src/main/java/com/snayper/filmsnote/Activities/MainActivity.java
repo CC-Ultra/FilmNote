@@ -27,7 +27,6 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 	 public static SharedPreferences prefs;
 	 private TabLayout tabLayout;
 	 private TabsFragmentAdapter tabsFragmentAdapter;
-	 private int themeSwitcher;
 
 	 private class testButtonListener implements View.OnClickListener
 		{
@@ -65,6 +64,12 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 			 DbHelper.deleteRecord(this,contentType,0);
 			 fragment.initAdapter();
 			 }
+		 }
+	 @Override
+	 protected void initTheme()
+		{
+		 initPrefs();
+		 super.initTheme();
 		 }
 	 private void initPrefs()
 		{
@@ -113,7 +118,6 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 	 protected void onCreate(Bundle savedInstanceState)
 		{
 		 super.onCreate(savedInstanceState);
-		 initPrefs();
 //		 Log.d(O.TAG,"onCreate: main");
 		 setContentView(R.layout.main_layout);
 

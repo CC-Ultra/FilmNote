@@ -3,19 +3,21 @@ package com.snayper.filmsnote.Activities;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.snayper.filmsnote.R;
 import com.snayper.filmsnote.Services.Updater;
+import com.snayper.filmsnote.Utils.O;
 
 /**
  * Created by snayper on 29.03.2016.
  */
 public class GlobalMenuOptions extends AppCompatActivity
 	{
-//	 int a;
+	 public static int themeSwitcher;
 
 	 protected boolean isServiceRunning(Class<?> serviceClass)
 		{
@@ -24,6 +26,27 @@ public class GlobalMenuOptions extends AppCompatActivity
 			if(serviceClass.getName().equals(service.service.getClassName() ) )
 				 return true;
 		 return false;
+		 }
+	 protected void setLayoutThemeCustoms() {}
+	 protected void initTheme()
+		{
+		 int res=0;
+		 switch(themeSwitcher)
+			{
+			 case O.prefs.THEME_ID_MENTOR:
+				 res= R.style.Theme_Mentor;
+				 break;
+			 case O.prefs.THEME_ID_ULTRA:
+				 res= R.style.Theme_Ultra;
+				 break;
+			 case O.prefs.THEME_ID_COW:
+				 res= R.style.Theme_Cow;
+				 break;
+			 default:
+				 res= R.style.Theme_Mentor;
+			 }
+		 setTheme(res);
+		 setLayoutThemeCustoms();
 		 }
 	 protected void resetActivity()
 		{
@@ -52,9 +75,16 @@ public class GlobalMenuOptions extends AppCompatActivity
 	 protected void putIntentExtra(Intent reset) {}
 
 	 @Override
-	 public boolean onCreateOptionsMenu(Menu menu)
+	 protected void onCreate(Bundle savedInstanceState)
 		{
+		 super.onCreate(savedInstanceState);
+		 initTheme();
+		 }
+	@Override
+	 public boolean onCreateOptionsMenu(Menu menu)
+		 {
 		 setMenuLayout(menu);
+		 menu.add(0,22,0,"Reset");
 		 return super.onCreateOptionsMenu(menu);
 		 }
 	 @Override
@@ -63,6 +93,9 @@ public class GlobalMenuOptions extends AppCompatActivity
 		 int id = item.getItemId();
 		 switch(id)
 			{
+			 case 22:
+				 resetActivity();
+				 return true;
 			 case R.id.menu_settings:
 				 goToSettings();
 				 return true;

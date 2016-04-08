@@ -1,5 +1,6 @@
 package com.snayper.filmsnote.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,12 +9,14 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import com.snayper.filmsnote.Activities.AddActivity;
+import com.snayper.filmsnote.Activities.GlobalMenuOptions;
 import com.snayper.filmsnote.Adapters.CustomCursorAdapter_Films;
 import com.snayper.filmsnote.Adapters.CustomCursorAdapter_Serial;
 import com.snayper.filmsnote.Interfaces.AdapterInterface;
@@ -65,6 +68,27 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 	 protected abstract void setListener_listOnClick();
 	 protected abstract void setListener_listOnLongClick();
 
+	 protected View initContentView(LayoutInflater inflater,ViewGroup container)
+		{
+		 int res;
+		 switch(GlobalMenuOptions.themeSwitcher)
+			{
+			 case O.prefs.THEME_ID_MENTOR:
+				 res= R.style.Theme_Mentor;
+				 break;
+			 case O.prefs.THEME_ID_ULTRA:
+				 res= R.style.Theme_Ultra;
+				 break;
+			 case O.prefs.THEME_ID_COW:
+				 res= R.style.Theme_Cow;
+				 break;
+			 default:
+				 res= R.style.Theme_Mentor;
+			 }
+		 final Context contextThemeWrapper= new ContextThemeWrapper(getActivity(), res);
+		 LayoutInflater localInflater= inflater.cloneInContext(contextThemeWrapper);
+		 return localInflater.inflate(R.layout.main_list_fragment,container, false);
+		 }
 	 public int getListCount()
 		{
 		 return list.getCount();
@@ -100,7 +124,7 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 		{
 		 super.onCreateView(inflater,container,savedInstanceState);
 //		 Log.d(O.TAG,"onCreateView: "+ contentType);
-		 View view= inflater.inflate(R.layout.main_list_fragment,container, false);
+		 View view= initContentView(inflater,container);
 
 		 list= (ListView)view.findViewById(R.id.list);
 		 activeButton= (FloatingActionButton)view.findViewById(R.id.activeButton);
