@@ -5,7 +5,7 @@
 		android:layout_height="wrap_content"
 		android:paddingLeft="10dp"
 		android:orientation="horizontal"
-		android:background="@color/list_background"
+		android:background="@color/list_background_mentor"
 		android:paddingBottom="10dp"
 		>
 	<TextView

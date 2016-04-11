@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:orientation="vertical"
-			  android:layout_width="match_parent"
-			  android:layout_height="match_parent">
+<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:id="@+id/basicLayout">
 	<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:orientation="horizontal" >
+			android:orientation="horizontal"
+			android:id="@+id/imgLayout">
 		<ImageView
 				android:layout_width="150dp"
 				android:layout_height="225dp"
-				android:id="@+id/img"
 				android:src="@drawable/image_not_found"
 				android:layout_marginBottom="2dp"
 				android:layout_marginRight="2dp"
 				android:layout_gravity="right"
-				/>
+				android:id="@+id/img"/>
 		<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:orientation="vertical" >
+				android:orientation="vertical"
+				android:layout_marginBottom="2dp"
+				android:id="@+id/infoLayout">
 			<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -49,8 +53,6 @@
 					android:layout_height="wrap_content"
 					android:layout_gravity="right"
 					android:text="Добавить серию"
-					android:background="@drawable/buton_selector"
-					android:textColor="#ffffff"
 					android:layout_marginBottom="2dp"
 					android:id="@+id/allButton"
 					android:layout_weight="1"/>
@@ -59,8 +61,6 @@
 					android:layout_height="wrap_content"
 					android:layout_gravity="right"
 					android:text="Отметить серию"
-					android:background="@drawable/buton_selector"
-					android:textColor="#ffffff"
 					android:id="@+id/watchButton"
 					android:layout_weight="1"/>
 		</LinearLayout >

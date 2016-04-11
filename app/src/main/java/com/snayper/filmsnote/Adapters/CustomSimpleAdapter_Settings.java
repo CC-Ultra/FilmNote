@@ -8,7 +8,9 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import com.snayper.filmsnote.Activities.GlobalMenuOptions;
 import com.snayper.filmsnote.R;
+import com.snayper.filmsnote.Utils.O;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,14 +21,29 @@ import java.util.Map;
  */
 public class CustomSimpleAdapter_Settings extends SimpleAdapter
 	{
-	 Context context;
-	 View.OnClickListener checkboxListener;
+	 private Context context;
+	 private View.OnClickListener checkboxListener;
+	 private int drawableRes;
 
 	 public CustomSimpleAdapter_Settings(Context _context,View.OnClickListener _checkboxListener,List<? extends Map<String,?> > data,int resource,String[] from,int[] to)
 		{
 		 super(_context,data,resource,from,to);
 		 context=_context;
 		 checkboxListener=_checkboxListener;
+		 switch(GlobalMenuOptions.themeSwitcher)
+			{
+			 case O.prefs.THEME_ID_MENTOR:
+				 drawableRes= R.drawable.list_selector_mentor;
+				 break;
+			 case O.prefs.THEME_ID_ULTRA:
+				 drawableRes= R.drawable.list_selector_ultra;
+				 break;
+			 case O.prefs.THEME_ID_COW:
+				 drawableRes= R.drawable.list_selector_cow_settings;
+				 break;
+			 default:
+				 drawableRes= R.drawable.list_selector_mentor;
+			 }
 		 }
 
 	 @Override
@@ -38,6 +55,7 @@ public class CustomSimpleAdapter_Settings extends SimpleAdapter
 			 inflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			 convertView= inflater.inflate(R.layout.settings_list_element, parent, false);
 			 }
+		 convertView.setBackgroundResource(drawableRes);
 		 HashMap<String,Object> item= (HashMap<String,Object>)getItem(position);
 		 TextView title= (TextView)convertView.findViewById(R.id.title);
 		 TextView valueTxt= (TextView)convertView.findViewById(R.id.value);
