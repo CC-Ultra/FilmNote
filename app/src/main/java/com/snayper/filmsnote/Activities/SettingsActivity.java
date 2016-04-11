@@ -6,9 +6,12 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -24,12 +27,13 @@ import java.util.HashMap;
 /**
  * Created by snayper on 03.04.2016.
  */
-public class SettingsActivity extends AppCompatActivity
+public class SettingsActivity extends GlobalMenuOptions
 	{
 	 private ListView list;
 	 private int updateInterval,theme,notificationType;
 	 private boolean gsmOrder;
 	 private long updateTime;
+	 private int dividerColor;
 	 private String activeThemes[]= {"Стандартная","Ultra"};
 	 private String notificationTypes[]= {"Без уведомлений","Обычные","Toast-уведомления"};
 
@@ -60,10 +64,27 @@ public class SettingsActivity extends AppCompatActivity
 		 }
 	 private class DialogOkListener implements DialogInterface.OnClickListener
 		{
-		 @Override
+		 boolean reset=false;
+		 int selectedTheme;
+
+		 public DialogOkListener() {}
+		 public DialogOkListener(int _selectedTheme)
+			{
+			 selectedTheme=_selectedTheme;
+			 reset=true;
+			 }
+
+		@Override
 		 public void onClick(DialogInterface dialog,int which)
 			{
-			 initAdapter();
+			 if(reset && (theme!=selectedTheme) )
+				{
+				 if(theme == O.prefs.THEME_ID_ULTRA)
+					 Toast.makeText(SettingsActivity.this,"Любишь мой \"вырвиглаз\"?",Toast.LENGTH_SHORT).show();
+				 resetActivity();
+				 }
+			 else
+				 initAdapter();
 			 }
 		 }
 	 private class CheckboxListener implements View.OnClickListener
@@ -92,6 +113,7 @@ public class SettingsActivity extends AppCompatActivity
 			 theme=which;
 			 SharedPreferences.Editor editor= MainActivity.prefs.edit();
 			 editor.putInt(O.mapKeys.prefs.THEME, theme).apply();
+			 MainActivity.themeSwitcher=theme;
 			 }
 		 }
 	 private class MenuSelectedListener implements AdapterView.OnItemClickListener
@@ -121,9 +143,19 @@ public class SettingsActivity extends AppCompatActivity
 			 }
 		 }
 
+	 @SuppressWarnings("deprecation")
 	 private void launchDialog(int type)
 		{
-		 AlertDialog.Builder adb = new AlertDialog.Builder(this);
+		 AlertDialog.Builder adb;
+		 if( (type==O.prefs.SETTINGS_LIST_ABOUT || type==O.prefs.SETTINGS_LIST_HELP) )//&& theme==O.prefs.THEME_ID_ULTRA)
+			{
+			 Resources resources= getResources();
+			 Resources.Theme x= resources.newTheme();
+			 x.applyStyle(R.style.CustomDialog_forTitle,true);
+			 adb= new AlertDialog.Builder(new ContextThemeWrapper(this, x) );
+			 }
+		 else
+		 adb= new AlertDialog.Builder(this);
 		 ViewGroup root= (ViewGroup)list.getParent();
 		 View dialogView;
 		 switch(type)
@@ -133,13 +165,22 @@ public class SettingsActivity extends AppCompatActivity
 				 try
 					{
 					 PackageInfo pInfo;
-					 pInfo=getPackageManager().getPackageInfo(getPackageName(),0);
-					 String version = pInfo.versionName;
+					 pInfo= getPackageManager().getPackageInfo(getPackageName(),0);
+					 String version= pInfo.versionName;
 					 TextView versionTxt= (TextView)dialogView.findViewById(R.id.version);
 					 versionTxt.setText("Версия "+ version);
 					 }
 				 catch(PackageManager.NameNotFoundException e)
 					{ Log.d(O.TAG,"launchDialog: package name не найден"); }
+				 if(theme==O.prefs.THEME_ID_COW)
+					 dialogView.setBackgroundResource(R.drawable.cow_background_dark);
+				 else
+					 dialogView.setBackgroundResource(backgroundRes);
+				 if(theme==O.prefs.THEME_ID_ULTRA)
+					{
+					 TextView mailTxt= (TextView)dialogView.findViewById(R.id.mail);
+					 mailTxt.setLinkTextColor(getResources().getColor(R.color.selection_ultra) );
+					 }
 				 adb.setTitle("О программе");
 				 adb.setView(dialogView);
 				 adb.setIcon(R.mipmap.avatar);
@@ -147,6 +188,10 @@ public class SettingsActivity extends AppCompatActivity
 			 case O.prefs.SETTINGS_LIST_HELP:
 				 dialogView= getLayoutInflater().inflate(R.layout.help_page,root,false);
 				 adb.setTitle("Подсказки");
+				 if(theme==O.prefs.THEME_ID_COW)
+					 dialogView.setBackgroundResource(R.drawable.cow_background_dark);
+				 else
+					 dialogView.setBackgroundResource(backgroundRes);
 				 adb.setView(dialogView);
 				 adb.setIcon(R.mipmap.halp_icon);
 				 break;
@@ -165,7 +210,7 @@ public class SettingsActivity extends AppCompatActivity
 			 case O.prefs.SETTINGS_LIST_THEME:
 				 int selectedTheme= (theme==O.prefs.THEME_ID_COW ? -1 : theme);
 				 adb.setSingleChoiceItems(activeThemes,selectedTheme,new ThemeSelectListener() );
-				 adb.setPositiveButton("Ok",new DialogOkListener() );
+				 adb.setPositiveButton("Ok",new DialogOkListener(theme) );
 				 break;
 			 }
 		 adb.show();
@@ -180,13 +225,14 @@ public class SettingsActivity extends AppCompatActivity
 		 Toast.makeText(SettingsActivity.this,(gsmOrder ? "Enabled" : "Disabled"),Toast.LENGTH_SHORT).show();
 		 }
 	 private void initPrefs()
-		{
-		 updateTime= MainActivity.prefs.getLong(O.mapKeys.prefs.UPDATE_TIME, DateUtil.buildTime(20,0).getTime() );
-		 updateInterval= MainActivity.prefs.getInt(O.mapKeys.prefs.UPDATE_INTERVAL, O.prefs.UPDATE_INTERVAL_DEFAULT);
+		 {
+		 updateTime=MainActivity.prefs.getLong(O.mapKeys.prefs.UPDATE_TIME,DateUtil.buildTime(20,0).getTime());
+		 updateInterval=MainActivity.prefs.getInt(O.mapKeys.prefs.UPDATE_INTERVAL, O.prefs.UPDATE_INTERVAL_DEFAULT);
 		 notificationType= MainActivity.prefs.getInt(O.mapKeys.prefs.NOTIFICATION_TYPE,O.prefs.NOTIFICATION_TYPE_ID_DEFAULT);
 		 theme= MainActivity.prefs.getInt(O.mapKeys.prefs.THEME,O.prefs.THEME_ID_MENTOR);
-		 gsmOrder= MainActivity.prefs.getBoolean(O.mapKeys.prefs.GSM_ORDER,false);
+		 gsmOrder=MainActivity.prefs.getBoolean(O.mapKeys.prefs.GSM_ORDER,false);
 		 }
+	 @SuppressWarnings("deprecation")
 	 private void fillValues(String[] values)
 		{
 		 values[1]="";
@@ -202,19 +248,24 @@ public class SettingsActivity extends AppCompatActivity
 		 values[4]= notificationTypes[notificationType];
 		 values[5]="Нюансы работы программы";
 		 values[6]="";
+		 Resources resources= getResources();
 		 switch(theme)
 			{
 			 case O.prefs.THEME_ID_MENTOR:
 				 values[0]=O.prefs.THEME_STR_MENTOR;
+				 dividerColor= resources.getColor(R.color.list_divider_mentor);
 				 break;
 			 case O.prefs.THEME_ID_ULTRA:
 				 values[0]=O.prefs.THEME_STR_ULTRA;
+				 dividerColor= resources.getColor(R.color.list_divider_mentor);
 				 break;
 			 case O.prefs.THEME_ID_COW:
 				 values[0]=O.prefs.THEME_STR_COW;
+				 dividerColor= resources.getColor(R.color.list_background_cow);
 				 break;
 			 default:
 				 values[0]=O.prefs.THEME_STR_MENTOR;
+				 dividerColor= resources.getColor(R.color.list_divider_mentor);
 			 }
 		 }
 	 private void initAdapter()
@@ -242,6 +293,9 @@ public class SettingsActivity extends AppCompatActivity
 		 CustomSimpleAdapter_Settings adapter= new CustomSimpleAdapter_Settings(this,new CheckboxListener(),
 				 listData,R.layout.settings_list_element,from,to);
 		 list.setAdapter(adapter);
+		 ColorDrawable divcolor= new ColorDrawable(dividerColor);
+		 list.setDivider(divcolor);
+		 list.setDividerHeight(2);
 		 }
 
 	 @Override
@@ -254,5 +308,11 @@ public class SettingsActivity extends AppCompatActivity
 		 list= (ListView)findViewById(R.id.list);
 		 initAdapter();
 		 list.setOnItemClickListener(new MenuSelectedListener() );
+		 }
+	 @Override
+	 public boolean onPrepareOptionsMenu(Menu menu)
+		{
+		 menu.findItem(R.id.menu_settings).setVisible(false);
+		 return super.onPrepareOptionsMenu(menu);
 		 }
 	 }

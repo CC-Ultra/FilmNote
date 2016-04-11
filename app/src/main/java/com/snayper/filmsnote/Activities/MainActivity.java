@@ -1,10 +1,8 @@
 package com.snayper.filmsnote.Activities;
 
-import android.app.ActivityManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+import android.content.res.Resources;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -14,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.snayper.filmsnote.Adapters.TabsFragmentAdapter;
 import com.snayper.filmsnote.Fragments.MainListFragment;
@@ -26,7 +25,10 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 	{
 	 public static SharedPreferences prefs;
 	 private TabLayout tabLayout;
+	 private Toolbar toolbar;
 	 private TabsFragmentAdapter tabsFragmentAdapter;
+	 private int toolbarTextColor,tabBackgroundColor,tabIndicatorColor,tabTextColor,tabTextColorSelected;
+	 private static boolean cowThemeStart=true;
 
 	 private class testButtonListener implements View.OnClickListener
 		{
@@ -74,16 +76,16 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 	 private void initPrefs()
 		{
 		 prefs= getSharedPreferences(O.mapKeys.prefs.PREFS_FILENAME, MODE_PRIVATE);
+		 if(cowThemeStart)
+			{
+			 prefs.edit().putInt(O.mapKeys.prefs.THEME,2).apply();
+			 cowThemeStart=!cowThemeStart;
+			 }
 		 themeSwitcher= prefs.getInt(O.mapKeys.prefs.THEME, 0);
-		 }
-	 private void updateThemeSwitcher()
-		{
-		 SharedPreferences.Editor editor= prefs.edit();
-		 editor.putInt(O.mapKeys.prefs.THEME, themeSwitcher).apply();
 		 }
 	 private void initToolbar()
 		{
-		 Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
+		 toolbar= (Toolbar)findViewById(R.id.toolbar);
 		 setSupportActionBar(toolbar);
 		 toolbar.setTitle("Looker");
 		 }
@@ -113,11 +115,44 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 		{
 		 getMenuInflater().inflate(R.menu.main_menu,menu);
 		 }
-
 	 @Override
-	 protected void onCreate(Bundle savedInstanceState)
+	 protected void initLayoutThemeCustoms()
 		{
-		 super.onCreate(savedInstanceState);
+		 super.initLayoutThemeCustoms();
+		 tabBackgroundColor=panelColor;
+		 toolbarTextColor=lightTextColor;
+		 tabTextColor=lightTextColor;
+		 tabTextColorSelected=lightTextColor;
+		 switch(localThemeSwitcher)
+			{
+			 case O.prefs.THEME_ID_MENTOR:
+				 tabIndicatorColor=lightTextColor;
+				 break;
+			 case O.prefs.THEME_ID_ULTRA:
+				 tabTextColorSelected=selectionColor;
+				 break;
+			 case O.prefs.THEME_ID_COW:
+				 tabTextColor=thirdTextColor;
+				 break;
+			 default:
+				 tabIndicatorColor=lightTextColor;
+			 }
+		 }
+	 @Override
+	 protected void setLayoutThemeCustoms()
+		{
+		 super.setLayoutThemeCustoms();
+		 if(localThemeSwitcher==O.prefs.THEME_ID_MENTOR)
+			 tabLayout.setSelectedTabIndicatorColor(tabIndicatorColor);
+		 toolbar.setTitleTextColor(toolbarTextColor);
+		 tabLayout.setBackgroundColor(tabBackgroundColor);
+		 tabLayout.setTabTextColors(tabTextColor,tabTextColorSelected);
+		}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+		{
+		super.onCreate(savedInstanceState);
 //		 Log.d(O.TAG,"onCreate: main");
 		 setContentView(R.layout.main_layout);
 
@@ -132,13 +167,14 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 		 Button doButton= (Button)findViewById(R.id.doButton);
 		 doButton.setOnClickListener(new testButtonListener() );
 		 Button undoButton= (Button)findViewById(R.id.undoButton);
-		 undoButton.setOnClickListener(new undoTestButtonListener() );
+		 undoButton.setOnClickListener(new undoTestButtonListener());
+		 setLayoutThemeCustoms();
 		 }
 	 @Override
 	 public boolean onPrepareOptionsMenu(Menu menu)
 		{
 		 boolean x= DbHelper.cursors[tabLayout.getSelectedTabPosition() ].getCount()!=0;
-		 menu.findItem(R.id.menu_deleteAll).setVisible(x);
+		 menu.findItem(R.id.menu_deleteAll).setVisible(x).setIcon(R.mipmap.halp_icon);
 		 return super.onPrepareOptionsMenu(menu);
 		 }
 	 @Override

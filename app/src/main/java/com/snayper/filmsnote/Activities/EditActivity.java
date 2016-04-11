@@ -2,6 +2,7 @@ package com.snayper.filmsnote.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -37,6 +38,8 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 	 private boolean updateOrder;
 	 private int contentType,dbPosition;
 	 private String webSrc;
+	 private int backgroundRes,checkboxColor,dividerColor;
+	 private LinearLayout imgLayout,infoLayout;
 
 	 private class CheckBoxListener implements View.OnClickListener
 		{
@@ -254,7 +257,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 			 }
 		 CustomSimpleAdapter_EditList adapter= new CustomSimpleAdapter_EditList(EditActivity.this,listData,R.layout.edit_list_element,from,to);
 		 episodeList.setAdapter(adapter);
-		 ColorDrawable divcolor = new ColorDrawable(Color.parseColor("#FF12212f") );
+		 ColorDrawable divcolor= new ColorDrawable(dividerColor);
 		 episodeList.setDivider(divcolor);
 		 episodeList.setDividerHeight(2);
 		 }
@@ -281,6 +284,45 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 		{
 		 reset.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
 		 reset.putExtra(O.mapKeys.extra.POSITION, dbPosition);
+		 }
+	 @SuppressWarnings("deprecation")
+	 @Override
+	 protected void initLayoutThemeCustoms()
+		{
+		 super.initLayoutThemeCustoms();
+		 Resources resources= getResources();
+		 switch(localThemeSwitcher)
+			{
+			 case O.prefs.THEME_ID_MENTOR:
+				 checkboxColor=darkTextColor;
+				 backgroundRes= R.color.background_mentor;
+				 dividerColor= resources.getColor(R.color.list_divider_mentor);
+				 break;
+			 case O.prefs.THEME_ID_ULTRA:
+				 checkboxColor=thirdTextColor;
+				 backgroundRes= R.color.background_ultra;
+				 dividerColor= resources.getColor(R.color.list_divider_ultra);
+				 break;
+			 case O.prefs.THEME_ID_COW:
+				 checkboxColor=lightTextColor;
+				 backgroundRes= R.drawable.cow_background;
+				 dividerColor= resources.getColor(R.color.list_background_cow);
+				 break;
+			 default:
+				 checkboxColor=darkTextColor;
+				 backgroundRes= R.color.background_mentor;
+				 dividerColor= resources.getColor(R.color.list_divider_mentor);
+			 }
+		 }
+	 @Override
+	 protected void setLayoutThemeCustoms()
+		{
+		 super.setLayoutThemeCustoms();
+		 imgLayout= (LinearLayout)findViewById(R.id.basicLayout);
+		 infoLayout= (LinearLayout)findViewById(R.id.basicLayout);
+		 imgLayout.setBackgroundResource(backgroundRes);
+		 infoLayout.setBackgroundResource(backgroundRes);
+		 updateBox.setTextColor(checkboxColor);
 		 }
 	 @Override
 	 public void sayNo(int noId) {}
@@ -334,6 +376,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 			 watchButton.setOnClickListener(new WatchButtonListener());
 			 updateBox.setVisibility(View.GONE);
 			 }
+		 setLayoutThemeCustoms();
 		 }
 	 @Override
 	 public boolean onPrepareOptionsMenu(Menu menu)

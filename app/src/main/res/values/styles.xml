@@ -1,20 +1,26 @@
 <resources>
 	<!-- Base application theme. -->
 	<style name="BasicTheme" parent="Theme.AppCompat.Light.NoActionBar">
-		<!-- Customize your theme here. -->
 		<item name="colorPrimary">#00C301</item>
-		<item name="android:buttonStyle">@style/button_style</item>
 		<item name="colorPrimaryDark">#00C301</item>
 		<item name="colorAccent">@color/colorAccent</item>
 	</style>
-	<style name="button_style" >
-		<item name="android:layout_width" >fill_parent</item>
-		<item name="android:layout_height" >wrap_content</item>
-		<item name="android:textColor" >#ffffff</item>
-		<item name="android:gravity" >center</item>
-		<item name="android:layout_margin" >3dp</item>
-		<item name="android:background" >@drawable/buton_selector</item>
-		<item name="android:textSize" >14dp</item>
+
+	<style name="button_style_basic">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:focusable">true</item>
+		<item name="android:gravity">center</item>
+		<item name="android:layout_margin">3dp</item>
+		<item name="android:textSize">14sp</item>
 	</style>
+
+	<style name="BasicDropdownListView" parent="Widget.AppCompat.Light.ListView.DropDown">
+		<item name="android:dividerHeight">1dp</item>
+	</style>
+
+	<style name="BasicEditText" parent="Base.V7.Widget.AppCompat.EditText"/>
+
+	<style name="CustomDialog_forTitle" parent="Theme.AppCompat.Dialog.Alert"/>
 
 </resources>

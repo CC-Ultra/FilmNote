@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:orientation="vertical" android:layout_width="match_parent"
-			  android:layout_height="match_parent">
+<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:id="@+id/basicLayout">
 	<Spinner
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
@@ -24,10 +27,8 @@
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:layout_weight="1"
-				android:src="@drawable/web_back"
 				android:layout_marginRight="1dp"
 				android:layout_marginLeft="1dp"
-				android:background="@drawable/buton_selector"
 				android:id="@+id/webBack" />
 		<ImageButton
 				android:layout_width="wrap_content"
@@ -35,17 +36,13 @@
 				android:layout_weight="1"
 				android:layout_marginRight="1dp"
 				android:layout_marginLeft="1dp"
-				android:src="@drawable/web_reload"
-				android:background="@drawable/buton_selector"
 				android:id="@+id/webReload" />
 		<ImageButton
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:layout_weight="1"
-				android:src="@drawable/web_forward"
 				android:layout_marginRight="1dp"
 				android:layout_marginLeft="1dp"
-				android:background="@drawable/buton_selector"
 				android:id="@+id/webForward" />
 		<Button
 				android:layout_width="wrap_content"
@@ -53,8 +50,6 @@
 				android:layout_weight="10"
 				android:layout_marginRight="1dp"
 				android:layout_marginLeft="1dp"
-				android:background="@drawable/buton_selector"
-				android:textColor="#ffffff"
 				android:layout_gravity="right"
 				android:id="@+id/acceptButton"
 				android:text="Извлечь отсюда"/>

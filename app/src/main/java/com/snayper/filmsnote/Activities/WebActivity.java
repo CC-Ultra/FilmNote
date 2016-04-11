@@ -22,7 +22,8 @@ import com.snayper.filmsnote.R;
 public class WebActivity extends GlobalMenuOptions implements WebTaskComleteListener
 	{
 	 private boolean loading;
-	 private ImageButton reloadButton;
+	 private int buttonIcon_back,buttonIcon_forward,buttonIcon_reload,buttonIcon_cancel;
+	 private ImageButton backButton,forwardButton,reloadButton;
 	 private WebView webView;
 	 private Spinner siteList;
 	 private ProgressBar progressBar;
@@ -82,14 +83,14 @@ public class WebActivity extends GlobalMenuOptions implements WebTaskComleteList
 					 if(loading)
 						{
 						 loading=false;
-						 reloadButton.setImageResource(R.drawable.web_reload);
+						 reloadButton.setImageResource(buttonIcon_reload);
 						 webView.stopLoading();
 						 progressBar.setProgress(0);
 						 }
 					 else
 						{
 						 loading=true;
-						 reloadButton.setImageResource(R.drawable.web_cancel);
+						 reloadButton.setImageResource(buttonIcon_cancel);
 						 webView.reload();
 						 }
 				 }
@@ -121,7 +122,7 @@ public class WebActivity extends GlobalMenuOptions implements WebTaskComleteList
 		 public void onPageFinished(WebView view, String url)
 			{
 			 loading=false;
-			 reloadButton.setImageResource(R.drawable.web_reload);
+			 reloadButton.setImageResource(buttonIcon_reload);
 			 progressBar.setProgress(100);
 			 super.onPageFinished(view, url);
 			 }
@@ -130,7 +131,7 @@ public class WebActivity extends GlobalMenuOptions implements WebTaskComleteList
 		 public void onPageStarted(WebView view, String url, Bitmap favicon)
 			{
 			 loading=true;
-			 reloadButton.setImageResource(R.drawable.web_cancel);
+			 reloadButton.setImageResource(buttonIcon_cancel);
 			 progressBar.setProgress(50);
 			 super.onPageStarted(view,url,favicon);
 			 }
@@ -159,6 +160,45 @@ public class WebActivity extends GlobalMenuOptions implements WebTaskComleteList
 		 siteList.setSelection(selected);
 		 }
 	 @Override
+	 protected void initLayoutThemeCustoms()
+		{
+		 super.initLayoutThemeCustoms();
+		 switch(localThemeSwitcher)
+			{
+			 case O.prefs.THEME_ID_MENTOR:
+				 buttonIcon_back= R.drawable.web_back_mentor;
+				 buttonIcon_forward= R.drawable.web_forward_mentor;
+				 buttonIcon_reload= R.drawable.web_reload_mentor;
+				 buttonIcon_cancel= R.drawable.web_cancel_mentor;
+				 break;
+			 case O.prefs.THEME_ID_ULTRA:
+				 buttonIcon_back= R.drawable.web_back_ultra;
+				 buttonIcon_forward= R.drawable.web_forward_ultra;
+				 buttonIcon_reload= R.drawable.web_reload_ultra;
+				 buttonIcon_cancel= R.drawable.web_cancel_ultra;
+				 break;
+			 case O.prefs.THEME_ID_COW:
+				 buttonIcon_back= R.drawable.web_back_cow;
+				 buttonIcon_forward= R.drawable.web_forward_cow;
+				 buttonIcon_reload= R.drawable.web_reload_cow;
+				 buttonIcon_cancel= R.drawable.web_cancel_cow;
+				 break;
+			 default:
+				 buttonIcon_back= R.drawable.web_back_mentor;
+				 buttonIcon_forward= R.drawable.web_forward_mentor;
+				 buttonIcon_reload= R.drawable.web_reload_mentor;
+				 buttonIcon_cancel= R.drawable.web_cancel_mentor;
+			 }
+		 }
+	 @Override
+	 protected void setLayoutThemeCustoms()
+		{
+		 super.setLayoutThemeCustoms();
+		 reloadButton.setImageResource(buttonIcon_reload);
+		 backButton.setImageResource(buttonIcon_back);
+		 forwardButton.setImageResource(buttonIcon_forward);
+		 }
+	 @Override
 	 public void useParserResult(Record_Serial extractedData)
 		{
 		 ParserResultConsumer.useParserResult(this,extractedData,action,contentType,dbPosition);
@@ -172,24 +212,22 @@ public class WebActivity extends GlobalMenuOptions implements WebTaskComleteList
 	 @Override
 	 protected void putIntentExtra(Intent reset)
 		{
-		 reset.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
-		 reset.putExtra(O.mapKeys.extra.POSITION, dbPosition);
-		 reset.putExtra(O.mapKeys.extra.ACTION, action);
+		 reset.putExtra(O.mapKeys.extra.CONTENT_TYPE,contentType);
+		 reset.putExtra(O.mapKeys.extra.POSITION,dbPosition);
+		 reset.putExtra(O.mapKeys.extra.ACTION,action);
 		 }
 
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState)
 		{
 		 super.onCreate(savedInstanceState);
-		 setContentView(R.layout.web_add_layout);
+		 setContentView(R.layout.web_layout);
 		 Intent intent= getIntent();
 		 contentType= intent.getIntExtra(O.mapKeys.extra.CONTENT_TYPE, -1);
 		 action= intent.getIntExtra(O.mapKeys.extra.ACTION, -1);
 		 dbPosition= intent.getIntExtra(O.mapKeys.extra.POSITION, -1);
 
 		 Button acceptButton;
-		 ImageButton backButton;
-		 ImageButton forwardButton;
 		 siteList= (Spinner) findViewById(R.id.siteList);
 		 acceptButton= (Button)findViewById(R.id.acceptButton);
 		 reloadButton= (ImageButton)findViewById(R.id.webReload);
@@ -198,6 +236,7 @@ public class WebActivity extends GlobalMenuOptions implements WebTaskComleteList
 		 progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		 webView= (WebView) findViewById(R.id.webView);
 
+		 setLayoutThemeCustoms();
 		 reloadButton.setOnClickListener(new NavigationButtonListener());
 		 webView.setWebViewClient(new WebClient() );
 		 acceptButton.setOnClickListener(new AcceptButtonListener());

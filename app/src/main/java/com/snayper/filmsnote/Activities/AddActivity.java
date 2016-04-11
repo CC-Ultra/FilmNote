@@ -1,6 +1,7 @@
 package com.snayper.filmsnote.Activities;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,7 +24,9 @@ import com.snayper.filmsnote.R;
 public class AddActivity extends GlobalMenuOptions
 	{
 	 private EditText titleInput;
+	 private Toolbar toolbar;
 	 private int contentType;
+	 private int toolbarTextColor,toolbarBackgroundColor;
 	 private boolean updated;
 
 	 private class OkButtonListener implements View.OnClickListener
@@ -58,7 +61,7 @@ public class AddActivity extends GlobalMenuOptions
 		 }
 	 private void initToolbar()
 		{
-		 Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
+		 toolbar=(Toolbar) findViewById(R.id.toolbar);
 		 setSupportActionBar(toolbar);
 		 toolbar.setTitle("Note");
 		 }
@@ -91,13 +94,27 @@ public class AddActivity extends GlobalMenuOptions
 	 @Override
 	 protected void setMenuLayout(Menu menu)
 		{
-		 getMenuInflater().inflate(R.menu.add_menu, menu);
+		 getMenuInflater().inflate(R.menu.add_menu,menu);
 		 }
 	 @Override
 	 protected void putIntentExtra(Intent reset)
 		{
-		 reset.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
+		 reset.putExtra(O.mapKeys.extra.CONTENT_TYPE,contentType);
 		 }
+	 @Override
+	 protected void initLayoutThemeCustoms()
+		{
+		 super.initLayoutThemeCustoms();
+		 toolbarTextColor=lightTextColor;
+		 toolbarBackgroundColor=panelColor;
+		 }
+	 @Override
+	 protected void setLayoutThemeCustoms()
+		{
+		 super.setLayoutThemeCustoms();
+		 toolbar.setTitleTextColor(toolbarTextColor);
+		 toolbar.setBackgroundColor(toolbarBackgroundColor);
+	 	 }
 
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState)
@@ -110,10 +127,17 @@ public class AddActivity extends GlobalMenuOptions
 		 Button okButton= (Button)findViewById(R.id.okButton);
 		 titleInput= (EditText)findViewById(R.id.titleInput);
 		 okButton.setOnClickListener(new OkButtonListener() );
-		 titleInput.setOnEditorActionListener(new SubmitListener() );
+		 titleInput.setOnEditorActionListener(new SubmitListener());
 		 initToolbar();
+		 setLayoutThemeCustoms();
 		 }
 	 @Override
+	 public boolean onPrepareOptionsMenu(Menu menu)
+		{
+		 menu.findItem(R.id.menu_convert).setVisible(contentType!=0);
+		 return super.onPrepareOptionsMenu(menu);
+		 }
+	@Override
 	 public boolean onOptionsItemSelected(MenuItem item)
 		{
 		 int id = item.getItemId();

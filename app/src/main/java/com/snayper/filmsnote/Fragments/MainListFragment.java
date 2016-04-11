@@ -2,13 +2,14 @@ package com.snayper.filmsnote.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 	 protected SimpleCursorAdapter adapter;
 	 public int contentType;
 	 protected int listElementLayout;
+	 private int themeResource,actionButtonBackgroundColor,actionButtonImageRes,dividerColor;
 
 	 protected String dbListFrom[]= {O.db.FIELD_NAME_TITLE, O.db.FIELD_NAME_ALL, O.db.FIELD_NAME_WATCHED, O.db.FIELD_NAME_DATE};
 	 protected int dbListTo[]= {R.id.title, R.id.newEpisodes, R.id.watchedEpisodes, R.id.lastDate};
@@ -70,28 +72,14 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 
 	 protected View initContentView(LayoutInflater inflater,ViewGroup container)
 		{
-		 int res;
-		 switch(GlobalMenuOptions.themeSwitcher)
-			{
-			 case O.prefs.THEME_ID_MENTOR:
-				 res= R.style.Theme_Mentor;
-				 break;
-			 case O.prefs.THEME_ID_ULTRA:
-				 res= R.style.Theme_Ultra;
-				 break;
-			 case O.prefs.THEME_ID_COW:
-				 res= R.style.Theme_Cow;
-				 break;
-			 default:
-				 res= R.style.Theme_Mentor;
-			 }
-		 final Context contextThemeWrapper= new ContextThemeWrapper(getActivity(), res);
+		 initLayoutThemeCustoms();
+		 final Context contextThemeWrapper= new ContextThemeWrapper(getActivity(),themeResource);
 		 LayoutInflater localInflater= inflater.cloneInContext(contextThemeWrapper);
 		 return localInflater.inflate(R.layout.main_list_fragment,container, false);
 		 }
 	 public int getListCount()
 		{
-		 return list.getCount();
+		return list.getCount();
 		 }
 	 public void initFragment(String _title,int _contentType,int _listElementLayout)
 		{
@@ -113,9 +101,46 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 		 else
 			 adapter= new CustomCursorAdapter_Serial(getActivity(), contentType, listElementLayout, DbHelper.cursors[contentType], dbListFrom, dbListTo);
 		 list.setAdapter(adapter);
-		 ColorDrawable divcolor = new ColorDrawable(Color.parseColor("#FF12212f") );
+		 ColorDrawable divcolor= new ColorDrawable(dividerColor);
 		 list.setDivider(divcolor);
 		 list.setDividerHeight(2);
+		 }
+	 @SuppressWarnings("deprecation")
+	 protected void initLayoutThemeCustoms()
+		{
+		 Resources resources= getResources();
+		 switch(GlobalMenuOptions.themeSwitcher)
+			{
+			 case O.prefs.THEME_ID_MENTOR:
+				 themeResource= R.style.Theme_Mentor;
+				 actionButtonBackgroundColor= resources.getColor(R.color.actionButtonBackground_mentor);
+				 actionButtonImageRes= R.mipmap.add_button;
+				 dividerColor= resources.getColor(R.color.list_divider_mentor);
+				 break;
+			 case O.prefs.THEME_ID_ULTRA:
+				 themeResource= R.style.Theme_Ultra;
+				 actionButtonBackgroundColor= resources.getColor(R.color.actionButtonBackground_ultra);
+				 actionButtonImageRes= R.mipmap.add_button_ultra;
+				 dividerColor= resources.getColor(R.color.list_divider_ultra);
+				 break;
+			 case O.prefs.THEME_ID_COW:
+				 themeResource= R.style.Theme_Cow;
+				 actionButtonBackgroundColor= resources.getColor(R.color.actionButtonBackground_cow);
+				 actionButtonImageRes= R.mipmap.add_button;
+				 dividerColor= resources.getColor(R.color.list_divider_cow);
+				 break;
+			 default:
+				 themeResource= R.style.Theme_Mentor;
+				 actionButtonBackgroundColor= resources.getColor(R.color.actionButtonBackground_mentor);
+				 actionButtonImageRes= R.mipmap.add_button;
+				 dividerColor= resources.getColor(R.color.list_divider_mentor);
+			 }
+		 }
+	 protected void setLayoutThemeCustoms(View view)
+		{
+		 FloatingActionButton actionButton= (FloatingActionButton)view.findViewById(R.id.activeButton);
+		 actionButton.setBackgroundTintList(ColorStateList.valueOf(actionButtonBackgroundColor) );
+		 actionButton.setImageResource(actionButtonImageRes);
 		 }
 
 	 @Nullable
@@ -131,6 +156,7 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 		 activeButton.setOnClickListener(new ActiveButtonListener() );
 		 setListener_listOnClick();
 		 setListener_listOnLongClick();
+		 setLayoutThemeCustoms(view);
 		 return view;
 		 }
 	 @Override

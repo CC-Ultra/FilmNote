@@ -1,0 +1,97 @@
+<resources>
+
+<!--mentor-->
+	<style name="Theme_Mentor" parent="BasicTheme">
+		<item name="colorPrimary">@color/panel_mentor</item>
+		<item name="android:layout">@color/panel_mentor</item>
+		<item name="android:textColor">@color/dark_text_mentor</item>
+		<item name="buttonStyle">@style/Button_mentor</item>
+		<item name="imageButtonStyle">@style/Button_mentor</item>
+		<item name="actionOverflowButtonStyle">@style/Button_menu_mentor</item>
+		<item name="editTextStyle">@style/EditText_mentor</item>
+		<item name="android:dropDownListViewStyle">@style/DropdownListView_mentor</item>
+	</style>
+
+	<style name="Button_mentor" parent="button_style_basic">
+		<item name="android:textColor">@color/light_text_mentor</item>
+		<item name="android:background">@drawable/buton_selector_mentor</item>
+	</style>
+	<style name="Button_menu_mentor" parent="Widget.AppCompat.ActionButton.Overflow">
+		<item name="android:src">@drawable/menu_button_mentor</item>
+	</style>
+	<style name="EditText_mentor" parent="BasicEditText">
+		<item name="android:textColor">@color/dark_text_mentor</item>
+		<item name="android:textColorHighlight">@color/selection_ultra</item>
+		<item name="android:background">@drawable/edit_text_selector_mentor</item>
+		<item name="android:textCursorDrawable">@drawable/edit_text_cursor_selector_mentor</item>
+	</style>
+	<style name="DropdownListView_mentor" parent="BasicDropdownListView">
+		<item name="android:background">@color/list_background_mentor</item>
+		<item name="android:divider">@color/list_divider_mentor</item>
+		<item name="android:listSelector">@drawable/dropdown_selector_mentor</item>
+	</style>
+
+<!--ultra-->
+	<style name="Theme_Ultra" parent="BasicTheme">
+		<item name="colorPrimary">@color/panel_ultra</item>
+		<item name="colorAccent">@color/selection_ultra</item>
+		<item name="android:textColor">@color/third_text_ultra</item>
+		<item name="buttonStyle">@style/Button_ultra</item>
+		<item name="imageButtonStyle">@style/Button_ultra</item>
+		<item name="actionOverflowButtonStyle">@style/Button_menu_ultra</item>
+		<item name="editTextStyle">@style/EditText_ultra</item>
+		<item name="android:dropDownListViewStyle">@style/DropdownListView_ultra</item>
+		<!--<item name="android:alertDialogTheme">@style/Dialog_ultra</item>-->
+	</style>
+
+	<style name="Button_ultra" parent="button_style_basic">
+		<item name="android:textColor">@color/light_text_ultra</item>
+		<item name="android:background">@drawable/buton_selector_ultra</item>
+	</style>
+	<style name="Button_menu_ultra" parent="Widget.AppCompat.ActionButton.Overflow">
+		<item name="android:src">@drawable/menu_button_ultra</item>
+	</style>
+	<style name="EditText_ultra" parent="BasicEditText">
+		<item name="android:textColor">@color/third_text_ultra</item>
+		<item name="android:textColorHighlight">@color/light_text_ultra</item>
+		<item name="android:background">@drawable/edit_text_selector_ultra</item>
+		<item name="android:textCursorDrawable">@drawable/edit_text_cursor_selector_ultra</item>
+	</style>
+	<style name="DropdownListView_ultra" parent="BasicDropdownListView">
+		<item name="android:background">@color/list_background_ultra</item>
+		<item name="android:divider">@color/list_divider_ultra</item>
+		<item name="android:listSelector">@drawable/dropdown_selector_ultra</item>
+	</style>
+
+<!--cow-->
+	<style name="Theme_Cow" parent="BasicTheme">
+		<item name="colorPrimary">@color/panel_cow</item>
+		<item name="colorAccent">@color/selection_cow</item>
+		<item name="android:textColor">@color/light_text_cow</item>
+		<item name="buttonStyle">@style/Button_cow</item>
+		<item name="imageButtonStyle">@style/Button_cow</item>
+		<item name="actionOverflowButtonStyle">@style/Button_menu_cow</item>
+		<item name="editTextStyle">@style/EditText_cow</item>
+		<item name="android:dropDownListViewStyle">@style/DropdownListView_cow</item>
+	</style>
+
+	<style name="Button_cow" parent="button_style_basic">
+		<item name="android:textColor">@color/light_text_cow</item>
+		<item name="android:background">@drawable/buton_selector_cow</item>
+	</style>
+	<style name="Button_menu_cow" parent="Widget.AppCompat.ActionButton.Overflow">
+		<item name="android:src">@drawable/menu_button_cow</item>
+	</style>
+	<style name="EditText_cow" parent="BasicEditText">
+		<item name="android:textColor">@color/dark_text_cow</item>
+		<item name="android:textColorHighlight">@color/light_text_cow</item>
+		<item name="android:background">@drawable/edit_text_selector_cow</item>
+		<item name="android:textCursorDrawable">@drawable/edit_text_cursor_selector_cow</item>
+	</style>
+	<style name="DropdownListView_cow" parent="BasicDropdownListView">
+		<item name="android:background">@color/panel_cow</item>
+		<item name="android:divider">@color/list_background_cow</item>
+		<item name="android:listSelector">@drawable/dropdown_selector_cow</item>
+	</style>
+
+</resources>
