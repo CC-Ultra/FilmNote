@@ -2,6 +2,7 @@ package com.snayper.filmsnote.Activities;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -55,6 +56,13 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 			 }
 		 }
 
+	 @Override
+	 protected void exit()
+		{
+		 if(isServiceRunning(Updater.class) )
+			 stopService(new Intent(this,Updater.class) );
+		 android.os.Process.killProcess(android.os.Process.myPid() );
+		 }
 	 private void clearMainList()
 		{
 		 int contentType= tabLayout.getSelectedTabPosition();
@@ -127,7 +135,8 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 				 tabIndicatorColor=lightTextColor;
 				 break;
 			 case O.prefs.THEME_ID_ULTRA:
-				 tabTextColorSelected=selectionColor;
+				 tabTextColorSelected=thirdTextColor;
+				 tabIndicatorColor=thirdTextColor;
 				 break;
 			 case O.prefs.THEME_ID_COW:
 				 tabTextColor=thirdTextColor;
@@ -140,7 +149,7 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 	 protected void setLayoutThemeCustoms()
 		{
 		 super.setLayoutThemeCustoms();
-		 if(localThemeSwitcher==O.prefs.THEME_ID_MENTOR)
+		 if(localThemeSwitcher!=O.prefs.THEME_ID_COW)
 			 tabLayout.setSelectedTabIndicatorColor(tabIndicatorColor);
 		 toolbar.setTitleTextColor(toolbarTextColor);
 		 tabLayout.setBackgroundColor(tabBackgroundColor);
@@ -150,8 +159,8 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState)
 		{
-		super.onCreate(savedInstanceState);
-//		 Log.d(O.TAG,"onCreate: main");
+		 super.onCreate(savedInstanceState);
+		 Log.d(O.TAG,"onCreate: main");
 		 setContentView(R.layout.main_layout);
 
 		 DbHelper dbHelper= new DbHelper(this);
@@ -172,7 +181,7 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 	 public boolean onPrepareOptionsMenu(Menu menu)
 		{
 		 boolean x= DbHelper.cursors[tabLayout.getSelectedTabPosition() ].getCount()!=0;
-		 menu.findItem(R.id.menu_deleteAll).setVisible(x).setIcon(R.mipmap.halp_icon);
+		 menu.findItem(R.id.menu_deleteAll).setVisible(x);
 		 return super.onPrepareOptionsMenu(menu);
 		 }
 	 @Override

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,8 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 	 protected ListView list;
 	 protected FloatingActionButton activeButton;
 	 protected SimpleCursorAdapter adapter;
-	 public int contentType;
+	 protected int contentType;
+	 public int fakeContentType;
 	 protected int listElementLayout;
 	 private int themeResource,actionButtonBackgroundColor,actionButtonImageRes,dividerColor;
 
@@ -85,8 +87,9 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 		{
 		 title=_title;
 		 contentType=_contentType;
+		 fakeContentType= contentType+4;
 		 listElementLayout=_listElementLayout;
-//		 Log.d(O.TAG,"initFragment: "+ contentType);
+		 Log.d(O.TAG,"initFragment: "+ fakeContentType);
 		 }
 	 public String getTitle()
 		{
@@ -95,7 +98,7 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 	 @Override
 	 public void initAdapter()
 		{
-//		 Log.d(O.TAG,"initAdapter: "+ contentType);
+		 Log.d(O.TAG,"initAdapter: "+ fakeContentType);
 		 if(contentType==O.interaction.CONTENT_FILMS)
 			 adapter= new CustomCursorAdapter_Films(getActivity(), listElementLayout, DbHelper.cursors[contentType], dbListFrom, dbListTo);
 		 else
@@ -148,7 +151,7 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 	 public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
 		{
 		 super.onCreateView(inflater,container,savedInstanceState);
-//		 Log.d(O.TAG,"onCreateView: "+ contentType);
+		 Log.d(O.TAG,"onCreateView: "+ fakeContentType);
 		 View view= initContentView(inflater,container);
 
 		 list= (ListView)view.findViewById(R.id.list);

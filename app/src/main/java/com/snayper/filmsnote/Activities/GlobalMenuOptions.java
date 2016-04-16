@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 public class GlobalMenuOptions extends AppCompatActivity
 	{
 	 public static int themeSwitcher;
+	 protected static boolean exitOrder=false;
 	 protected int localThemeSwitcher=-1;
 	 protected LinearLayout basicLayout;
 	 protected int backgroundRes;
@@ -106,9 +107,7 @@ public class GlobalMenuOptions extends AppCompatActivity
 		 }
 	 protected void exit()
 		{
-		 if(isServiceRunning(Updater.class) )
-			 stopService(new Intent(this,Updater.class) );
-		 android.os.Process.killProcess(android.os.Process.myPid());
+		 finish();
 		 }
 	 protected void goToSettings()
 		{
@@ -130,6 +129,8 @@ public class GlobalMenuOptions extends AppCompatActivity
 	 @Override
 	 protected void onResume()
 		{
+		 if(exitOrder)
+			 exit();
 		 if(localThemeSwitcher!=themeSwitcher)
 			{
 			 localThemeSwitcher=themeSwitcher;
@@ -141,7 +142,6 @@ public class GlobalMenuOptions extends AppCompatActivity
 	 public boolean onCreateOptionsMenu(Menu menu)
 		 {
 		 setMenuLayout(menu);
-		 menu.add(0,22,0,"Reset");
 		 return super.onCreateOptionsMenu(menu);
 		 }
 	@Override
@@ -150,13 +150,11 @@ public class GlobalMenuOptions extends AppCompatActivity
 		 int id = item.getItemId();
 		 switch(id)
 			{
-			 case 22:
-				 resetActivity();
-				 return true;
 			 case R.id.menu_settings:
 				 goToSettings();
 				 return true;
 			 case R.id.menu_exit:
+				 exitOrder=true;
 				 exit();
 				 return true;
 			 default:

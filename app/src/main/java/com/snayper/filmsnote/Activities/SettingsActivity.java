@@ -80,7 +80,7 @@ public class SettingsActivity extends GlobalMenuOptions
 			 if(reset && (theme!=selectedTheme) )
 				{
 				 if(theme == O.prefs.THEME_ID_ULTRA)
-					 Toast.makeText(SettingsActivity.this,"Любишь мой \"вырвиглаз\"?",Toast.LENGTH_SHORT).show();
+					 Toast.makeText(SettingsActivity.this,"Любишь мои контрасты?",Toast.LENGTH_SHORT).show();
 				 resetActivity();
 				 }
 			 else

@@ -73,7 +73,7 @@ public class DbHelper extends SQLiteOpenHelper implements BaseColumns
 		 newRecord.put(O.db.FIELD_NAME_WEB, rec.getWebSrc() );
 		 newRecord.put(O.db.FIELD_NAME_UPDATE_ORDER, rec.hasUpdateOrder() );
 		 newRecord.put(O.db.FIELD_NAME_UPDATE_MARK, rec.isUpdated() );
-		 newRecord.put(O.db.FIELD_NAME_CONFIDENT_DATE,rec.isConfidentDate());
+		 newRecord.put(O.db.FIELD_NAME_CONFIDENT_DATE,rec.isConfidentDate() );
 		 db.insert(O.db.TABLE_NAME[tableNum],null,newRecord);
 		 DbHelper.initCursors();
 		 }
