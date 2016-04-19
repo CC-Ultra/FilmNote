@@ -12,6 +12,9 @@
 			android:label="@string/app_name"
 			android:supportsRtl="true"
 			android:theme="@style/BasicTheme">
+		<provider
+				android:authorities="com.snayper.filmsnote.DB"
+				android:name=".Db.DbProvider"/>
 		<service
 				android:banner="@drawable/tech_icon"
 				android:icon="@drawable/tech_icon"
@@ -30,5 +33,6 @@
 		<activity android:name=".Activities.WebActivity"/>
 		<activity android:name=".Activities.SettingsActivity"/>
 		<activity android:name=".Activities.EasterActivity"/>
+		<!--<activity android:name=".Activities.TestActivity"/>-->
 	</application>
 </manifest>

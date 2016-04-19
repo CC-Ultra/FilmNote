@@ -2,6 +2,7 @@ package com.snayper.filmsnote.Activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,7 +23,7 @@ import com.snayper.filmsnote.R;
 public class WebActivity extends GlobalMenuOptions implements WebTaskComleteListener
 	{
 	 private boolean loading;
-	 private int buttonIcon_back,buttonIcon_forward,buttonIcon_reload,buttonIcon_cancel;
+	 private int buttonIcon_back,buttonIcon_forward,buttonIcon_reload,buttonIcon_cancel,progressColor;
 	 private ImageButton backButton,forwardButton,reloadButton;
 	 private WebView webView;
 	 private Spinner siteList;
@@ -163,6 +164,7 @@ public class WebActivity extends GlobalMenuOptions implements WebTaskComleteList
 	 protected void initLayoutThemeCustoms()
 		{
 		 super.initLayoutThemeCustoms();
+		 progressColor=selectionColor;
 		 switch(localThemeSwitcher)
 			{
 			 case O.prefs.THEME_ID_MENTOR:
@@ -194,6 +196,7 @@ public class WebActivity extends GlobalMenuOptions implements WebTaskComleteList
 	 protected void setLayoutThemeCustoms()
 		{
 		 super.setLayoutThemeCustoms();
+		 progressBar.getProgressDrawable().setColorFilter(progressColor, android.graphics.PorterDuff.Mode.SRC_IN);
 		 reloadButton.setImageResource(buttonIcon_reload);
 		 backButton.setImageResource(buttonIcon_back);
 		 forwardButton.setImageResource(buttonIcon_forward);

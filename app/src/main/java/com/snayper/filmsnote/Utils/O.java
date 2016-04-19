@@ -1,5 +1,7 @@
 package com.snayper.filmsnote.Utils;
 
+import android.net.Uri;
+
 /**
  * Created by snayper on 24.02.2016.
  */
@@ -39,19 +41,33 @@ public class O
 
 	 public static class db
 		{
-		 public static final String DB_FILENAME= "filmNote.db";
-		 public static final int DB_VERSION= 9;
+		 public static final String AUTHORITY="com.snayper.filmsnote.DB";
+		 public static final String PROVIDER_PATH[]= {"Films","Serial","Mult_Serial"};
+		 public static final int URI_ID_FILMS=0;
+		 public static final int URI_ID_SERIAL=1;
+		 public static final int URI_ID_MULT=2;
+
+		 public static final String DB_FILENAME="filmNote.db";
+		 public static final int DB_VERSION=9;
 		 public static final String TABLE_NAME[]= {"Films","Serial","Mult_Serial"};
-		 public static final String FIELD_NAME_TITLE= "Title";
-		 public static final String FIELD_NAME_DATE= "Date";
-		 public static final String FIELD_NAME_WATCHED= "Watched";
-		 public static final String FIELD_NAME_ALL= "All2";
-		 public static final String FIELD_NAME_IMG= "Image";
-		 public static final String FIELD_NAME_WEB= "WebSRC";
-		 public static final String FIELD_NAME_FILM_WATCHED= "Watched_flag";
-		 public static final String FIELD_NAME_CONFIDENT_DATE= "Confident_flag";
-		 public static final String FIELD_NAME_UPDATE_ORDER= "Update_order";
-		 public static final String FIELD_NAME_UPDATE_MARK= "Update_mark";
+		 public static final String FIELD_NAME_ID= "_id";
+		 public static final String FIELD_NAME_TITLE="Title";
+		 public static final String FIELD_NAME_DATE="Date";
+		 public static final String FIELD_NAME_WATCHED="Watched";
+		 public static final String FIELD_NAME_ALL="All2";
+		 public static final String FIELD_NAME_IMG="Image";
+		 public static final String FIELD_NAME_WEB="WebSRC";
+		 public static final String FIELD_NAME_FILM_WATCHED="Watched_flag";
+		 public static final String FIELD_NAME_CONFIDENT_DATE="Confident_flag";
+		 public static final String FIELD_NAME_UPDATE_ORDER="Update_order";
+		 public static final String FIELD_NAME_UPDATE_MARK="Update_mark";
+		 public static final String TABLE_FIELDS[][]=
+				{
+					{DbHelper._ID, O.db.FIELD_NAME_TITLE, O.db.FIELD_NAME_DATE, O.db.FIELD_NAME_FILM_WATCHED},
+					{DbHelper._ID, O.db.FIELD_NAME_TITLE, O.db.FIELD_NAME_ALL, O.db.FIELD_NAME_WATCHED,
+							O.db.FIELD_NAME_DATE, O.db.FIELD_NAME_IMG, O.db.FIELD_NAME_WEB,
+							O.db.FIELD_NAME_UPDATE_ORDER, O.db.FIELD_NAME_UPDATE_MARK, O.db.FIELD_NAME_CONFIDENT_DATE}
+				 };
 		 }
 
 	 public static class mapKeys

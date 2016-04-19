@@ -3,14 +3,19 @@ package com.snayper.filmsnote.Adapters;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import com.snayper.filmsnote.Activities.GlobalMenuOptions;
 import com.snayper.filmsnote.R;
-import com.snayper.filmsnote.Utils.*;
+import com.snayper.filmsnote.Utils.DateUtil;
+import com.snayper.filmsnote.Utils.DbHelper;
+import com.snayper.filmsnote.Utils.O;
+import com.snayper.filmsnote.Utils.Record_Serial;
+
+import java.util.Date;
 
 /**
  * Created by snayper on 19.02.2016.
@@ -25,7 +30,7 @@ public class CustomCursorAdapter_Serial extends SimpleCursorAdapter
 	 @SuppressWarnings("deprecation")
 	 public CustomCursorAdapter_Serial(Context _context,int _contentType,int layout,Cursor c,String[] from,int[] to)
 		{
-		 super(_context,layout,c,from,to);
+		 super(_context,layout,c,from,to,0);
 		 context=_context;
 		 contentType=_contentType;
 		 Resources resources= context.getResources();
@@ -63,7 +68,6 @@ public class CustomCursorAdapter_Serial extends SimpleCursorAdapter
 			 convertView= inflater.inflate(R.layout.main_list_element_serial, parent, false);
 			 }
 		 convertView.setBackgroundResource(drawableRes);
-		 Record_Serial record= DbHelper.extractRecord_Serial(contentType, position);
 		 TextView titleTxt= (TextView)convertView.findViewById(R.id.title);
 		 TextView allTxt= (TextView)convertView.findViewById(R.id.newEpisodes);
 		 TextView watchedTxt= (TextView)convertView.findViewById(R.id.watchedEpisodes);
@@ -77,11 +81,22 @@ public class CustomCursorAdapter_Serial extends SimpleCursorAdapter
 		 allTxtInfo.setTextColor(textColor);
 		 watchedTxtInfo.setTextColor(textColor);
 		 dateTxt.setTextColor(textColor);
-		 dateTxt.setText(DateUtil.dateToString(record.getDate() ) );
-		 titleTxt.setText(record.getTitle() );
-		 allTxt.setText(""+ record.getAll() );
-		 watchedTxt.setText(""+ record.getWatched() );
-		 if(record.isUpdated() )
+
+		 Cursor cursor= getCursor();
+		 cursor.moveToPosition(position);
+		 String title= cursor.getString(cursor.getColumnIndex(O.db.FIELD_NAME_TITLE) );
+		 Date date= new Date(cursor.getLong(cursor.getColumnIndex(O.db.FIELD_NAME_DATE) ) );
+		 if(date.getTime()==0)
+			 date=null;
+		 int all= cursor.getInt(cursor.getColumnIndex(O.db.FIELD_NAME_ALL) );
+		 int watched= cursor.getInt(cursor.getColumnIndex(O.db.FIELD_NAME_WATCHED) );
+		 boolean updated= cursor.getInt(cursor.getColumnIndex(O.db.FIELD_NAME_UPDATE_MARK) )==1;
+
+		 dateTxt.setText(DateUtil.dateToString(date) );
+		 titleTxt.setText(title);
+		 allTxt.setText(""+ all);
+		 watchedTxt.setText(""+ watched);
+		 if(updated)
 			 convertView.setBackgroundResource(updatedColor);
 		 return convertView;
 		 }

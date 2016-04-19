@@ -190,7 +190,7 @@ public class DbHelper extends SQLiteOpenHelper implements BaseColumns
 		 db.execSQL(DB_CREATE_SCRIPT[0] );
 		 db.execSQL(DB_CREATE_SCRIPT[1] );
 		 db.execSQL(DB_CREATE_SCRIPT[2] );
-		 } // gg
+		 }
 	 @Override
 	 public void onUpgrade(SQLiteDatabase db,int oldVersion,int newVersion)
 		{
