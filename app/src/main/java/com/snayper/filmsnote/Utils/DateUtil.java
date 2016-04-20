@@ -10,8 +10,7 @@ public class DateUtil
 	{
 	 public static Date getCurrentDate()
 		{
-		 Calendar date= Calendar.getInstance();
-		 return date.getTime();
+		 return new Date();
 		 }
 	 public static Date dropTime(Date date)
 		{

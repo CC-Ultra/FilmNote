@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.snayper.filmsnote.Utils.DbHelper;
+import com.snayper.filmsnote.Db.DbConsumer;
 import com.snayper.filmsnote.Utils.O;
 import com.snayper.filmsnote.Utils.Record_Film;
 import com.snayper.filmsnote.Utils.Record_Serial;
@@ -25,6 +25,7 @@ public class AddActivity extends GlobalMenuOptions
 	{
 	 private EditText titleInput;
 	 private Toolbar toolbar;
+	 private DbConsumer dbConsumer;
 	 private int contentType;
 	 private int toolbarTextColor,toolbarBackgroundColor;
 	 private boolean updated;
@@ -80,14 +81,14 @@ public class AddActivity extends GlobalMenuOptions
 			{
 			 Record_Film record= new Record_Film();
 			 record.setTitle(title);
-			 DbHelper.putRecord_Films(record,contentType);
+			 dbConsumer.putRecord(record);
 			 }
 		 else
 			{
 			 Record_Serial record= new Record_Serial();
 			 record.setTitle(title);
 			 record.setUpdated(updated);
-			 DbHelper.putRecord_Serial(record,contentType);
+			 dbConsumer.putRecord(record,contentType);
 			 }
 		 onBackPressed();
 		 }
@@ -122,12 +123,15 @@ public class AddActivity extends GlobalMenuOptions
 		 super.onCreate(savedInstanceState);
 		 setContentView(R.layout.add_layout);
 
-		 contentType= getIntent().getIntExtra(O.mapKeys.extra.CONTENT_TYPE, -1);
+		 contentType= getIntent().getIntExtra(O.mapKeys.extra.CONTENT_TYPE,-1);
 		 updated= getIntent().getBooleanExtra("Updated",false);
+
 		 Button okButton= (Button)findViewById(R.id.okButton);
 		 titleInput= (EditText)findViewById(R.id.titleInput);
+
+		 dbConsumer= new DbConsumer(this,getContentResolver(),contentType);
 		 okButton.setOnClickListener(new OkButtonListener() );
-		 titleInput.setOnEditorActionListener(new SubmitListener());
+		 titleInput.setOnEditorActionListener(new SubmitListener() );
 		 initToolbar();
 		 setLayoutThemeCustoms();
 		 }
@@ -140,8 +144,7 @@ public class AddActivity extends GlobalMenuOptions
 	@Override
 	 public boolean onOptionsItemSelected(MenuItem item)
 		{
-		 int id = item.getItemId();
-		 switch(id)
+		 switch(item.getItemId() )
 			{
 			 case R.id.menu_convert:
 				 toOnline();

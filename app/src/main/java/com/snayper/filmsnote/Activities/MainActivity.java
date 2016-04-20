@@ -1,11 +1,11 @@
 package com.snayper.filmsnote.Activities;
 
+import android.util.Log;
+import android.widget.Button;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 import com.snayper.filmsnote.Adapters.TabsFragmentAdapter;
+import com.snayper.filmsnote.Db.DbConsumer;
 import com.snayper.filmsnote.Fragments.MainListFragment;
 import com.snayper.filmsnote.Interfaces.DialogDecision;
 import com.snayper.filmsnote.Services.Updater;
@@ -27,7 +28,7 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 	 private Toolbar toolbar;
 	 private TabsFragmentAdapter tabsFragmentAdapter;
 	 private int toolbarTextColor,tabBackgroundColor,tabIndicatorColor,tabTextColor,tabTextColorSelected;
-	 private static boolean cowThemeStart=true;
+	 private boolean cowThemeStart=true;
 
 	 private class testButtonListener implements View.OnClickListener
 		{
@@ -56,22 +57,28 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 			 }
 		 }
 
+	 private void startService()
+		{
+		 PendingIntent pendingIntent= createPendingResult(112,new Intent(),0);
+		 Intent serv= new Intent(MainActivity.this,Updater.class);
+		 serv.putExtra(O.mapKeys.extra.PENDING_INTENT_AS_EXTRA,pendingIntent);
+		 if(!isServiceRunning(Updater.class) )
+			 startService(serv);
+		 }
 	 @Override
 	 protected void exit()
 		{
 		 if(isServiceRunning(Updater.class) )
 			 stopService(new Intent(this,Updater.class) );
-		 android.os.Process.killProcess(android.os.Process.myPid() );
+		 android.os.Process.killProcess(android.os.Process.myPid());
 		 }
 	 private void clearMainList()
 		{
 		 int contentType= tabLayout.getSelectedTabPosition();
+		 DbConsumer consumer= new DbConsumer(this,getContentResolver(),contentType);
 		 MainListFragment fragment= (MainListFragment)tabsFragmentAdapter.getItem(contentType);
-		 while(fragment.getListCount()!=0)
-			{
-			 DbHelper.deleteRecord(this,contentType,0);
-			 fragment.initAdapter();
-			 }
+		 consumer.clear();
+		 fragment.initAdapter();
 		 }
 	 @Override
 	 protected void initTheme()
@@ -79,9 +86,10 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 		 initPrefs();
 		 super.initTheme();
 		 }
+	 @SuppressWarnings("deprecation")
 	 private void initPrefs()
 		{
-		 prefs= getSharedPreferences(O.mapKeys.prefs.PREFS_FILENAME, MODE_PRIVATE);
+		 prefs= getSharedPreferences(O.mapKeys.prefs.PREFS_FILENAME, MODE_MULTI_PROCESS);
 //		 if(cowThemeStart)
 //			{
 //			 prefs.edit().putInt(O.mapKeys.prefs.THEME,2).apply();
@@ -154,57 +162,46 @@ public class MainActivity extends GlobalMenuOptions implements DialogDecision
 		 toolbar.setTitleTextColor(toolbarTextColor);
 		 tabLayout.setBackgroundColor(tabBackgroundColor);
 		 tabLayout.setTabTextColors(tabTextColor,tabTextColorSelected);
-		}
+		 }
 
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState)
 		{
 		 super.onCreate(savedInstanceState);
-		 Log.d(O.TAG,"onCreate: main");
+//		 Log.d(O.TAG,"onCreate: main");
 		 setContentView(R.layout.main_layout);
 
-		 DbHelper dbHelper= new DbHelper(this);
-		 dbHelper.initDb();
-		 DbHelper.initCursors();
 		 initToolbar();
 		 initTabs();
 
 //		 Button testButton= (Button)findViewById(R.id.testButton);
 //		 testButton.setOnClickListener(new testButtonListener() );
-		 Button doButton= (Button)findViewById(R.id.doButton);
-		 doButton.setOnClickListener(new testButtonListener() );
-		 Button undoButton= (Button)findViewById(R.id.undoButton);
-		 undoButton.setOnClickListener(new undoTestButtonListener());
+//		 Button doButton= (Button)findViewById(R.id.doButton);
+//		 doButton.setOnClickListener(new testButtonListener() );
+//		 Button undoButton= (Button)findViewById(R.id.undoButton);
+//		 undoButton.setOnClickListener(new undoTestButtonListener() );
 		 setLayoutThemeCustoms();
+		 startService();
 		 }
 	 @Override
 	 public boolean onPrepareOptionsMenu(Menu menu)
 		{
-		 boolean x= DbHelper.cursors[tabLayout.getSelectedTabPosition() ].getCount()!=0;
+		 int contentType= tabLayout.getSelectedTabPosition();
+		 DbConsumer consumer= new DbConsumer(this,getContentResolver(),contentType);
+		 boolean x= consumer.getCount()!=0;
 		 menu.findItem(R.id.menu_deleteAll).setVisible(x);
 		 return super.onPrepareOptionsMenu(menu);
 		 }
 	 @Override
 	 public boolean onOptionsItemSelected(MenuItem item)
 		{
-		 int id = item.getItemId();
-		 switch(id)
+		 switch(item.getItemId() )
 			{
 			 case R.id.menu_deleteAll:
 				 new ConfirmDialog(this,this,0);
 				 return true;
 			 default:
 				 return super.onOptionsItemSelected(item);
-			 }
-		 }
-	 @Override
-	 protected void onActivityResult(int requestCode, int resultCode, Intent data)
-		{
-		 super.onActivityResult(requestCode, resultCode, data);
-		 switch(resultCode)
-			{
-//			 case O.interaction.SERVICE_RESULT_:
-//				 break;
 			 }
 		 }
 	 }

@@ -9,8 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import com.snayper.filmsnote.Activities.AddActivity;
 import com.snayper.filmsnote.Activities.WebActivity;
+import com.snayper.filmsnote.Db.DbConsumer;
 import com.snayper.filmsnote.Interfaces.AdapterInterface;
-import com.snayper.filmsnote.Utils.DbHelper;
 import com.snayper.filmsnote.Utils.O;
 import com.snayper.filmsnote.Utils.Record_Serial;
 import com.snayper.filmsnote.Utils.DateUtil;
@@ -22,6 +22,7 @@ import java.util.HashMap;
  */
 public class ActionDialog extends DialogFragment
 	{
+	 DbConsumer dbConsumer;
 	 private AdapterInterface parent;
 	 private int contentType;
 	 private int position;
@@ -38,7 +39,7 @@ public class ActionDialog extends DialogFragment
 			{
 			 HashMap<String,Object> data= new HashMap<>();
 			 data.put(O.db.FIELD_NAME_FILM_WATCHED,false);
-			 DbHelper.updateRecord(contentType,position,data);
+			 dbConsumer.updateRecord(contentType,position,data);
 			 parent.initAdapter();
 			 }
 		 }
@@ -50,7 +51,7 @@ public class ActionDialog extends DialogFragment
 			 HashMap<String,Object> data= new HashMap<>();
 			 data.put(O.db.FIELD_NAME_FILM_WATCHED,true);
 			 data.put(O.db.FIELD_NAME_DATE, DateUtil.getCurrentDate().getTime() );
-			 DbHelper.updateRecord(contentType,position,data);
+			 dbConsumer.updateRecord(contentType,position,data);
 			 parent.initAdapter();
 			 }
 		 }
@@ -59,13 +60,13 @@ public class ActionDialog extends DialogFragment
 		 @Override
 		 public void onClick(DialogInterface dialog,int which)
 			{
-			 Record_Serial record= DbHelper.extractRecord_Serial(contentType,position);
+			 Record_Serial record= dbConsumer.extractRecord_Serial(position);
 			 if(record.getWatched() > 0)
 				{
 				 record.setWatched( record.getWatched()-1 );
 				 HashMap<String,Object> data= new HashMap<>();
 				 data.put(O.db.FIELD_NAME_WATCHED,record.getWatched() );
-				 DbHelper.updateRecord(contentType,position,data);
+				 dbConsumer.updateRecord(contentType,position,data);
 				 parent.initAdapter();
 				 }
 			 }
@@ -75,7 +76,7 @@ public class ActionDialog extends DialogFragment
 		 @Override
 		 public void onClick(DialogInterface dialog,int which)
 			{
-			 Record_Serial record= DbHelper.extractRecord_Serial(contentType,position);
+			 Record_Serial record= dbConsumer.extractRecord_Serial(position);
 			 if(record.getAll() > 0)
 				{
 				 record.setAll(record.getAll()-1);
@@ -84,7 +85,7 @@ public class ActionDialog extends DialogFragment
 				 HashMap<String,Object> data= new HashMap<>();
 				 data.put(O.db.FIELD_NAME_ALL,record.getAll() );
 				 data.put(O.db.FIELD_NAME_WATCHED,record.getWatched() );
-				 DbHelper.updateRecord(contentType,position,data);
+				 dbConsumer.updateRecord(contentType,position,data);
 				 parent.initAdapter();
 				 }
 			 }
@@ -94,7 +95,7 @@ public class ActionDialog extends DialogFragment
 		 @Override
 		 public void onClick(DialogInterface dialog,int which)
 			{
-			 DbHelper.deleteRecord(parent.getContext(),contentType,position);
+			 dbConsumer.deleteRecord(position);
 			 parent.initAdapter();
 			 }
 		 }
@@ -224,6 +225,7 @@ public class ActionDialog extends DialogFragment
 	 @Override
 	 public Dialog onCreateDialog(Bundle savedInstanceState)
 		{
+		 dbConsumer= new DbConsumer(getActivity(), getActivity().getContentResolver(),contentType);
 		 AlertDialog.Builder adb = new AlertDialog.Builder(getActivity() );
 		 switch(buttonsNum)
 			{

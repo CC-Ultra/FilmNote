@@ -11,18 +11,16 @@
 			android:orientation="horizontal"
 			android:id="@+id/imgLayout">
 		<ImageView
-				android:layout_width="150dp"
-				android:layout_height="225dp"
+				android:layout_width="@dimen/img_w"
+				android:layout_height="@dimen/img_h"
 				android:src="@drawable/image_not_found"
-				android:layout_marginBottom="2dp"
-				android:layout_marginRight="2dp"
 				android:layout_gravity="right"
 				android:id="@+id/img"/>
 		<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
+				android:layout_marginLeft="2dp"
 				android:orientation="vertical"
-				android:layout_marginBottom="2dp"
 				android:id="@+id/infoLayout">
 			<TextView
 					android:layout_width="wrap_content"
@@ -68,6 +66,7 @@
 	<ListView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="2dp"
 			android:id="@+id/episodeList"
 			android:layout_gravity="center_horizontal" />
 </LinearLayout>

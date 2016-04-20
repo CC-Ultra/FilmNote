@@ -3,7 +3,9 @@ package com.snayper.filmsnote.Parsers;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.support.v7.view.ContextThemeWrapper;
 import android.util.Log;
 import android.widget.Toast;
 import com.snayper.filmsnote.Interfaces.WebTaskComleteListener;
@@ -15,8 +17,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 import com.snayper.filmsnote.R;
+import com.snayper.filmsnote.Utils.Toaster;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -53,15 +55,16 @@ public abstract class AsyncParser extends AsyncTask<Void,Void,Record_Serial>
 		 urlConnn.setUseCaches(false);
 		 urlConnn.setInstanceFollowRedirects(false);
 		 }
-	 private String getHtmlString()
+	 private String getHtmlString() throws IOException
 		{
-		 String result="";
+		 String result;
 		 URL url;
 		 try
 			{
 			 url=new URL(pageSrc);
 			 HttpURLConnection urlConnn=(HttpURLConnection) url.openConnection();
 			 fillBasicURLparams(urlConnn);
+			 urlConnn.setConnectTimeout( (int)O.date.MINUTE_MILLIS/6);
 			 urlConnn.setRequestMethod("GET");
 			 BufferedReader htmlIn=new BufferedReader(new InputStreamReader(urlConnn.getInputStream(),charset) );
 			 StringBuilder sb=new StringBuilder();
@@ -75,12 +78,13 @@ public abstract class AsyncParser extends AsyncTask<Void,Void,Record_Serial>
 		 catch(IOException err)
 			{
 			 Log.d(O.TAG,"getHtmlString: fail");
+			 throw err;
 			 }
 		 return result;
 		 }
-	 protected void initDOM()
+	 protected void initDOM() throws IOException
 		{
-		 docDOM= Jsoup.parse(getHtmlString());
+		 docDOM= Jsoup.parse(getHtmlString() );
 		 }
 	 protected abstract int extractEpisodesNum();
 	 protected abstract String extractTitle();
@@ -91,7 +95,15 @@ public abstract class AsyncParser extends AsyncTask<Void,Void,Record_Serial>
 		{
 		 Record_Serial extractedData= new Record_Serial();
 		 extractedData.setWebSrc(pageSrc);
-		 initDOM();
+		 try
+			{
+			 initDOM();
+			 }
+		 catch(IOException e)
+			{
+			 Toaster.makeHomeToast(context,"Ошибка соединения");
+			 return null;
+			 }
 		 if(isCancelled() )
 			 return null;
 		 boolean isImg=false, isEpisodesNum=false;
@@ -133,7 +145,13 @@ public abstract class AsyncParser extends AsyncTask<Void,Void,Record_Serial>
 		{
 		 if(dialogEnabled)
 			{
-			 dialog= new ProgressDialog(context);
+			 Resources resources= context.getResources();
+			 Resources.Theme x= resources.newTheme();
+			 x.applyStyle(R.style.CustomDialog_forTitle,true);
+//			 adb= new AlertDialog.Builder(new ContextThemeWrapper(this, x) );
+
+			 dialog= new ProgressDialog(new ContextThemeWrapper(context, x));
+//			 dialog= new ProgressDialog(context);
 			 dialog.setOnDismissListener(new TaskInterruptor() );
 			 dialog.setIndeterminate(true);
 			 dialog.setMessage("Извлекаю данные...");

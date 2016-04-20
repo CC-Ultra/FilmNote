@@ -30,25 +30,27 @@
 				android:layout_height="match_parent"
 				app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 	</LinearLayout>
-	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal">
-		<Button
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:layout_gravity="center"
-				android:text="Start"
-				android:id="@+id/doButton" />
-		<Button
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:layout_gravity="center"
-				android:text="Stop"
-				android:id="@+id/undoButton" />
-	</LinearLayout >
+	<!--<LinearLayout-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:orientation="horizontal">-->
+		<!--<Button-->
+				<!--android:layout_width="wrap_content"-->
+				<!--android:layout_height="wrap_content"-->
+				<!--android:layout_weight="1"-->
+				<!--android:layout_gravity="center"-->
+				<!--android:layout_margin="1dp"-->
+				<!--android:text="Start"-->
+				<!--android:id="@+id/doButton" />-->
+		<!--<Button-->
+				<!--android:layout_width="wrap_content"-->
+				<!--android:layout_height="wrap_content"-->
+				<!--android:layout_weight="1"-->
+				<!--android:layout_gravity="center"-->
+				<!--android:layout_margin="1dp"-->
+				<!--android:text="Stop"-->
+				<!--android:id="@+id/undoButton" />-->
+	<!--</LinearLayout >-->
 	<!--<Button-->
 			<!--android:layout_width="wrap_content"-->
 			<!--android:layout_height="wrap_content"-->

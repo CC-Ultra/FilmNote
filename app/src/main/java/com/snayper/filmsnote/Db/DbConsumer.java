@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import com.snayper.filmsnote.Utils.*;
 
@@ -19,6 +20,7 @@ public class DbConsumer
 	{
 	 private ContentResolver resolver;
 	 private Context context;
+	 private Loader loader;
 	 private int contentType;
 	 private Uri uri;
 
@@ -28,6 +30,19 @@ public class DbConsumer
 		 resolver=_resolver;
 		 contentType=_contentType;
 		 uri= Uri.parse("content://"+ O.db.AUTHORITY +"/"+ O.db.PROVIDER_PATH[contentType] );
+		 }
+	 public DbConsumer(Context _context,ContentResolver _resolver,Loader _loader,int _contentType)
+		{
+		 this(_context,_resolver,_contentType);
+		 loader=_loader;
+		 }
+	 public int getCount()
+		{
+		 int result;
+		 Cursor cursor= getCursor();
+		 result=cursor.getCount();
+		 cursor.close();
+		 return result;
 		 }
 	 private Cursor getCursor()
 		{
@@ -47,6 +62,8 @@ public class DbConsumer
 		 newRecord.put(O.db.FIELD_NAME_DATE, DateUtil.getCurrentDate().getTime() );
 		 newRecord.put(O.db.FIELD_NAME_FILM_WATCHED,rec.isWatched());
 		 resolver.insert(uri,newRecord);
+		 if(loader!=null)
+			 loader.forceLoad();
 		 }
 	 public void putRecord(Record_Serial rec,int tableNum)
 		{
@@ -61,6 +78,8 @@ public class DbConsumer
 		 newRecord.put(O.db.FIELD_NAME_UPDATE_MARK, rec.isUpdated() );
 		 newRecord.put(O.db.FIELD_NAME_CONFIDENT_DATE,rec.isConfidentDate() );
 		 resolver.insert(uri,newRecord);
+		 if(loader!=null)
+			 loader.forceLoad();
 		 }
 	 public Record_Film extractRecord_Film(int position)
 		{
@@ -79,7 +98,7 @@ public class DbConsumer
 		 }
 	 public Record_Serial extractRecord_Serial(int position)
 		{
-		 Record_Serial result=null;
+		 Record_Serial result;
 		 Cursor cursor= getCursor();
 		 cursor.moveToPosition(position);
 		 result= new Record_Serial();
@@ -141,6 +160,8 @@ public class DbConsumer
 		 String strID= cursor.getString(cursor.getColumnIndex(O.db.FIELD_NAME_ID) );
 		 resolver.update(uri,record, O.db.FIELD_NAME_ID +" = "+ strID, null);
 		 cursor.close();
+		 if(loader!=null)
+			 loader.forceLoad();
 		 }
 	 public void deleteRecord(int position)
 		{
@@ -152,10 +173,12 @@ public class DbConsumer
 			 if(pic.length()!=0)
 				 FileManager.deleteFile(context,pic);
 			 }
-		 cursor.moveToPosition(position);
-		 String strID= cursor.getString(cursor.getColumnIndex(O.db.FIELD_NAME_ID) );
-		 resolver.delete(uri,O.db.FIELD_NAME_ID +" = "+ strID, null);
+		cursor.moveToPosition(position);
+		 String strID= cursor.getString(cursor.getColumnIndex(O.db.FIELD_NAME_ID));
+		resolver.delete(uri,O.db.FIELD_NAME_ID +" = "+ strID, null);
 		 cursor.close();
+		 if(loader!=null)
+			 loader.forceLoad();
 		 }
 	 public void clear()
 		{
@@ -173,5 +196,7 @@ public class DbConsumer
 			 }
 		 resolver.delete(uri,null,null);
 		 cursor.close();
+		 if(loader!=null)
+			 loader.forceLoad();
 		 }
 	 }

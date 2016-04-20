@@ -21,7 +21,6 @@ import java.util.HashMap;
 public class TestActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>
 	{
 	 CustomCursorAdapter_Serial adapter;
-	 Loader loader;
 	 DbConsumer dbConsumer;
 	 EditText input;
 
@@ -34,7 +33,6 @@ public class TestActivity extends AppCompatActivity implements LoaderManager.Loa
 		 public void onItemClick(AdapterView<?> parent,View view,int position,long id)
 			{
 			 dbConsumer.deleteRecord(position);
-			 loader.forceLoad();
 			 }
 		 }
 	 private class TestListener implements View.OnClickListener
@@ -85,7 +83,6 @@ public class TestActivity extends AppCompatActivity implements LoaderManager.Loa
 					 dbConsumer.updateRecord(O.interaction.CONTENT_SERIAL,position,data);
 					 break;
 				 }
-			 loader.forceLoad();
 			 }
 		 }
 
@@ -122,15 +119,14 @@ public class TestActivity extends AppCompatActivity implements LoaderManager.Loa
 		 input= (EditText)findViewById(R.id.paramsInput);
 
 		 insertButton.setOnClickListener(new TestListener() );
-		 updateButton.setOnClickListener(new TestListener() );
-		 clearButton.setOnClickListener(new TestListener() );
+		 updateButton.setOnClickListener(new TestListener());
+		 clearButton.setOnClickListener(new TestListener());
 		 list.setOnItemClickListener(new DeleteListener());
 
-		 dbConsumer= new DbConsumer(this, getContentResolver(), O.interaction.CONTENT_SERIAL);
+		 getSupportLoaderManager().initLoader(0,null,this);
+		 dbConsumer= new DbConsumer(this, getContentResolver(), getSupportLoaderManager().getLoader(0), O.interaction.CONTENT_SERIAL);
 		 adapter= new CustomCursorAdapter_Serial(this,O.interaction.CONTENT_SERIAL,R.layout.main_list_element_serial,null,dbListFrom,dbListTo);
 		 list.setAdapter(adapter);
-		 getSupportLoaderManager().initLoader(0,null,this);
-		 loader= getSupportLoaderManager().getLoader(0);
 		 }
 	 @Override
 	 public Loader<Cursor> onCreateLoader(int id,Bundle args)

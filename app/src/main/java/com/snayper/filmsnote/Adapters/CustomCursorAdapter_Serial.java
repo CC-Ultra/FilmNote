@@ -11,9 +11,7 @@ import android.widget.TextView;
 import com.snayper.filmsnote.Activities.GlobalMenuOptions;
 import com.snayper.filmsnote.R;
 import com.snayper.filmsnote.Utils.DateUtil;
-import com.snayper.filmsnote.Utils.DbHelper;
 import com.snayper.filmsnote.Utils.O;
-import com.snayper.filmsnote.Utils.Record_Serial;
 
 import java.util.Date;
 

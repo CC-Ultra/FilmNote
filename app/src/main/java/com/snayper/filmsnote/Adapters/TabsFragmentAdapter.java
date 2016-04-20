@@ -31,7 +31,7 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter
 	 @Override
 	 public Fragment getItem(int position)
 		{
-		 Log.d(O.TAG,"getItem: "+ tabs.get(position).fakeContentType);
+//		 Log.d(O.TAG,"getItem: "+ tabs.get(position).fakeContentType);
 		 return tabs.get(position);
 		 }
 	 @Override
@@ -41,7 +41,7 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter
 		 }
 	 private void initTabsMap()
 		{
-		 Log.d(O.TAG,"initTabsMap: TabsFragmentAdapter");
+//		 Log.d(O.TAG,"initTabsMap: TabsFragmentAdapter");
 		 tabs = new HashMap<>();
 		 MainListFragment fragmentFilms= new Fragment_Films();
 		 MainListFragment fragmentSerial= new Fragment_Serial();

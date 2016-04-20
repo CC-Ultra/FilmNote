@@ -1,13 +1,9 @@
 package com.snayper.filmsnote.Fragments;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.AdapterView;
 import com.snayper.filmsnote.Activities.EditActivity;
-import com.snayper.filmsnote.Adapters.CustomCursorAdapter_Serial;
-import com.snayper.filmsnote.Utils.DbHelper;
 import com.snayper.filmsnote.Utils.O;
 
 import java.util.HashMap;
@@ -25,7 +21,7 @@ public class Fragment_Serial extends MainListFragment
 			 Intent jumper= new Intent(getActivity(), EditActivity.class);
 			 HashMap<String,Object> data= new HashMap<>();
 			 data.put(O.db.FIELD_NAME_UPDATE_MARK,false);
-			 DbHelper.updateRecord(contentType,position,data);
+			 dbConsumer.updateRecord(contentType,position,data);
 			 jumper.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
 			 jumper.putExtra(O.mapKeys.extra.POSITION, position);
 			 startActivity(jumper);

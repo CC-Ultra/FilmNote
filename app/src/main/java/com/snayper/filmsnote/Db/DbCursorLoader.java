@@ -23,8 +23,12 @@ public class DbCursorLoader extends CursorLoader
 		 contentType=_contentType;
 		 uri= Uri.parse("content://"+ O.db.AUTHORITY +"/"+ O.db.PROVIDER_PATH[contentType] );
 		 }
+	 public int getContentType()
+		{
+		 return contentType;
+		 }
 
-	 @Override
+	@Override
 	 public Cursor loadInBackground()
 		{
 		 Cursor result;

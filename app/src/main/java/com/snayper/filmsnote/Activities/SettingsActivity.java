@@ -60,6 +60,7 @@ public class SettingsActivity extends GlobalMenuOptions
 			 SharedPreferences.Editor editor= MainActivity.prefs.edit();
 			 editor.putLong(O.mapKeys.prefs.UPDATE_TIME, updateTime).apply();
 			 initAdapter();
+			 Toast.makeText(SettingsActivity.this,"Нужна перезагрузка программы, чтобы изменения вступили в силу",Toast.LENGTH_SHORT).show();
 			 }
 		 }
 	 private class DialogOkListener implements DialogInterface.OnClickListener
@@ -147,7 +148,7 @@ public class SettingsActivity extends GlobalMenuOptions
 	 private void launchDialog(int type)
 		{
 		 AlertDialog.Builder adb;
-		 if( (type==O.prefs.SETTINGS_LIST_ABOUT || type==O.prefs.SETTINGS_LIST_HELP) )//&& theme==O.prefs.THEME_ID_ULTRA)
+		 if(type==O.prefs.SETTINGS_LIST_ABOUT || type==O.prefs.SETTINGS_LIST_HELP || type==O.prefs.SETTINGS_LIST_UPDATE_TIME)
 			{
 			 Resources resources= getResources();
 			 Resources.Theme x= resources.newTheme();
@@ -155,7 +156,7 @@ public class SettingsActivity extends GlobalMenuOptions
 			 adb= new AlertDialog.Builder(new ContextThemeWrapper(this, x) );
 			 }
 		 else
-		 adb= new AlertDialog.Builder(this);
+			 adb= new AlertDialog.Builder(this);
 		 ViewGroup root= (ViewGroup)list.getParent();
 		 View dialogView;
 		 switch(type)
@@ -222,7 +223,6 @@ public class SettingsActivity extends GlobalMenuOptions
 		 checkBox.setChecked(gsmOrder);
 		 SharedPreferences.Editor editor= MainActivity.prefs.edit();
 		 editor.putBoolean(O.mapKeys.prefs.GSM_ORDER, gsmOrder).apply();
-		 Toast.makeText(SettingsActivity.this,(gsmOrder ? "Enabled" : "Disabled"),Toast.LENGTH_SHORT).show();
 		 }
 	 private void initPrefs()
 		 {

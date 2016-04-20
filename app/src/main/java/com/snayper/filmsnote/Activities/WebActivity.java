@@ -204,7 +204,7 @@ public class WebActivity extends GlobalMenuOptions implements WebTaskComleteList
 	 @Override
 	 public void useParserResult(Record_Serial extractedData)
 		{
-		 ParserResultConsumer.useParserResult(this,extractedData,action,contentType,dbPosition);
+		 ParserResultConsumer.useParserResult(this,getContentResolver(),extractedData,action,contentType,dbPosition);
 		 finish();
 		 }
 	 @Override
@@ -250,8 +250,7 @@ public class WebActivity extends GlobalMenuOptions implements WebTaskComleteList
 		 }
 	 public boolean onOptionsItemSelected(MenuItem item)
 		{
-		 int id = item.getItemId();
-		 switch(id)
+		 switch(item.getItemId() )
 			{
 			 case R.id.menu_convert:
 				 toOffline();

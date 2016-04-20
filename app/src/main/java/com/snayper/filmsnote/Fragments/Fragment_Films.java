@@ -1,11 +1,7 @@
 package com.snayper.filmsnote.Fragments;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.AdapterView;
-import com.snayper.filmsnote.Adapters.CustomCursorAdapter_Films;
-import com.snayper.filmsnote.Utils.DbHelper;
 import com.snayper.filmsnote.Utils.Record_Film;
 import com.snayper.filmsnote.R;
 import com.snayper.filmsnote.Utils.O;
@@ -20,7 +16,7 @@ public class Fragment_Films extends MainListFragment
 		 @Override
 		 public void onItemClick(AdapterView<?> parent,View view,int position,long id)
 			{
-			 Record_Film record= DbHelper.extractRecord_Film(contentType,position);
+			 Record_Film record= dbConsumer.extractRecord_Film(position);
 			 String txtLeft= (record.isWatched() ? "Не просмотрено" : "Просмотрено");
 			 String txtRight="Удалить";
 			 int listenerLeft= (record.isWatched() ? O.dialog.LISTENER_FILM_CANCEL : O.dialog.LISTENER_FILM_WATCH);

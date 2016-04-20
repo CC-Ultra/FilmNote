@@ -1,6 +1,8 @@
 package com.snayper.filmsnote.Utils;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import com.snayper.filmsnote.Db.DbConsumer;
 
 import java.util.HashMap;
 
@@ -9,21 +11,22 @@ import java.util.HashMap;
  */
 public class ParserResultConsumer
 	{
-	 public static void useParserResult(Context context,Record_Serial extractedData,int action,int contentType,int dbPosition)
+	 public static void useParserResult(Context context,ContentResolver resolver,Record_Serial extractedData,int action,int contentType,int dbPosition)
 		{
 		 if( (extractedData!=null) && (extractedData.getTitle().length()!=0) )
 			{
+			 DbConsumer dbConsumer= new DbConsumer(context,resolver,contentType);
 			 extractedData.setImgSrc(FileManager.getFilenameFromURL(extractedData.getImgSrc()));
 			 if( FileManager.getStoredPicURI(context, extractedData.getImgSrc() ).length() == 0)
 				 extractedData.setImgSrc("");
 			 if(action == O.interaction.WEB_ACTION_ADD)
 				{
 				 extractedData.setDate(DateUtil.getCurrentDate());
-				 DbHelper.putRecord_Serial(extractedData,contentType);
+				 dbConsumer.putRecord(extractedData,contentType);
 				 }
 			 if(action == O.interaction.WEB_ACTION_UPDATE)
 				{
-				 Record_Serial dbRecord= DbHelper.extractRecord_Serial(contentType,dbPosition);
+				 Record_Serial dbRecord= dbConsumer.extractRecord_Serial(dbPosition);
 				 HashMap<String,Object> data= new HashMap<>();
 				 dbRecord.setTitle( extractedData.getTitle() );
 				 data.put(O.db.FIELD_NAME_TITLE,dbRecord.getTitle());
@@ -62,7 +65,7 @@ public class ParserResultConsumer
 					 dbRecord.setUpdateOrder(true);
 					 data.put(O.db.FIELD_NAME_UPDATE_ORDER, dbRecord.hasUpdateOrder() );
 					 }
-				 DbHelper.updateRecord(contentType,dbPosition,data);
+				 dbConsumer.updateRecord(contentType,dbPosition,data);
 				 }
 			 }
 		 }

@@ -4,14 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
-import android.graphics.Color;
+import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,21 +22,26 @@ import com.snayper.filmsnote.Activities.AddActivity;
 import com.snayper.filmsnote.Activities.GlobalMenuOptions;
 import com.snayper.filmsnote.Adapters.CustomCursorAdapter_Films;
 import com.snayper.filmsnote.Adapters.CustomCursorAdapter_Serial;
+import com.snayper.filmsnote.Db.DbConsumer;
+import com.snayper.filmsnote.Db.DbCursorLoader;
 import com.snayper.filmsnote.Interfaces.AdapterInterface;
 import com.snayper.filmsnote.R;
-import com.snayper.filmsnote.Utils.DbHelper;
 import com.snayper.filmsnote.Utils.O;
 
 /**
  * Created by snayper on 16.02.2016.
  */
-public abstract class MainListFragment extends Fragment implements AdapterInterface
+public abstract class MainListFragment extends Fragment implements AdapterInterface,LoaderManager.LoaderCallbacks<Cursor>
 	{
+	 protected DbConsumer dbConsumer;
+	 protected Loader loader;
 	 private String title;
 	 protected ListView list;
 	 protected FloatingActionButton activeButton;
 	 protected SimpleCursorAdapter adapter;
 	 protected int contentType;
+	 protected static int saveExitSumm=0;
+	 private int exitDeposit=0;
 	 public int fakeContentType;
 	 protected int listElementLayout;
 	 private int themeResource,actionButtonBackgroundColor,actionButtonImageRes,dividerColor;
@@ -77,11 +83,7 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 		 initLayoutThemeCustoms();
 		 final Context contextThemeWrapper= new ContextThemeWrapper(getActivity(),themeResource);
 		 LayoutInflater localInflater= inflater.cloneInContext(contextThemeWrapper);
-		 return localInflater.inflate(R.layout.main_list_fragment,container, false);
-		 }
-	 public int getListCount()
-		{
-		return list.getCount();
+		 return localInflater.inflate(R.layout.main_list_fragment,container,false);
 		 }
 	 public void initFragment(String _title,int _contentType,int _listElementLayout)
 		{
@@ -89,7 +91,8 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 		 contentType=_contentType;
 		 fakeContentType= contentType+4;
 		 listElementLayout=_listElementLayout;
-		 Log.d(O.TAG,"initFragment: "+ fakeContentType);
+		 exitDeposit=1;
+//		 Log.d(O.TAG,"initFragment: "+ fakeContentType);
 		 }
 	 public String getTitle()
 		{
@@ -98,15 +101,7 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 	 @Override
 	 public void initAdapter()
 		{
-		 Log.d(O.TAG,"initAdapter: "+ fakeContentType);
-		 if(contentType==O.interaction.CONTENT_FILMS)
-			 adapter= new CustomCursorAdapter_Films(getActivity(), listElementLayout, DbHelper.cursors[contentType], dbListFrom, dbListTo);
-		 else
-			 adapter= new CustomCursorAdapter_Serial(getActivity(), contentType, listElementLayout, DbHelper.cursors[contentType], dbListFrom, dbListTo);
-		 list.setAdapter(adapter);
-		 ColorDrawable divcolor= new ColorDrawable(dividerColor);
-		 list.setDivider(divcolor);
-		 list.setDividerHeight(2);
+		 loader.forceLoad();
 		 }
 	 @SuppressWarnings("deprecation")
 	 protected void initLayoutThemeCustoms()
@@ -142,8 +137,11 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 	 protected void setLayoutThemeCustoms(View view)
 		{
 		 FloatingActionButton actionButton= (FloatingActionButton)view.findViewById(R.id.activeButton);
-		 actionButton.setBackgroundTintList(ColorStateList.valueOf(actionButtonBackgroundColor) );
+		 actionButton.setBackgroundTintList(ColorStateList.valueOf(actionButtonBackgroundColor));
 		 actionButton.setImageResource(actionButtonImageRes);
+		 ColorDrawable divcolor= new ColorDrawable(dividerColor);
+		 list.setDivider(divcolor);
+		 list.setDividerHeight(2);
 		 }
 
 	 @Nullable
@@ -151,12 +149,21 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 	 public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
 		{
 		 super.onCreateView(inflater,container,savedInstanceState);
-		 Log.d(O.TAG,"onCreateView: "+ fakeContentType);
+//		 Log.d(O.TAG,"onCreateView: "+ fakeContentType);
 		 View view= initContentView(inflater,container);
 
 		 list= (ListView)view.findViewById(R.id.list);
 		 activeButton= (FloatingActionButton)view.findViewById(R.id.activeButton);
+
+		 saveExitSumm+= exitDeposit;
+		 loader= getActivity().getSupportLoaderManager().initLoader(contentType,null,this);
+		 dbConsumer= new DbConsumer(getActivity(), getActivity().getContentResolver(),loader,contentType);
 		 activeButton.setOnClickListener(new ActiveButtonListener() );
+		 if(contentType==O.interaction.CONTENT_FILMS)
+			 adapter= new CustomCursorAdapter_Films(getActivity(), listElementLayout, null, dbListFrom, dbListTo);
+		 else
+			 adapter= new CustomCursorAdapter_Serial(getActivity(), contentType, listElementLayout, null, dbListFrom, dbListTo);
+		 list.setAdapter(adapter);
 		 setListener_listOnClick();
 		 setListener_listOnLongClick();
 		 setLayoutThemeCustoms(view);
@@ -165,7 +172,32 @@ public abstract class MainListFragment extends Fragment implements AdapterInterf
 	 @Override
 	 public void onResume()
 		{
-		 initAdapter();
+		 if(saveExitSumm>0)
+			 initAdapter();
 		 super.onResume();
 		 }
+	 @Override
+	 public void onDestroyView()
+		{
+		 saveExitSumm-= exitDeposit;
+		 super.onDestroyView();
+		 }
+
+	@Override
+	 public Loader<Cursor> onCreateLoader(int id,Bundle args)
+		{
+//		 Log.d(O.TAG,"onCreateLoader: "+ fakeContentType);
+		 if(saveExitSumm>0)
+			 return new DbCursorLoader(getActivity(), getActivity().getContentResolver(), contentType);
+		 return null;
+		 }
+	 @Override
+	 public void onLoadFinished(Loader<Cursor> loader,Cursor cursor)
+		{
+//		 Log.d(O.TAG,"onLoadFinished: loader "+ ( (DbCursorLoader)loader).getContentType() +"\tcontentType "+ fakeContentType);
+		 if(saveExitSumm>0)
+			 adapter.swapCursor(cursor);
+		 }
+	 @Override
+	 public void onLoaderReset(Loader<Cursor> loader) {}
 	 }

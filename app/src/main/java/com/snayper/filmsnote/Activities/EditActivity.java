@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.snayper.filmsnote.Adapters.CustomSimpleAdapter_EditList;
+import com.snayper.filmsnote.Db.DbConsumer;
 import com.snayper.filmsnote.Fragments.ActionDialog;
 import com.snayper.filmsnote.Interfaces.AdapterInterface;
 import com.snayper.filmsnote.Interfaces.DialogDecision;
@@ -30,6 +31,7 @@ import java.util.HashMap;
  */
 public class EditActivity extends GlobalMenuOptions implements AdapterInterface,WebTaskComleteListener,DialogDecision
 	{
+	 private DbConsumer dbConsumer;
 	 private ListView episodeList;
 	 private ImageView img;
 	 private TextView titleTxtView, dateTxtView;
@@ -49,7 +51,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 			 updateOrder=!updateOrder;
 			 HashMap<String,Object> data= new HashMap<>();
 			 data.put(O.db.FIELD_NAME_UPDATE_ORDER,updateOrder);
-			 DbHelper.updateRecord(contentType,dbPosition,data);
+			 dbConsumer.updateRecord(contentType,dbPosition,data);
 			 }
 		 }
 	 private class AddButtonListener implements View.OnClickListener
@@ -60,7 +62,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 			 all++;
 			 HashMap<String,Object> data= new HashMap<>();
 			 data.put(O.db.FIELD_NAME_ALL,all);
-			 DbHelper.updateRecord(contentType,dbPosition,data);
+			 dbConsumer.updateRecord(contentType,dbPosition,data);
 			 updateDate();
 			 initAdapter();
 			 }
@@ -72,7 +74,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 			{
 			 HashMap<String,Object> data= new HashMap<>();
 			 data.put(O.db.FIELD_NAME_CONFIDENT_DATE,false);
-			 DbHelper.updateRecord(contentType,dbPosition,data);
+			 dbConsumer.updateRecord(contentType,dbPosition,data);
 			 AsyncParser parser;
 			 if(webSrc.contains(O.web.filmix.HOST) )
 				 parser= new Parser_Filmix(EditActivity.this, EditActivity.this, webSrc, true);
@@ -97,8 +99,8 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 			{
 			 HashMap<String,Object> data= new HashMap<>();
 			 data.put(O.db.FIELD_NAME_CONFIDENT_DATE,false);
-			 DbHelper.updateRecord(contentType,dbPosition,data);
-			 boolean confidentDate= DbHelper.extractRecord_Serial(contentType,dbPosition).isConfidentDate();
+			 dbConsumer.updateRecord(contentType,dbPosition,data);
+			 boolean confidentDate= dbConsumer.extractRecord_Serial(dbPosition).isConfidentDate();
 			 Toast.makeText(EditActivity.this,"Confident date: "+ confidentDate,Toast.LENGTH_SHORT).show();
 			 return false;
 			 }
@@ -161,7 +163,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 			 webSrc="";
 			 HashMap<String,Object> data= new HashMap<>();
 			 data.put(O.db.FIELD_NAME_WEB,webSrc);
-			 DbHelper.updateRecord(contentType,dbPosition,data);
+			 dbConsumer.updateRecord(contentType,dbPosition,data);
 			 Intent reset= new Intent(this,this.getClass() );
 			 reset.putExtra(O.mapKeys.extra.CONTENT_TYPE, contentType);
 			 reset.putExtra(O.mapKeys.extra.POSITION, dbPosition);
@@ -175,7 +177,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 		 watched=all;
 		 HashMap<String,Object> data= new HashMap<>();
 		 data.put(O.db.FIELD_NAME_WATCHED,watched);
-		 DbHelper.updateRecord(contentType,dbPosition,data);
+		 dbConsumer.updateRecord(contentType,dbPosition,data);
 		 initAdapter();
 		 }
 	 private void unwatchAll()
@@ -183,7 +185,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 		 watched=0;
 		 HashMap<String,Object> data= new HashMap<>();
 		 data.put(O.db.FIELD_NAME_WATCHED,watched);
-		 DbHelper.updateRecord(contentType,dbPosition,data);
+		 dbConsumer.updateRecord(contentType,dbPosition,data);
 		 initAdapter();
 		 }
 	 private void clear()
@@ -195,7 +197,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 		 data.put(O.db.FIELD_NAME_WATCHED, watched);
 		 data.put(O.db.FIELD_NAME_ALL, all);
 		 data.put(O.db.FIELD_NAME_DATE, 0L);
-		 DbHelper.updateRecord(contentType,dbPosition,data);
+		 dbConsumer.updateRecord(contentType,dbPosition,data);
 		 initAdapter();
 		 dateTxtView.setText(dateSrc);
 		 }
@@ -206,7 +208,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 			 watched++;
 			 HashMap<String,Object> data= new HashMap<>();
 			 data.put(O.db.FIELD_NAME_WATCHED,watched);
-			 DbHelper.updateRecord(contentType,dbPosition,data);
+			 dbConsumer.updateRecord(contentType,dbPosition,data);
 			 initAdapter();
 			 if(watched+3 < all)
 				 episodeList.setSelection(all- (watched+3) );
@@ -218,12 +220,12 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 		 String dateStr= DateUtil.dateToString(currentDate);
 		 HashMap<String,Object> data= new HashMap<>();
 		 data.put(O.db.FIELD_NAME_DATE,currentDate.getTime());
-		 DbHelper.updateRecord(contentType,dbPosition,data);
+		 dbConsumer.updateRecord(contentType,dbPosition,data);
 		 dateTxtView.setText(dateStr);
 		 }
 	 private void initPageByRecord()
 		{
-		 Record_Serial record= DbHelper.extractRecord_Serial(contentType,dbPosition);
+		 Record_Serial record= dbConsumer.extractRecord_Serial(dbPosition);
 		 String titleSrc= record.getTitle();
 		 String dateStr= DateUtil.dateToString(record.getDate() );
 		 String imgSrc= FileManager.getStoredPicURI(this,record.getImgSrc() );
@@ -238,7 +240,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 		 }
 	 public void initAdapter()
 		{
-		 Record_Serial record= DbHelper.extractRecord_Serial(contentType,dbPosition);
+		 Record_Serial record= dbConsumer.extractRecord_Serial(dbPosition);
 		 all= record.getAll();
 		 watched= record.getWatched();
 		 String from[]= {"Episode", "Pic"};
@@ -271,7 +273,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 		{
 		 if(extractedData.getAll()!=all)
 			 extractedData.setDate(DateUtil.getCurrentDate() );
-		 ParserResultConsumer.useParserResult(this,extractedData,O.interaction.WEB_ACTION_UPDATE,contentType,dbPosition);
+		 ParserResultConsumer.useParserResult(this,getContentResolver(),extractedData,O.interaction.WEB_ACTION_UPDATE,contentType,dbPosition);
 		 initPageByRecord();
 		 }
 	 @Override
@@ -355,6 +357,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 		 dateTxtView= (TextView)findViewById(R.id.date);
 		 img= (ImageView)findViewById(R.id.img);
 
+		 dbConsumer= new DbConsumer(this,getContentResolver(),contentType);
 		 initPageByRecord();
 		 episodeList.setOnItemClickListener(new ListItemClickListener_Watch());
 		 episodeList.setOnItemLongClickListener(new ListItemLongClickListener());
@@ -365,7 +368,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 			 allButton.setOnClickListener(new UpdateButtonListener());
 			 watchButton.setText("Просмотреть серию");
 			 watchButton.setOnClickListener(new WatchOnlineButtonListener());
-			 watchButton.setOnLongClickListener(new WatchOnlineButtonLongListener());
+//			 watchButton.setOnLongClickListener(new WatchOnlineButtonLongListener());
 			 updateBox.setVisibility(View.VISIBLE);
 			 }
 		 else
@@ -390,8 +393,7 @@ public class EditActivity extends GlobalMenuOptions implements AdapterInterface,
 	 @Override
 	 public boolean onOptionsItemSelected(MenuItem item)
 		{
-		 int id = item.getItemId();
-		 switch(id)
+		 switch(item.getItemId() )
 			{
 			 case R.id.menu_convert:
 				 convert();

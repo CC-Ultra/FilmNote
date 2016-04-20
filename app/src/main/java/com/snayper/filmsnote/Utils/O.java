@@ -1,7 +1,5 @@
 package com.snayper.filmsnote.Utils;
 
-import android.net.Uri;
-
 /**
  * Created by snayper on 24.02.2016.
  */
@@ -12,12 +10,8 @@ public class O
 	 public static class prefs
 		{
 		 public static final int UPDATE_INTERVAL_DEFAULT=7;
-		 public static final int NOTIFICATION_TYPE_ID_NONE=0;
 		 public static final int NOTIFICATION_TYPE_ID_DEFAULT=1;
 		 public static final int NOTIFICATION_TYPE_ID_TOAST=2;
-		 public static final String NOTIFICATION_TYPE_STR_NONE="Без уведомлений";
-		 public static final String NOTIFICATION_TYPE_STR_DEFAULT="Обычные";
-		 public static final String NOTIFICATION_TYPE_STR_TOAST="Toast-уведомления";
 		 public static final int THEME_ID_MENTOR=0;
 		 public static final int THEME_ID_ULTRA=1;
 		 public static final int THEME_ID_COW=2;
@@ -63,10 +57,10 @@ public class O
 		 public static final String FIELD_NAME_UPDATE_MARK="Update_mark";
 		 public static final String TABLE_FIELDS[][]=
 				{
-					{DbHelper._ID, O.db.FIELD_NAME_TITLE, O.db.FIELD_NAME_DATE, O.db.FIELD_NAME_FILM_WATCHED},
-					{DbHelper._ID, O.db.FIELD_NAME_TITLE, O.db.FIELD_NAME_ALL, O.db.FIELD_NAME_WATCHED,
-							O.db.FIELD_NAME_DATE, O.db.FIELD_NAME_IMG, O.db.FIELD_NAME_WEB,
-							O.db.FIELD_NAME_UPDATE_ORDER, O.db.FIELD_NAME_UPDATE_MARK, O.db.FIELD_NAME_CONFIDENT_DATE}
+					{FIELD_NAME_ID, FIELD_NAME_TITLE, FIELD_NAME_DATE, FIELD_NAME_FILM_WATCHED},
+					{FIELD_NAME_ID, FIELD_NAME_TITLE, FIELD_NAME_ALL, FIELD_NAME_WATCHED,
+							FIELD_NAME_DATE, FIELD_NAME_IMG, FIELD_NAME_WEB,
+							FIELD_NAME_UPDATE_ORDER, FIELD_NAME_UPDATE_MARK, FIELD_NAME_CONFIDENT_DATE}
 				 };
 		 }
 
@@ -78,19 +72,16 @@ public class O
 			 public static final String ACTION="Action";
 			 public static final String POSITION="Position";
 			 public static final String PENDING_INTENT_AS_EXTRA="Activity agent intent";
-//			 public static final String ="";
 			 }
 		 public static class prefs
 			{
 			 public static final String PREFS_FILENAME="Ultra Prefs";
-			 public static final String FIRST_START="First start";
 			 public static final String THEME="Theme";
 			 public static final String GSM_ORDER="GSM order";
 			 public static final String UPDATE_TIME="Update time";
 			 public static final String UPDATE_INTERVAL="Update interval";
 			 public static final String NOTIFICATION_TYPE="Notification type";
 			 public static final String YPS_MODE="Yps mode";
-//			 public static final String ="";
 			 }
 		 }
 
@@ -101,7 +92,6 @@ public class O
 		 public final static int CONTENT_MULT=2;
 		 public final static int WEB_ACTION_ADD=3;
 		 public final static int WEB_ACTION_UPDATE=4;
-//		 public static final int SERVICE_RESULT_=;
 		 }
 
 	 public static class dialog
