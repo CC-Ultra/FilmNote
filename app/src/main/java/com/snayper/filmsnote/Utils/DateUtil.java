@@ -4,31 +4,57 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by snayper on 26.02.2016.
+ * Утильный класс для более комфортной работы с классом {@link Date}. Часто через {@link Calendar}.
+ * <p><sub>(26.02.2016)</sub></p>
+ * @author CC-Ultra
+ * @see DateUtil#getCurrentDate()
+ * @see DateUtil#dropTime(Date)
+ * @see DateUtil#buildTime(int, int)
+ * @see DateUtil#getHours(Date)
+ * @see DateUtil#getMinutes(Date)
+ * @see DateUtil#combineDateAndTime(Date, Date)
+ * @see DateUtil#timeToString(Date, boolean)
+ * @see DateUtil#dateToString(Date)
  */
 public class DateUtil
 	{
+	/**
+	 * По сути своей, просто делегирование {@link Date#Date()} или {@link Calendar#getInstance()}, но оставил этот метод,
+	 * потому что показалось, что его название более говорящее
+	 */
 	 public static Date getCurrentDate()
 		{
-		 return new Date();
+		 Calendar result= Calendar.getInstance();
+		 return result.getTime();
 		 }
+
+	/**
+	 * Обнуляет время в {@code date}, оставляя только дату
+	 */
 	 public static Date dropTime(Date date)
 		{
-		 Calendar cleanDate= Calendar.getInstance();
-		 Calendar oldDate= Calendar.getInstance();
-		 cleanDate.setTime(new Date(0) );
-		 oldDate.setTime(date);
-		 cleanDate.set(Calendar.DAY_OF_MONTH, oldDate.get(Calendar.DAY_OF_MONTH) );
-		 cleanDate.set(Calendar.MONTH, oldDate.get(Calendar.MONTH) );
-		 cleanDate.set(Calendar.YEAR, oldDate.get(Calendar.YEAR) );
-		 Date result= cleanDate.getTime();
-		 return result;
+		 Calendar calendar= Calendar.getInstance();
+		 calendar.setTime(date);
+		 calendar.set(Calendar.MINUTE,0);
+		 calendar.set(Calendar.HOUR_OF_DAY,0);
+		 calendar.set(Calendar.SECOND,0);
+		 return calendar.getTime();
 		 }
+
+	/**
+	 * @param hours 0..23
+	 * @param minutes 0..59
+	 * @return новый {@link Date} с обнуленной датой, но установленным временем
+	 */
 	 public static Date buildTime(int hours,int minutes)
 		{
-		 long resTime= minutes*O.date.MINUTE_MILLIS + hours*O.date.HOUR_MILLIS;
-		 Date date= new Date(resTime);
-		 return date;
+		 Calendar calendar= Calendar.getInstance();
+		 calendar.clear(Calendar.YEAR);
+		 calendar.clear(Calendar.MONTH);
+		 calendar.clear(Calendar.DAY_OF_MONTH);
+		 calendar.set(Calendar.HOUR_OF_DAY,hours);
+		 calendar.set(Calendar.MINUTE,minutes);
+		 return calendar.getTime();
 		 }
 	 public static int getHours(Date date)
 		{
@@ -42,22 +68,26 @@ public class DateUtil
 		 x.setTime(date);
 		 return x.get(Calendar.MINUTE);
 		 }
-	 public static Date buildDate(int day,int month,int year)
-		{
-		 Calendar result= Calendar.getInstance();
-		 result.setTime(new Date(0));
-		 result.set(Calendar.YEAR,year);
-		 result.set(Calendar.MONTH,month-1);
-		 result.set(Calendar.DAY_OF_MONTH,day);
-		 return dropTime(result.getTime());
-		 }
+
+	/**
+	 * @param date из этого параметра возьмется только дата
+	 * @param time в этом дата должна быть обнулена
+	 */
 	 public static Date combineDateAndTime(Date date,Date time)
 		{
-		 Date result= new Date();
+		 Date result;
 		 date= dropTime(date);
-		 result.setTime(date.getTime() + time.getTime() );
+		 Calendar calendar= Calendar.getInstance();
+		 calendar.setTime(date);
+		 calendar.set(Calendar.HOUR, getHours(time) );
+		 calendar.set(Calendar.MINUTE, getMinutes(time) );
+		 result= calendar.getTime();
 		 return result;
 		 }
+
+	/**
+	 * {@code 12:34} или {@code 12:34:56}
+	 */
 	 public static String timeToString(Date from, boolean showSeconds)
 		{
 		 if(from==null)
@@ -77,6 +107,10 @@ public class DateUtil
 			 result= hoursStr +":"+ minutesStr;
 		 return result;
 		 }
+
+	/**
+	 * {@code 07.12.2007}, например
+	 */
 	 public static String dateToString(Date from)
 		{
 		 if(from==null)

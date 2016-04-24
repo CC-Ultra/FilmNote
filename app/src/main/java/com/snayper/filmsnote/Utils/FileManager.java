@@ -4,19 +4,27 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
-
 import java.io.*;
 
 /**
- * Created by snayper on 11.03.2016.
+ * <p>Класс созданный для кеширования. Сохраняет картинки по ссылке, читает, удаляет, работает с именами</p>
+ * Сохранение производится средствами класса {@link Bitmap} и библиотеки {@code picasso} ({@link Picasso}, {@link RequestCreator}).
+ * Папка для кеширования стандартная системная, предпочтение карте памяти.
+ * <p><sub>(11.03.2016)</sub></p>
+ * @author CC-Ultra
  */
 public class FileManager
 	{
+	/**
+	 * Отсекает всю строку до последнего {@code '/'} включительно, оставляя только имя
+	 * @return пустая строка, если на вход пришла пустая или {@code null}, или вырезанное из url имя файла
+	 */
 	 public static String getFilenameFromURL(String urlStr)
 		{
-		 if(urlStr.length()==0)
+		 if(urlStr==null || urlStr.length()==0)
 			{
 			 Log.d(O.TAG,"getFilenameFromURL: передано пустое имя файла для извлечения");
 			 return "";
@@ -26,9 +34,14 @@ public class FileManager
 		 result= urlStr.substring(startIndex);
 		 return result;
 		 }
-	 public static String getFileExtension(String filename)
+
+	/**
+	 * Отсекает всю строку до последней {@code '.'} включительно, оставляя только расширение
+	 * @return пустая строка, если на вход пришла пустая или {@code null}, или вырезанное из имени файла расширение
+	 */
+	 private static String getFileExtension(String filename)
 		{
-		 if(filename.length()==0)
+		 if(filename==null || filename.length()==0)
 			{
 			 Log.d(O.TAG,"getFileExtension: передано пустое имя файла для извлечения");
 			 return "";
@@ -38,9 +51,15 @@ public class FileManager
 		 result= filename.substring(startIndex).toLowerCase();
 		 return result;
 		 }
+
+	/**
+	 * получаю папку, делаю из нее полный путь к файлу
+	 * @param context нужен для получения адреса системной папки cache
+	 * @return строка, которую можно использовать для {@link ImageView#setImageURI}
+	 */
 	 public static String getStoredPicURI(Context context,String filename)
 		{
-		 if(filename.length()==0)
+		 if(filename==null || filename.length()==0)
 			{
 			 Log.d(O.TAG,"getStoredPicURI: передано пустое имя файла для извлечения");
 			 return "";
@@ -64,9 +83,20 @@ public class FileManager
 			 }
 		 return result;
 		 }
+
+	/**
+	 * Создаю объект {@link Picasso}, говорю ему грузить картинку (и грузится оно, очевидно, асинхронно), устанавливаю размеры
+	 * и центрирование, и в конечном итоге делаю {@link RequestCreator#get()}. Тут можно подождать, пусть грузится, все равно
+	 * работа ведется асинхронно. Потом получаю имя файла, расположение папки, полный путь и создаю {@link OutputStream}.
+	 * В зависимости от расширения с помощью этого потока делаю {@link Bitmap#compress} и закрываю поток, сохраняя файл.
+	 * @param context нужен для получения адреса системной папки cache
+	 * @param picSrc ссылка на картинку
+	 * @param widthResDimen ширина сохраняемой
+	 * @param heightResDimen высота сохраняемой
+	 */
 	 public static void storeWebSrcPic(Context context, String picSrc, int widthResDimen, int heightResDimen)
 		{
-		 if(picSrc.length()==0)
+		 if(picSrc==null || picSrc.length()==0)
 			{
 			 Log.d(O.TAG,"Нечего сохранять, пустая ссылка");
 			 return;
@@ -134,9 +164,14 @@ public class FileManager
 			 Log.d(O.TAG,"Не могу закрыть файл "+ filename +" после записи. Файл не сохранен");
 			 }
 		 }
+
+	/**
+	 * получение папки, создание пути, удаление
+	 * @param context нужен для получения адреса системной папки cache
+	 */
 	 public static void deleteFile(Context context, String filename)
 		{
-		 if(filename.length()==0)
+		 if(filename==null || filename.length()==0)
 			{
 			 Log.d(O.TAG,"Нечего удалять, пустой адрес");
 			 return;
@@ -153,7 +188,7 @@ public class FileManager
 			 return;
 			 }
 		 filepath= dir.getAbsolutePath() +"/"+ filename;
-		 File fileToDelete=new File(filepath);
+		 File fileToDelete= new File(filepath);
 		 if(fileToDelete.exists() )
 			 fileToDelete.delete();
 		 }

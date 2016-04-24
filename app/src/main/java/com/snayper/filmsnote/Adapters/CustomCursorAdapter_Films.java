@@ -10,20 +10,28 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.snayper.filmsnote.Activities.GlobalMenuOptions;
+import com.snayper.filmsnote.Fragments.MainListFragment;
 import com.snayper.filmsnote.R;
 import com.snayper.filmsnote.Utils.DateUtil;
 import com.snayper.filmsnote.Utils.O;
-
 import java.util.Date;
 
 /**
- * Created by snayper on 19.02.2016.
+ * <p>Адаптер для {@link MainListFragment}</p>
+ * Кроме заполнения даными текстовых полей, адаптер инициализируется цветами согласно теме, красит все текстовые поля и
+ * в зависимости от значения {@code watched} у записи, ставит одну из картинов на статус фильма.
+ * <p><sub>(19.02.2016)</sub></p>
+ * @author CC-Ultra
  */
 public class CustomCursorAdapter_Films extends SimpleCursorAdapter
 	{
 	 private int drawableRes,textColor;
 	 private Context context;
 
+	/**
+	 * Кромe {@code super()} здесь еще идет инициализация цветов и ресурсов согласно текущей теме.
+	 * {@code @SuppressWarnings("deprecation")} нужен, чтобы пользоваться {@link Resources#getColor(int)}
+	 */
 	 @SuppressWarnings("deprecation")
 	 public CustomCursorAdapter_Films(Context _context,int layout,Cursor c,String[] from,int[] to)
 		{
@@ -50,6 +58,13 @@ public class CustomCursorAdapter_Films extends SimpleCursorAdapter
 			 }
 		 }
 
+	/**
+	 * Метод, который возвращает сложные элементы списка. Работа идет на базе {@code convertView}, который может оказаться
+	 * и пустым, и тогда придется его делать самостоятельно через {@link LayoutInflater#inflate}. Когда View для заполнения
+	 * получена, ставлю на фон соответствующий селектор, получаю все TextView и всем ставлю цвет. Получаю курсор, вытаскиваю
+	 * из него всю информацию по записи, проставляю везде этот текст и в зависимости от флага {@code watched} ставится
+	 * картинка статуса фильма
+	 */
 	 @Override
 	 public View getView(int position,View convertView,ViewGroup parent)
 		{

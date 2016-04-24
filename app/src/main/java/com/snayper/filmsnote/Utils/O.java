@@ -1,12 +1,24 @@
 package com.snayper.filmsnote.Utils;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+
 /**
- * Created by snayper on 24.02.2016.
+ * <p>Централизированное хранилище констант</p>
+ * Внутренние классы реализуют классификацию констант по назначению
+ * <p><sub>(24.02.2016)</sub></p>
+ * @author CC-Ultra
  */
 public class O
 	{
+	/**
+	 * Тег для логов. Просто после {@code logd} надо дописывать {@code O.}. Это проще, чем писать тег в каждом классе
+	 */
 	 public static final String TAG="c123";
 
+	/**
+	 * Настройки. Дефолтные значения, Id и строковые представления
+	 */
 	 public static class prefs
 		{
 		 public static final int UPDATE_INTERVAL_DEFAULT=7;
@@ -26,6 +38,7 @@ public class O
 		 public static final int SETTINGS_LIST_HELP=5;
 		 public static final int SETTINGS_LIST_ABOUT=6;
 		 }
+
 	 public static class date
 		{
 		 public static final long MINUTE_MILLIS= 1000*60;
@@ -33,6 +46,9 @@ public class O
 		 public static final long DAY_MILLIS= HOUR_MILLIS*24;
 		 }
 
+	/**
+	 * Названия полей, версия DB, URI_ID, названия таблиц, файла, Autority, наборы полей
+	 */
 	 public static class db
 		{
 		 public static final String AUTHORITY="com.snayper.filmsnote.DB";
@@ -64,6 +80,9 @@ public class O
 				 };
 		 }
 
+	/**
+	 * Ключи для {@link Intent} и {@link SharedPreferences}
+	 */
 	 public static class mapKeys
 		{
 		 public static class extra
@@ -81,10 +100,12 @@ public class O
 			 public static final String UPDATE_TIME="Update time";
 			 public static final String UPDATE_INTERVAL="Update interval";
 			 public static final String NOTIFICATION_TYPE="Notification type";
-			 public static final String YPS_MODE="Yps mode";
 			 }
 		 }
 
+	/**
+	 * значения, которые часто передаются через {@link Intent#putExtra}
+	 */
 	 public static class interaction
 		{
 		 public final static int CONTENT_FILMS=0;
@@ -94,6 +115,9 @@ public class O
 		 public final static int WEB_ACTION_UPDATE=4;
 		 }
 
+	/**
+	 * listener's id
+	 */
 	 public static class dialog
 		{
 		 public final static int LISTENER_FILM_CANCEL=0;
@@ -101,13 +125,15 @@ public class O
 		 public final static int LISTENER_SERIAL_CANCEL=2;
 		 public final static int LISTENER_SERIAL_DEL=3;
 		 public final static int LISTENER_MAIN_LIST_DEL=4;
-		 public final static int LISTENER_MAIN_LIST_UPDATE=5;
-		 public final static int LISTENER_ADD_ONLINE=6;
-		 public final static int LISTENER_ADD_OFFLINE=7;
-		 public final static int LISTENER_CONFIRM_YES=8;
-		 public final static int LISTENER_CONFIRM_NO=9;
+		 public final static int LISTENER_ADD_ONLINE=5;
+		 public final static int LISTENER_ADD_OFFLINE=6;
+		 public final static int LISTENER_CONFIRM_YES=7;
+		 public final static int LISTENER_CONFIRM_NO=8;
 		 }
 
+	/**
+	 * Для парсеров
+	 */
 	 public static class web
 		{
 		 public static class filmix

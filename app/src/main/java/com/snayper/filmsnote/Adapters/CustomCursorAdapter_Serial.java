@@ -9,28 +9,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.snayper.filmsnote.Activities.GlobalMenuOptions;
+import com.snayper.filmsnote.Fragments.MainListFragment;
 import com.snayper.filmsnote.R;
 import com.snayper.filmsnote.Utils.DateUtil;
 import com.snayper.filmsnote.Utils.O;
-
 import java.util.Date;
 
 /**
- * Created by snayper on 19.02.2016.
+ * <p>Адаптер для {@link MainListFragment}</p>
+ * Кроме заполнения даными текстовых полей, адаптер инициализируется цветами согласно теме, красит все текстовые поля и
+ * в зависимости от значения {@code updated} у записи, может покрасить фон элемента.
+ * <p><sub>(19.02.2016)</sub></p>
+ * @author CC-Ultra
  */
 public class CustomCursorAdapter_Serial extends SimpleCursorAdapter
 	{
 	 private Context context;
-	 private int contentType;
 	 private int drawableRes;
 	 private int updatedColor,textColor;
 
+	/**
+	 * Кромe {@code super()} здесь еще идет инициализация цветов и ресурсов согласно текущей теме.
+	 * {@code @SuppressWarnings("deprecation")} нужен, чтобы пользоваться {@link Resources#getColor(int)}
+	 */
 	 @SuppressWarnings("deprecation")
-	 public CustomCursorAdapter_Serial(Context _context,int _contentType,int layout,Cursor c,String[] from,int[] to)
+	 public CustomCursorAdapter_Serial(Context _context,int layout,Cursor c,String[] from,int[] to)
 		{
 		 super(_context,layout,c,from,to,0);
 		 context=_context;
-		 contentType=_contentType;
 		 Resources resources= context.getResources();
 		 switch(GlobalMenuOptions.themeSwitcher)
 			{
@@ -56,8 +62,14 @@ public class CustomCursorAdapter_Serial extends SimpleCursorAdapter
 			 }
 		 }
 
-	@Override
-	public View getView(int position,View convertView,ViewGroup parent)
+	/**
+	 * Метод, который возвращает сложные элементы списка. Работа идет на базе {@code convertView}, который может оказаться
+	 * и пустым, и тогда придется его делать самостоятельно через {@link LayoutInflater#inflate}. Когда View для заполнения
+	 * получена, ставлю на фон соответствующий селектор, получаю все TextView и всем ставлю цвет. Получаю курсор, вытаскиваю
+	 * из него всю информацию по записи, проставляю везде этот текст и в зависимости от флага {@code updated} ставится фон
+	 */
+	 @Override
+	 public View getView(int position,View convertView,ViewGroup parent)
 		{
 		 if(convertView==null)
 			{
@@ -98,4 +110,4 @@ public class CustomCursorAdapter_Serial extends SimpleCursorAdapter
 			 convertView.setBackgroundResource(updatedColor);
 		 return convertView;
 		 }
-	}
+	 }

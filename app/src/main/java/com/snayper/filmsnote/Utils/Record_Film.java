@@ -3,7 +3,14 @@ package com.snayper.filmsnote.Utils;
 import java.util.Date;
 
 /**
- * Created by snayper on 17.02.2016.
+ * <p></p>
+ * <p>Просто структура данных для хранения записи фильма</p>
+ * <p>В наличии такие поля:</p>
+ * <p>{@code title} - заголовок сериала</p>
+ * <p>{@code date} - дата добавления или последнего обновления статуса</p>
+ * <p>{@code watched} - статус просмотра</p>
+ * <p><sub>(17.02.2016)</sub></p>
+ * @author CC-Ultra
  */
 public class Record_Film
 	{

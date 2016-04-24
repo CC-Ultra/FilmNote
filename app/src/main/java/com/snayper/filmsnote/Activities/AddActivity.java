@@ -1,9 +1,7 @@
 package com.snayper.filmsnote.Activities;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -19,7 +17,11 @@ import com.snayper.filmsnote.Utils.Record_Serial;
 import com.snayper.filmsnote.R;
 
 /**
- * Created by snayper on 18.02.2016.
+ * <p>Активность для offline добавления</p>
+ * Здесь кнопка и поле ввода. Пользователь вводит текст, жмет кнопку и фильм/сериал добавляется в базу. Пользователь может
+ * передумать и нажать через меню на переход в online режим
+ * <p><sub>(18.02.2016)</sub></p>
+ * @author CC-Ultra
  */
 public class AddActivity extends GlobalMenuOptions
 	{
@@ -28,8 +30,11 @@ public class AddActivity extends GlobalMenuOptions
 	 private DbConsumer dbConsumer;
 	 private int contentType;
 	 private int toolbarTextColor,toolbarBackgroundColor;
-	 private boolean updated;
 
+	/**
+	 * Listener для кнопки
+	 * @see #acceptPress()
+	 */
 	 private class OkButtonListener implements View.OnClickListener
 		{
 		 @Override
@@ -38,6 +43,11 @@ public class AddActivity extends GlobalMenuOptions
 			 acceptPress();
 			 }
 		 }
+
+	/**
+	 * Listener {@link #titleInput}, обрабатывающий нажатие {@code Enter} во время ввода
+	 * @see #acceptPress()
+	 */
 	 private class SubmitListener implements TextView.OnEditorActionListener
 		{
 		 @Override
@@ -48,6 +58,11 @@ public class AddActivity extends GlobalMenuOptions
 			 }
 		 }
 
+	/**
+	 * Если пользователь решил добавить сериал, все-таки online. Завершает эту активность и прыгает в {@link WebActivity}
+	 * добавляя в {@link Intent} {@code O.interaction.WEB_ACTION_ADD}
+	 * @see #onOptionsItemSelected
+	 */
 	 private void toOnline()
 		{
 		 finish();
@@ -56,16 +71,30 @@ public class AddActivity extends GlobalMenuOptions
 		 jumper.putExtra(O.mapKeys.extra.ACTION, O.interaction.WEB_ACTION_ADD);
 		 startActivity(jumper);
 		 }
+
+	/**
+	 * Если был введено секретное ключевое слово, дает доступ к пасхалке. Не зависит от регистра и пробелов по бокам
+	 */
 	 private boolean easterCheck(String secretKey)
 		{
 		 return secretKey.toLowerCase().trim().equals("955653 ограбить корован!");
 		 }
+
+	/**
+	 * Привязывает к {@link #toolbar} меню
+	 */
 	 private void initToolbar()
 		{
 		 toolbar=(Toolbar) findViewById(R.id.toolbar);
 		 setSupportActionBar(toolbar);
-		 toolbar.setTitle("Note");
 		 }
+
+	/**
+	 * Действие при нажатии кнопки или {@code Enter} при вводе. Если позитивная проверка на пасхалку, то переход в {@link EasterActivity},
+	 * иначе, если текст не пустой, добавляю запись, в зависимости от ее типа, и выхожу из активности
+	 * @see OkButtonListener
+	 * @see SubmitListener
+	 */
 	 private void acceptPress()
 		{
 		 String title= titleInput.getText().toString();
@@ -87,21 +116,35 @@ public class AddActivity extends GlobalMenuOptions
 			{
 			 Record_Serial record= new Record_Serial();
 			 record.setTitle(title);
-			 record.setUpdated(updated);
-			 dbConsumer.putRecord(record,contentType);
+			 dbConsumer.putRecord(record);
 			 }
-		 onBackPressed();
+		 finish();
 		 }
+
+	/**
+	 * Установка содержимого меню
+	 * @see GlobalMenuOptions#onCreateOptionsMenu
+	 */
 	 @Override
 	 protected void setMenuLayout(Menu menu)
 		{
 		 getMenuInflater().inflate(R.menu.add_menu,menu);
 		 }
+
+	/**
+	 * При перезагрузке активности нужно упаковать в {@link Intent} те же данные, с которыми она была запущена
+	 * @param reset перезапускающий активность {@link Intent}
+	 * @see #resetActivity()
+	 */
 	 @Override
 	 protected void putIntentExtra(Intent reset)
 		{
 		 reset.putExtra(O.mapKeys.extra.CONTENT_TYPE,contentType);
 		 }
+
+	/**
+	 * Инициализация цветов {@link #toolbar}
+	 */
 	 @Override
 	 protected void initLayoutThemeCustoms()
 		{
@@ -109,6 +152,10 @@ public class AddActivity extends GlobalMenuOptions
 		 toolbarTextColor=lightTextColor;
 		 toolbarBackgroundColor=panelColor;
 		 }
+
+	/**
+	 * Установка цветов {@link #toolbar}
+	 */
 	 @Override
 	 protected void setLayoutThemeCustoms()
 		{
@@ -117,6 +164,9 @@ public class AddActivity extends GlobalMenuOptions
 		 toolbar.setBackgroundColor(toolbarBackgroundColor);
 	 	 }
 
+	/**
+	 * Получение элементов страницы, выдача Listener-ов, создание {@link #dbConsumer}, инициализация и покраска {@link #toolbar},
+	 */
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState)
 		{
@@ -124,7 +174,6 @@ public class AddActivity extends GlobalMenuOptions
 		 setContentView(R.layout.add_layout);
 
 		 contentType= getIntent().getIntExtra(O.mapKeys.extra.CONTENT_TYPE,-1);
-		 updated= getIntent().getBooleanExtra("Updated",false);
 
 		 Button okButton= (Button)findViewById(R.id.okButton);
 		 titleInput= (EditText)findViewById(R.id.titleInput);
@@ -135,13 +184,22 @@ public class AddActivity extends GlobalMenuOptions
 		 initToolbar();
 		 setLayoutThemeCustoms();
 		 }
+
+	/**
+	 * Если добавление не сериала, то конвертировать в online нельзя. Тогда скрываю пункт меню
+	 */
 	 @Override
 	 public boolean onPrepareOptionsMenu(Menu menu)
 		{
 		 menu.findItem(R.id.menu_convert).setVisible(contentType!=0);
 		 return super.onPrepareOptionsMenu(menu);
 		 }
-	@Override
+
+	/**
+	 * Срабатывает по нажатию на пункт меню
+	 * @param item по нему определяется кто был нажат и что теперь делать
+	 */
+	 @Override
 	 public boolean onOptionsItemSelected(MenuItem item)
 		{
 		 switch(item.getItemId() )

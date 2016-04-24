@@ -33,6 +33,6 @@
 		<activity android:name=".Activities.WebActivity"/>
 		<activity android:name=".Activities.SettingsActivity"/>
 		<activity android:name=".Activities.EasterActivity"/>
-		<!--<activity android:name=".Activities.TestActivity"/>-->
+		<!--<activity android:name=".Activities.TestActivity"></activity>-->
 	</application>
 </manifest>

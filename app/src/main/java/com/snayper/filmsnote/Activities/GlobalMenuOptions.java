@@ -18,7 +18,14 @@ import com.snayper.filmsnote.Utils.O;
 import java.lang.reflect.Method;
 
 /**
- * Created by snayper on 29.03.2016.
+ * <p>Суперкласс для активностей, реализующий базовое меню</p>
+ * Здесь же происходит обобщенная работа с темами. Далеко не все в вопросах тем решается стилями в {@code .xml}. Много чего
+ * делается или слишком сложно, или только через код. Для этого здесь определены методы {@link #initLayoutThemeCustoms()}
+ * и {@link #setLayoutThemeCustoms()}, в которых в зависимости от выбранной темы инициализируются (как правило, из {@code .xml})
+ * цвета, стили и прочие ресурсы, и устанавливаются по месту назначения. Каждая наследующая активность дополняет базовый
+ * функционал, переопределяя эти методы.
+ * <p><sub>(29.03.2016)</sub></p>
+ * @author CC-Ultra
  */
 public class GlobalMenuOptions extends AppCompatActivity
 	{
@@ -31,6 +38,11 @@ public class GlobalMenuOptions extends AppCompatActivity
 	 protected int panelColor,buttonPressedColor,selectionColor;
 	 private int themeResource;
 
+	/**
+	 * Проверка запущен ли сервис. Сервис всего один, и важно знать его статус. Как он проверяется я не знаю, это колдовство
+	 * подсказал мне гугл
+	 * @return статус сервиса
+	 */
 	 protected boolean isServiceRunning(Class<?> serviceClass)
 		{
 		 ActivityManager manager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
@@ -39,6 +51,14 @@ public class GlobalMenuOptions extends AppCompatActivity
 				 return true;
 		 return false;
 		 }
+
+	/**
+	 * В зависимости от выбранной темы инициализирует цвета и ресурс темы для последующего применения их в классах потомках
+	 * и методах {@link #initTheme()} и {@link #setLayoutThemeCustoms()}. {@code @SuppressWarnings("deprecation")} нужен,
+	 * чтобы пользоваться {@link Resources#getColor(int)}
+	 * @see #initTheme()
+	 * @see #setLayoutThemeCustoms()
+	 */
 	 @SuppressWarnings("deprecation")
 	 protected void initLayoutThemeCustoms()
 		{
@@ -86,17 +106,33 @@ public class GlobalMenuOptions extends AppCompatActivity
 				 backgroundRes= R.color.background_mentor;
 			 }
 		 }
+
+	/**
+	 * В классах потомках здесь свой переопределенный функционал, а пока что просто устанавливаю фон, установленный в
+	 * {@link #initLayoutThemeCustoms()}
+	 * @see #initLayoutThemeCustoms()
+	 */
 	 protected void setLayoutThemeCustoms()
 		{
 		 basicLayout= (LinearLayout)findViewById(R.id.basicLayout);
 		 basicLayout.setBackgroundResource(backgroundRes);
 		 }
+
+	/**
+	 * Установка темы. Различия {@link #localThemeSwitcher} и {@link #themeSwitcher} описаны тут: {@link #onResume()}
+	 */
 	 protected void initTheme()
 		{
 		 localThemeSwitcher=themeSwitcher;
 		 initLayoutThemeCustoms();
 		 setTheme(themeResource);
 		 }
+
+	/**
+	 * Завершение и сразу же перезапуск текущей активности. Если в запускающем активность {@link Intent}-е были данные,
+	 * их можно дописать к базовым, переопределив метод {@link #putIntentExtra}
+	 * @see #putIntentExtra
+	 */
 	 protected void resetActivity()
 		{
 		 finish();
@@ -120,12 +156,24 @@ public class GlobalMenuOptions extends AppCompatActivity
 		 }
 	 protected void putIntentExtra(Intent reset) {}
 
+	/**
+	 * Базовый {@code onCreate} только ставит тему
+	 */
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState)
 		{
 		 super.onCreate(savedInstanceState);
 		 initTheme();
 		 }
+
+	/**
+	 * Первая проверка позволит выйти из всех активностей при установленном флаге.
+	 * <p> Устанавливать тему можно перед {@link AppCompatActivity#setContentView}, а если он уже был вызван, нужно перегрузить
+	 * активность. {@link #themeSwitcher} - статическая переменная, единая для всех, а {@link #localThemeSwitcher} - она
+	 * же, только индивидуальная. Смысл в том, что когда в {@link SettingsActivity} устанавливается другая тема, глобальная
+	 * переменная меняется, а локальные остаются в прежнем состоянии, показывая какие активности нужно перегрузить с новой
+	 * темой, возвращаясь в них</p>
+	 */
 	 @Override
 	 protected void onResume()
 		{
@@ -138,13 +186,23 @@ public class GlobalMenuOptions extends AppCompatActivity
 			 }
 		 super.onResume();
 		 }
+
+	/**
+	 * У каждой активности свой {@code layout_menu}, определяющий содержание меню. Чтобы установить свой, метод {@link #setMenuLayout}
+	 * переопределяется
+	 */
 	 @Override
 	 public boolean onCreateOptionsMenu(Menu menu)
-		 {
+		{
 		 setMenuLayout(menu);
 		 return super.onCreateOptionsMenu(menu);
 		 }
-	@Override
+
+	/**
+	 * Срабатывает по нажатию на пункт меню. В потомках метод переопределяется
+	 * @param item по нему определяется кто был нажат и что теперь делать
+	 */
+	 @Override
 	 public boolean onOptionsItemSelected(MenuItem item)
 		{
 		 switch(item.getItemId() )
@@ -160,25 +218,4 @@ public class GlobalMenuOptions extends AppCompatActivity
 				 return super.onOptionsItemSelected(item);
 			 }
 		 }
-	 @Override
-	 public boolean onMenuOpened(int featureId, Menu menu)
-		{
-		 if(featureId == Window.FEATURE_ACTION_BAR && menu != null)
-			 if(menu.getClass().getSimpleName().equals("MenuBuilder"))
-				 try
-					{
-					 Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-					 m.setAccessible(true);
-					 m.invoke(menu, true);
-					 }
-				 catch(NoSuchMethodException e)
-					{
-					 Log.d(O.TAG,"onMenuOpened",e);
-					 }
-				 catch(Exception e)
-					{
-					 throw new RuntimeException(e);
-					 }
-		 return super.onMenuOpened(featureId, menu);
-		 }
-	}
+	 }

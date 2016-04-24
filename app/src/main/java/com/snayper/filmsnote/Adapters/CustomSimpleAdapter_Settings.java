@@ -5,19 +5,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import com.snayper.filmsnote.Activities.GlobalMenuOptions;
+import com.snayper.filmsnote.Activities.SettingsActivity;
 import com.snayper.filmsnote.R;
 import com.snayper.filmsnote.Utils.O;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by snayper on 19.02.2016.
+ * <p>Адаптер для {@link SettingsActivity}</p>
+ * Здесь ставится тематический фон для элементов и в зависимости от переданных данных определяется тип элемента: с текстовым
+ * полем или с {@code checkbox}-ом
+ * <p><sub>(19.02.2016)</sub></p>
+ * @author CC-Ultra
  */
 public class CustomSimpleAdapter_Settings extends SimpleAdapter
 	{
@@ -25,6 +28,9 @@ public class CustomSimpleAdapter_Settings extends SimpleAdapter
 	 private View.OnClickListener checkboxListener;
 	 private int drawableRes;
 
+	/**
+	 * Кромe {@code super()} здесь еще идет инициализация ресурсов согласно текущей теме. А также, инициализируется {@code checkboxListener}
+	 */
 	 public CustomSimpleAdapter_Settings(Context _context,View.OnClickListener _checkboxListener,List<? extends Map<String,?> > data,int resource,String[] from,int[] to)
 		{
 		 super(_context,data,resource,from,to);
@@ -46,6 +52,13 @@ public class CustomSimpleAdapter_Settings extends SimpleAdapter
 			 }
 		 }
 
+	/**
+	 * Метод, который возвращает сложные элементы списка. Работа идет на базе {@code convertView}, который может оказаться
+	 * и пустым, и тогда придется его делать самостоятельно через {@link LayoutInflater#inflate}. Когда View для заполнения
+	 * получена, ставлю на фон соответствующий селектор, получаю {@link CheckBox} и все {@link TextView}, текущий {@code item},
+	 * устанавливаю текст для {@code title}. А вот {@code item.get("Value")} может быть {@link Boolean} или {@link String},
+	 * что будет означать кому ставить какую видимость и значение. Если это {@code checkBox}, то ему передается и {@code checkboxListener}
+	 */
 	 @Override
 	 public View getView(int position,View convertView,ViewGroup parent)
 		{

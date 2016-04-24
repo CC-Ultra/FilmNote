@@ -8,7 +8,10 @@ import com.snayper.filmsnote.R;
 import com.snayper.filmsnote.Utils.O;
 
 /**
- * Created by snayper on 10.03.2016.
+ * Активность пасхалки. Тут только один {@link ImageView} с картинкой и {@code Toast}. При переходе сюда устанавливается
+ * коровья тема
+ * <p><sub>(10.03.2016)</sub></p>
+ * @author CC-Ultra
  */
 public class EasterActivity extends AppCompatActivity
 	{

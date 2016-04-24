@@ -5,22 +5,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.snayper.filmsnote.Activities.EditActivity;
 import com.snayper.filmsnote.Activities.GlobalMenuOptions;
 import com.snayper.filmsnote.R;
 import com.snayper.filmsnote.Utils.O;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by snayper on 19.02.2016.
+ * <p>Адаптер для {@link EditActivity}</p>
+ * Здесь ставится тематический фон для элементов и в зависимости от переданных данных статус-картинка на элемент
+ * <p><sub>(19.02.2016)</sub></p>
+ * @author CC-Ultra
  */
 public class CustomSimpleAdapter_EditList extends SimpleAdapter
 	{
 	 private Context context;
 	 private int drawableRes;
 
+	/**
+	 * Кромe {@code super()} здесь еще идет инициализация ресурсов согласно текущей теме
+	 */
 	 public CustomSimpleAdapter_EditList(Context _context,List<? extends Map<String,?> > data,int resource,String[] from,int[] to)
 		{
 		 super(_context,data,resource,from,to);
@@ -41,6 +47,13 @@ public class CustomSimpleAdapter_EditList extends SimpleAdapter
 			 }
 		 }
 
+	/**
+	 * Метод, который возвращает сложные элементы списка. Работа идет на базе {@code convertView}, который может оказаться
+	 * и пустым, и тогда придется его делать самостоятельно через {@link LayoutInflater#inflate}. Когда View для заполнения
+	 * получена, ставлю на фон соответствующий селектор, получаю {@link ImageView} и {@link TextView}, текущий {@code item},
+	 * устанавливаю текст для {@code title}. В {@code item.get("Pic")} записан статус в {@link Boolean}, и по нему подставляется
+	 * картинка в {@code img}
+	 */
 	 @Override
 	 public View getView(int position,View convertView,ViewGroup parent)
 		{

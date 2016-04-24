@@ -1,16 +1,34 @@
 package com.snayper.filmsnote.Fragments;
 
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.SimpleCursorAdapter;
+import com.snayper.filmsnote.Activities.MainActivity;
 import com.snayper.filmsnote.Utils.Record_Film;
 import com.snayper.filmsnote.R;
 import com.snayper.filmsnote.Utils.O;
 
 /**
- * Created by snayper on 16.02.2016.
+ * <p>Класс фрагмента для {@link ViewPager} в {@link MainActivity}</p>
+ * Основная логика в {@link MainListFragment}, а здесь только описаны действия по обычному нажатию на элемент списка и
+ * переопределяются массивы {@link #dbListFrom} и {@link #dbListTo} для адаптера, ориентированного на другой {@link #listElementLayout}
+ * <p><sub>(16.02.2016)</sub></p>
+ * @author CC-Ultra
+ * @see MainListFragment
  */
 public class Fragment_Films extends MainListFragment
 	{
+	/**
+	 * <p>Listener для обычного нажатия на элемент списка</p>
+	 * Обычное нажатие порождает {@link ActionDialog}. Чтобы это сделать, нужно определиться с требованиями к нему, для чего
+	 * нужно извлечь запись (с помощью {@link #dbConsumer}) и узнать статус фильма. От статуса зависит тект и Listener на
+	 * кнопках диалога. Когда все понятно, диалогу передается {@code contentType} и {@code position} (позиция в списке
+	 * соответствует позиции в базе) и указываются требования:
+	 * <p>Две кнопки с текстом {@code "Просмотрено"/"Не просмотрено"} и {@code "Удалить"}, на которые будут привязаны
+	 * {@link ActionDialog.FilmWatchListener}/{@link ActionDialog.FilmCancelListener} и {@link ActionDialog.MainDelListener}</p>
+	 * @see ActionDialog
+	 */
 	 private class FilmsListItemClickListener implements AdapterView.OnItemClickListener
 		{
 		 @Override
@@ -26,6 +44,12 @@ public class Fragment_Films extends MainListFragment
 			 dialog.show(getActivity().getSupportFragmentManager(), "");
 			 }
 		 }
+
+	/**
+	 * Здесь переопределяются массивы {@link #dbListFrom} и {@link #dbListTo} для адаптера, ориентированного на другой
+	 * {@link #listElementLayout}
+	 * @see SimpleCursorAdapter
+	 */
 	 public Fragment_Films()
 		{
 		 super();

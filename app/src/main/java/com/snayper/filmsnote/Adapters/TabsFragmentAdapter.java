@@ -4,7 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import java.util.HashMap;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import com.snayper.filmsnote.Activities.MainActivity;
 import com.snayper.filmsnote.Fragments.Fragment_Films;
 import com.snayper.filmsnote.Fragments.Fragment_Serial;
 import com.snayper.filmsnote.Fragments.MainListFragment;
@@ -12,7 +14,11 @@ import com.snayper.filmsnote.R;
 import com.snayper.filmsnote.Utils.O;
 
 /**
- * Created by snayper on 10.02.2016.
+ * <p>Адаптер для {@link ViewPager} у {@link MainActivity}, который производит разновидности {@link MainListFragment}</p>
+ * Есть на борту {@code HashMap<Integer,MainListFragment>} {@link #tabs}, которая в конструкторе создатся и заполняется,
+ * а потом работает во всех основных методах адаптера, отвечая на запросы извне
+ * <p><sub>(10.02.2016)</sub></p>
+ * @author CC-Ultra
  */
 public class TabsFragmentAdapter extends FragmentPagerAdapter
 	{
@@ -23,11 +29,18 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter
 		 super(fm);
 		 initTabsMap();
 		 }
+
 	 @Override
 	 public CharSequence getPageTitle(int position)
 		{
 		 return tabs.get(position).getTitle();
 		 }
+
+	/**
+	 * Просто выдача уже готового фрагмента
+	 * <p>(Странным образом перестает вызываться при перезагрузке активности. Не понимаю почему. Просто генерируются пустые
+	 * фрагменты вместо этого)</p>
+	 */
 	 @Override
 	 public Fragment getItem(int position)
 		{
@@ -39,6 +52,11 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter
 		{
 		 return tabs.size();
 		 }
+
+	/**
+	 * Создаю фрагменты, инициализирую их наименованием, типом элемента списка и привязываю {@code contentType}. Заношу
+	 * всех в {@link #tabs}
+	 */
 	 private void initTabsMap()
 		{
 //		 Log.d(O.TAG,"initTabsMap: TabsFragmentAdapter");
